@@ -1,0 +1,288 @@
+############################## PNGwriter ################################
+#
+#  Website: Principal:        http://pngwriter.sourceforge.net/
+#           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+#           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+#
+#  Autor:                     Paul Blackburn
+#
+#  Email:                     individual61@users.sourceforge.net
+#
+#  Version:                   0.5.4   (19 / II / 2009)
+#
+#  Descripcion:               Libreria que permite plotear una imagen PNG
+#                             de 48 bit pixel por pixel, que luego puede
+#                             ser abierta por un programa de graficos.
+#
+#  Licencia:                   GNU General Public License
+#                              (C) 2002, 2003, 2004, 2005, 2006, 2007,
+#                              2008, 2009 Paul Blackburn
+########################################################################
+
+PNGwriter
+Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Paul Blackburn
+
+
+
+
+#######################################################################
+                     IMPORTANT - IMPORTANTE
+The  Spanish README and documentation can be found in doc/espaniol
+El archivo LEAME y la documentacion en castellano esta en doc/espaniol
+
+Nota: Este documento ha sido intencionalmente escrito sin acentos ni 'enie'.
+#######################################################################
+
+######################################################################
+Este programa es software libre. Puede redistribuirlo y/o modificarlo
+bajo los terminos de la Licencia Publica General de GNU segun
+es publicada por la Free Software Foundation, bien de la version 2 de 
+dicha Licencia o bien (segun su eleccion) de cualquier version posterior.
+
+ Este programa se distribuye con la esperanza de que sea util, pero SIN
+NINGUNA GARANTiA, incluso sin la garantia MERCANTIL implicita o sin
+garantizar la CONVENIENCIA PARA UN PROPoSITO PARTICULAR.
+Vease la Licencia Publica General de GNU para mas detalles.
+
+ Deberia haber recibido una copia de la Licencia Publica
+General junto con este programa. Si no ha sido asi, escriba a la 
+Free Software Foundation, Inc., en 675 Mass Ave, Cambridge, MA 02139,
+EEUU.
+######################################################################
+
+
+CONTACTOS
+Email del Autor:                               individual61@users.sourceforge.net
+Home page:                                     http://pngwriter.sourceforge.net/
+pagina del proyecto en Sourceforge.net:        http://sourceforge.net/projects/pngwriter/
+Freshmeat.net project page:                    http://freshmeat.net/projects/pngwriter/
+
+
+
+
+INTRODUCCION
+Hola. Gracias por bajar PNGwriter. Espero que lo encuentres util.
+Mira doc/espaniol/CAMBIOS para ver que hay de nuevo.
+
+
+
+
+DESCRIPCION
+PNGwriter es una libreria grafica que usa el formato PNG. La interface
+ha sido diseniada para ser lo mas simple e intuitiva posible.
+Permite plotear y leer en los espacios de colores RGB (rojo, verde, azul),
+HSV (hue, saturation, value/brightness) y CMYK (cyan, magenta, amarillo, negro),
+figuras basicas, escalamiento de imagenes, interpolacion bilineal,
+soporte completo para texto TrueType rotado y con antialiasing, 
+curvas bezier, abrir imagenes PNG ya existentes y mas. Documentacion en 
+ingles y espaniol. Funciona en Linux, Unix, Mac OS X y Windows. 
+Requiere libpng y opcionalmente FreeType2 para el soporte de texto.
+
+
+
+
+
+REQUERIMIENTOS
+LibPNG (http://www.libpng.org/)
+PNGwriter requiere un libpng instalado correctamente para funcionar.
+
+Freetype 2 (http://www.freetype.org)
+PNGwriter usa FreeType 2 para renderear texto con antialias y kerning,
+pero puede ser compilado sin soporte para esto. Ver mas abajo.
+
+Fuentes (Fonts)
+Si vas a usar la funcion plot_text() de PNGwriter para plotear texto, 
+entonces necesitaras un font TrueType. PNGwriter instala algunos del 
+Free UCS Outline Fonts Project (http://savannah.nongnu.org/projects/freefont)
+en /usr/local/share/pngwriter/fonts, o bajo el directorio que
+especificaste con PREFIX al momento de instalar, para que puedas
+comenzar desde ya. Ver mas abajo.
+
+
+
+
+INSTALACION
+Antes de nada, revisa que 'make.include' sea un symbolic link a
+'make.include.linux' o a 'make.include.osx'.
+
+La opcion presente de 'make.include.linux' deberia abarcar la mayoria de los sistemas, 
+incluido OS X. Ver mas abajo.
+
+Si tienes un sistema OS X con libpng y FreeType2 instalados con Fink
+en /sw, o via DarwinPorts/MacPorts en /opt, edita y luego usa 'make.include.osx'.  
+Generalmente no sera necesario usar make.include.osx en un sistema OS X si est‡s 
+compilando PNGwriter con soporte FreeType2. Esto es porque el programa asistente 
+de FreeType2, freetype-config, ejecutado al momento de la compilacion, proveera 
+los paths de libreria e include correctos, segun uses una distribucion Fink o 
+MacPorts. En resumen, si estas en OS X, simplemente usa make.include.linux, y 
+si no funciona, entonces prueba con make.include.osx
+
+Si estas usando un compilador viejo, quizas quieras usar
+ 'make.include.linux.oldcpp', o quizas quieras alterar tu propio Makefile 
+ agregando -DOLD_CPP a los compiler flags.
+ 
+ Si quieres compilar PNGwriter sin soporte para FreeType2, abre make.include
+ con tu editor de texto y descomenta la linea que dice
+ 
+     # P_FREETYPE = 1
+
+o, al compilar, agrega  P_FREETYPE=1 a los argumentos de make.
+
+Nota que caad vez que compilas un proyecto que usa PNGwriter, y PNGwriter 
+ ha sido compilado sin soporte para FreeType2, tendras que agregar 
+ -DNO_FREETYPE a tus parametros de compilacion.
+ 
+Para compilar PNGwriter, tipea
+
+  make
+  
+y despues, como Root, tipea
+
+  make install
+  
+Si no eres root, o no quieres instalar PNGwriter en el lugar por
+defecto (/usr/local/, fijado en make.include), entonces especifica la
+ubicacion con PREFIX al usar make, asi:
+
+  make PREFIX=$HOME (por ejemplo)
+  
+o
+
+  make PREFIX=%HOME/programacion (por ejemplo)
+
+Los directorios por defecto para la instalacion son:
+
+ -  libpngwriter.a en /usr/local/lib
+ -  pngwriter.h en /usr/local/include
+ -  La documentacion in /usr/local/share/doc/pngwriter/doc/
+ -  Los ejemplos en /usr/local/share/doc/pngwriter/examples/
+ -  Algunos fonts en  /usr/local/share/pngwriter/fonts
+
+Luego de la instalacion, las siguientes lineas mostraran la ubicacion
+del software installado (esto se determina de lo que era PREFIX al
+momento de instalar):
+
+
+ -  libpngwriter.a: /usr/local/lib/ 
+ -  pngwriter.h: /usr/local/include/ 
+ -  documentacion: /usr/local/share/doc/pngwriter/ 
+ -  ejemplos: /usr/local/share/doc/pngwriter/ 
+ -  fonts: /usr/local/share/pngwriter/fonts/ 
+
+
+Mira en examples/ para ver dos ejemplos del uso de PNGwriter, y en
+doc/espaniol/EJEMPLOS para leer una explicacion.
+
+
+
+
+SOPORTE
+Para ejemplos, preguntas frecuentes, etc, mira el Home page de PNGwriter:
+
+http://pngwriter.sourceforge.net/
+
+Si tienes un problema o una sugerencia, puedes unirte o enviar un
+email a lista de correo de PNGwriter (cualquier traduccion ingles
+espaniol o vice versa que sea pedida la hare yo), que esta disponible 
+en el website principal, bajo la seccion CONTACTOS, o puedes mandarme
+un email a la direccion que aparece en CONTACTOS. Realmente me gustaria 
+saber de ti y que estas haciendo con PNGwriter.
+
+
+
+
+LEGAL
+Esta clase de C++ y su codigo estan distribuidos bajo la Licencia General
+Publica de GNU (GNU GPL). El texto completo esta incluido en esta
+distribucion.
+
+
+
+
+ACTUALIZACIONES
+Nuevas versiones apareceran de vez en cuando asi que revisa la pagina web:
+
+http://pngwriter.sourceforge.net/
+y
+http://sourceforge.net/projects/pngwriter/
+
+Tambien puedes mantenerte al tanto revisando la pagina de PNGwriter en
+freshmeat.net:
+
+http://freshmeat.net/projects/pngwriter/
+
+
+
+
+
+CONTENIDO DE ESTE RELEASE
+
+pngwriter-x.y.z
+|-- Makefile
+|-- README
+|-- configure
+|-- doc
+|   |-- english
+|   |   |-- CHANGES
+|   |   |-- EXAMPLES
+|   |   |-- LICENSE
+|   |   |-- PNGwriterQuickReference_EN.pdf
+|   |   `-- README
+|   `-- espaniol
+|       |-- CAMBIOS
+|       |-- EJEMPLOS
+|       |-- LEAME
+|       |-- LICENCIA
+|       `-- PNGwriterQuickReference_ES.pdf
+|-- examples
+|   |-- Makefile
+|   |-- burro.png
+|   |-- lyapunov.cc
+|   |-- lyapunov.espaniol.cc
+|   |-- pngtest.cc
+|   `-- pngtest.espaniol.cc
+|-- fonts
+|   |-- FreeMonoBold.ttf
+|   `-- FreeSansBold.ttf
+|-- make.include -> make.include.linux
+|-- make.include.linux
+|-- make.include.linux.oldcpp
+|-- make.include.osx
+`-- src
+    |-- Makefile
+    |-- pngwriter.cc
+    `-- pngwriter.h
+    
+    
+    
+    
+AGRADECIMIENTOS
+
+En ningun orden en particular, mis agradecimientos a
+
+> Xavier Andrade
+> Andres Kievsky
+> Jšrgen Pehrson, por la funcion settext().
+> Nadav Rotem, por sugerir la funcion bezier().
+> Jeramy Webb (jeramyw@gmail.com), por su generosidad.
+> Mike Heller (mkheller@gmail.com), por su generosidad.
+> Benjamin Raskob, por hacerme notar la necesidad de una funcion resize().
+> Dr John Charlery, por su apoyo con la documentacion de Windows.
+> Tobias Kretz, por informarme acerca del bug en readfromfile(), y
+> Greg Roelofs y John Bowler en la lista png-implement por su ayuda
+  en arreglar el bug.
+> Gurkan Sengun (gurkan@linuks.mine.nu, http://www.linuks.mine.nu/)
+  por el codigo de filledtriangle().
+> Miguel Gea (debian@miguelgea.com), Debian Package Maintainer para
+  versiones > 0.5.1
+> Carsten Klapp (carstenklapp@users.sourceforge.net), por su ayuda con
+  el paquete de Fink.
+> Sven, quien posteo anonimamente en el foro PNGwriter con respecto a readfromfile()
+> Mikkel (mikkel@biosource.dk) por expandir el codigo de Sven, aumentando enormemente
+  la variedad de PNGs que puede abrir PNGwriter. 
+
+
+Diviertete y cuentame como te fue!
+
+Paul Blackburn
+individual61@users.sourceforge.net

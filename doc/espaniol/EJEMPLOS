@@ -1,0 +1,22 @@
+Acerca de los Ejemplos
+
+Corre pngtest. Algunas imagenes PNG seran creadas. Abrelas con cualquier 
+programa de graficos, o incluso un browser web, y echales una mirada. Para 
+averiguar que esta sucediendo, explora el Makefile y pngtest.cc. Ambos tienen
+muchos comentarios. 
+
+El archivo header pngwriter.h tiene muchos comentarios, y 
+si perdieras el PDF de referencia rapida, o si no tienes acceso a internet, 
+te servira como manual de referencia.
+
+Si quieres, echale una mirada a la fuente pngwriter.cc.
+
+El archivo lyapunov.cc tambien esta comentado, y ofrece una explicacion 
+de lo que se genera. Alternativamente, puedes obtener informacion de como
+usarlo ejecutandolo sin argumentos. Para una explicacion del algoritmo detras
+de las imagenes, tipea
+
+./lyapunov 999
+
+y mostrara una explicacion en pantalla.
+

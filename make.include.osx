@@ -1,0 +1,56 @@
+############## FREETYPE SUPPORT / SOPORTE PARA FREETYPE#####################
+#
+# Uncomment the following line if you do not wish to compile PNGwriter
+# with FreeType2 support.
+# (Please note that if you compile PNGwriter without FreeType2 support,
+# all projects that you compile that use PNGwriter must be compiled with
+# -DNO_FREETYPE).
+#
+# Descomenta la siguiente linea si no quieres compilar PNGwriter
+# con soporte para FreeType2.
+# (Nota que si compilas PNGwriter sin soporte para FreeType2, todos los
+# proyectos que usen PNGwriter que compiles deberan ser compilados con
+# -DNO_FREETYPE).
+#
+#
+# P_FREETYPE = 1
+#
+# 
+# Alternatively, when compiling, call make with the option P_FREETYPE=1
+
+
+PREFIX=/usr/local
+
+# This is where you enter the location of your ports distribution (for
+# Fink, use /sw and for DawrinPorts/MacPorts use /opt). If you use
+# neither, then just use make.include.linux, and not this file.
+#
+# Aqui es donde especificas la ubicacion de tu ports distribution (para
+# Fink usa /sw y para DarwinPorts/MacPorts usa /opt). Si no usas
+# ninguno de los dos, entonces simplemente usa make.include.linux 
+# en vez de este archivo.
+
+PORTS_LOCATION=/opt
+
+DESTDIR=
+
+
+ifdef P_FREETYPE
+FT_ARG = -DNO_FREETYPE
+else
+FT_ARG = `freetype-config --cflags` `freetype-config --libs`
+endif
+
+CXX=c++
+
+CXXFLAGS= -Wall -O3 -Wno-deprecated $(FT_ARG)
+
+INC= -I../src/ -I$(PREFIX)/include/ -I$(FINK_LOCATION)/include
+
+LIBS= -L../src/ -L$(PREFIX)/lib/ -L$(FINK_LOCATION)/lib/ -lz -lpng -lpngwriter
+
+INSTALL=install
+
+OSXSPECIFIC= ranlib -s $(DESTDIR)$(PREFIX)/lib/libpngwriter.a
+
+SELF=make.include.osx

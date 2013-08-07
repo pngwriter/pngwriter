@@ -1,0 +1,20 @@
+About the Examples
+
+Run pngtest. Some PNG images will be produced. Open them with any
+graphics program or even a web browser and take a look. To find out what is
+going on, explore the Makefile and the pngtest.cc source. Both have many
+comments. 
+
+The pngwriter.h header file is fully commented as well,
+and should you lose the PNGwriter Quick Reference, or be without internet
+access to check the website, it will serve as a reference manual.
+
+If you feel like it, take a look at the pngwriter.cc source. The makefile is fully commented as well.
+
+The lyapunov.cc source file has an explanation of what is being generated.
+Alternatively, you can get info on its usage by running lyapunov with no
+arguments. If you wish to see what is going on, you can run it with
+
+./lyapunov 999
+
+and it will show an onscreen explanation.

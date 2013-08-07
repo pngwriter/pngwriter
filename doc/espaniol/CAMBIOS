@@ -1,0 +1,282 @@
+############################## PNGwriter ################################
+#  
+#  Website: Principal:        http://pngwriter.sourceforge.net/
+#           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+#           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+#
+#  Autor:                     Paul Blackburn
+#
+#  Email:                     individual61@users.sourceforge.net
+#
+#  Version:                   0.5.4   (19 / II / 2009)
+#
+#  Descripcion:               Libreria que permite plotear una imagen PNG
+#                             de 48 bit pixel por pixel, que luego puede
+#                             ser abierta por un programa de graficos.
+#
+#  Licencia:                  GNU General Public License
+#                             (C) 2002, 2003, 2004, 2005, 2006, 2007, 
+#                             2008, 2009 Paul Blackburn
+########################################################################
+
+Cambios:
+
+Nota: la lista de cambios antes de la version 0.3.7 esta en ingles por ahora. 
+Si tienes una pregunta en particular, no dudes en contactarme.
+
+0.5.4
+ 19 Febrero 2009
+ > filegamma_ fue corregido de 0.5 en un constructor a 0.6 como en los demas. 
+ > PNGwriter ahora abre un rango mucho mas grande de archivos PNG con readfromfile().
+   En general, el alpha channel se descarta sin problemas. Hay algunos problemas,
+   sin embargo: Un PNG con informacion en el chroma chunk no sera leido de manera perfecta,
+   y un PNG con un transparency chunk sera leido de manera totalmente incorrecta,
+   aunque sin generar un error.
+ > Se arreglaron las advertencias del compilador en drawtriangle() and drawbottom().
+
+0.5.3
+ 24 Enero 2005
+  > Se agrego get_text_width() y get_text_width_utf8(). Esto da el 
+    ancho que tendria el texto si se ploteara. Este ancho, usado con
+    el tamanio del font, pueden ayudar a estimar las dimensiones reales
+    del texto ploteado.
+  > Se agregaron nuevas figuras: flecha, cruz, cruz de malta y diamante.
+  > Se arreglo un pequenio error en un mensaje de error de plot_text().
+     
+0.5.2
+ 10 Enero 2005
+ > Se cambio la Licencia. PNGwriter ahora se distribuye bajo la Licencia GNU GPL,
+   no esta misma modificada. Esto permite a PNGwriter ser parte de la 
+   distribucion Debian de Linux, y mantiene las cosas simples. 
+   
+0.5.1
+ 3 Enero 2005
+ > Se modifico el Makefile para que fuera mas apto para hacer paquetes.
+ > Se modifico el manual PDF para documentar mejor la posibilidad de 
+   instalar PNGwriter en una ubicacion distinta a la por defecto.
+ > Se modifico el archivo LEAME, para documentar mejor el proceso de 
+   instalar PNGwriter bajo un directorio distinto al por defecto, 
+   usando PREFIX.
+ > Se modifico el archivo LEAME, para reflejar las ubicaciones reales
+   de los archivos instalados, determinado por PREFIX al momento 
+   de instalar.
+
+0.5.0
+ 24 Octubre 2004
+ > Se agrego la funcion triangle() para el ploteo rapido de triangulos.
+ > Se arreglo un bug serio que afectaba las versiones de PNGwriter
+   compiladas en Windows. En particular, readfromfile() abria el archivo
+   en modo ASCII ("r") y no binario ("rb"). Esto tenia como resultado
+   que libpng no podia leer el archivo PNG.
+   
+0.4.9
+ 18 Octubre 2004
+ > Se agregaron las funciones filledtriangle() y filledtriangle_blend() para
+   el ploteo rapido de triangulos llenados.
+   
+0.4.8
+ 10 Octubre 2004
+ > Se arreglo un par de bugs serios introducidos en 0.4.7, el que fue
+   removido un par de horas despues de ser distribuido. Dado que 0.4.7 no 
+   estuvo disponible mucho tiempo, sus cambios se incluyen en las notas de
+   version de 0.4.8.
+ > readfromfile() ahora determina correctamente si el archivo que se intenta 
+   abrir es un PNG valido o no.
+ > Aun mas mejoras en el manejo de errores relacionados con archivos.
+ > Se arreglaron un par de bugs en los constructores. A pesar de que se revisaba
+   para ver si el color de fondo, ancho u altura estaban fuera de rango, no se
+   limitaban al rango valido, a pesar de lo que decian los mensajes de error.
+   Esto ha sido arreglado.
+ > Los cambios de 0.4.7 son:
+ > Se arreglo un bug serio en readfromfile() que causaba un crash debido 
+   al tener demasiados archivos abiertos si se llamaba un cierto numero
+   de veces (causado por un fopen() fuera de lugar)
+ > Todos los campos de texto (nombre del archivo y la informacion del png)
+   ya no estan limitados a 255 caracteres.
+ > Mejor manejo de errores de archivo: intentar abrir un archivo que no
+   existe ya no causara un crash.
+   
+0.4.7
+ 10 Octubre 2004
+ > Se arreglo un bug serio en readfromfile() que causaba un crash debido 
+   al tener demasiados archivos abiertos si se llamaba un cierto numero
+   de veces (causado por un fopen() fuera de lugar)
+ > Todos los campos de texto (nombre del archivo y la informacion del png)
+   ya no estan limitados a 255 caracteres.
+ > Mejor manejo de errores de archivo: intentar abrir un archivo que no
+   existe ya no causara un crash.
+
+0.4.6
+ 31 Agosto 2004
+ > Se ha arreglado un bug que imped&iacute;a la compilaci&oacute;n de PNGwriter 
+   en Windows usando Borland Builder y MSVC7.
+ 
+0.4.5
+ 15 Agosto 2004
+ > Nuevas funciones: scale_k(), scale_kxky() and scale_wh(). Estas te permiten
+   re-escalar la imagen proporcionalmente, no-proporcionalmente, y a una altura
+   y ancho objetivo. 
+ > Nuevas funciones: Funciones combinadas. Todas las figuras y modos de ploteo
+   se han complementado con versiones combinadas, permitiendote plotear
+   cualquier figura  que PNGwriter incluye (texto tambien) en modo combinado.
+ > Nueva funcion: laplacian(). Calcula el laplaciano discreto de la imagen. 
+ > Actualizacion de documentacion: Los PDF de Referencia Rapida han sido 
+   reformateados y reorganizados, y el resultado es mas facil de usar 
+   (y se ve mejor tambien!).
+   
+0.4.4
+ 8 Agosto 2004
+ > Nuevas funciones: Boundary y Flood Fill. Para Boundary Fill, los 
+   pixeles adjacentes al pixel de comienzo se llenaran del color de llenado
+   hasta que se encuentre el color de borde, y para Flood Fill, 
+   todos los pixeles adjacentes al pixel inicial se llenaran con el
+   color de llenado, si son del mismo color que el pixel inicial.
+ > Nueva funcion: Poligono. Esta funcion toma un arreglo de valores
+   enteros representando las coordenadas de los vertices de un poligono.
+ > Nueva funcion: Plotear y Leer CMYK. Plotea y lee los pixeles en el 
+   espacio de colores Cyan, Magenta, Amarillo, Negro.
+   
+0.4.3
+ 8 Julio 2004
+ > Esta version ya no escribe el numero de caracteres a stdout cuando se plotea
+   texto. Esto se habia incluido por error en la ultima version.
+   
+0.4.2
+ 5 Julio 2004
+ > Nueva funcion: plot_text_utf8(). Ahora es posible plotear texto usando
+   caracteres de cualquier idioma (castellano con acentos, japones, koreano, etc).
+   Solo pasale el string codificado en UTF-8 a plot_text_utf8() y usa un font 
+   que tenga soporte para el lenguaje que usaras.
+ > Nueva funcion: resize(). Cambia el tamanio de la imagen. Util en el caso que
+   se crean arreglos de instancias de PNGwriter, para poder cambiar su tamanio 
+   posteriormente. Nota: no re-escala la imagen, sino que la deja en negro.
+
+0.4.1
+ 21 Junio 2004
+ > Documentacion actualizada (algunas pequenias partes no habian sido actualizadas
+   desde la version 0.3.7)
+ 
+0.4.0
+ 20 Junio 2004
+ > PNGwriter tiene sporte de texto!! Luego de muchas peticiones, 
+   se ha agregado soporte de texto con la libreria FreeType2. El texto
+   ploteado esta antialiased, puede ser rotado como quieras, puee usar
+   cualquier fuente TrueType, y como si fuera poco, el texto tiene
+   kerning correcto.
+ > Nueva funcion: plot_blend(). Similar a plot(), pero combina
+   el pixel ploteado con el pixel existente, dado un numero de 0.0 a
+   1.0, que regula la opacidad.
+ > Nueva funcion: bilinear_interpolation_read(). Las coordenadas x e y
+   todavia estan en el espacio de pixeles, pero ahora son de tipo double.
+   Cuando se pide el valor de un pixel con una posicion x,y que no tenga
+   indices enteros, se usara interpolacion bilineal. Ahora es posible
+   agrandar la imagen suavemente.
+ > Nueva funcion: invert(). Invierte la imagen en el espacio de colores
+   RGB.
+ > plot() y read() son mas rapidos.
+ > circle() es mas rapido.
+ > plot() ahora revisa si los coeficientes de color estan dentro de
+   rango, y los recorta si no.
+ > read() ahora revisa si los coeficientes de color estan dentro de
+   rango, y los recorta si no.
+ > Se arreglo un bug que habia pasado desapercibido y sin reportar, en
+   plot(). Ahora se puede plotear correctamente a instancias de PNGwriter
+   que han leido una imagen PNG de 8 bits :-)
+ > Documentacion actualizada.
+
+0.3.7
+ 12 October 2003
+ > Both branches, English and Spanish, have been merged into one
+   bilingual main branch. This is to make the release process easier
+   for me. The PNGwriter Quick Reference PDF is now distributed
+   only with the main PNGwriter package.
+ > PNGwriter is now a library! No more worrying about having
+   pngwriter.o and pngwriter.h available.
+ > Better error handling. All malloc and new events are now checked
+   for failure. readfromfile() now does not crash the program if the file
+   cannot be found.
+ > New write_png() function. It writes the PNG file to disk. Useful
+   for using one PNGwriter instance to make many slightly different
+   images in a sequence.
+ > pngwriter_rename() has been overloaded to accept an unsigned long
+   int. Given 54726 as an argument, for example, it will rename the 
+   filename to "000054726.png". In theory one could make up to 999999999
+   sequential images before having to change directory and start at
+   zero again. This is ideally suited for making movies, using MEncoder,
+   for example.
+ > The line() function has been completely rewritten. The new
+   implementation uses the Bresenham algorithm, which is much faster than
+   the old implementation.
+ > Assignment operator overloaded, a proper copy constructor, and
+   a default constructor.
+ > New version() function. It simply returns the PNGwriter version.   
+ > Completely rewritten Makefile. It is now much more flexible, better
+   written, and clearer than before. Customization for your particular
+   system is also much easier.
+ > Completely reorganized the PNGwriter package layout. Easier to
+   install, and more suited to porting.
+
+
+0.3.6
+ 18 September 2003
+ > Added the settext() functions to change the PNG header text.
+
+0.3.5
+ 7 June 2003
+ > Added bezier() function for making bezier curves.
+ > Fixed a bug in the read() function (line 440 in pngwriter.cc).
+
+0.3.4
+ 17 January 2003
+ > Added setcompressionlevel()
+ > Fixed default gamma
+ > Improved documentation
+ > Added new test program, lyapunov
+ > Fixed a bug with the line() function.
+
+0.3.3 
+ 19 Nov 2002 
+  > Where necessary, functions that took "char *" as an argument now accept
+ "const char *" as well.
+ > Added read(x, y) and dread(x, y) to get the average value of the pixel x, y.
+ > Added readHSV(x, y, colour) and dreadHSV(x, y, colour) to get the colour
+ of a certain pixel in HSV colourspace.  
+
+0.3.2 
+ 27 Oct 2002 
+ > Added better error reporting.
+ > Added plotHSV() to be able to make rainbows.
+ > Added double versions of most functions that work in the 0 to 1 range
+ instead of 0 to 65535. 
+ 
+0.3.1 
+ 4 Oct 2002 
+ > Implemented support for 16 and 8 bit PNGs for readfromfile(). 
+
+0.3.0
+ 1 Oct 2002 
+ > Added readfromfile(). Now you can open PNGs and play with them with
+ pngwriter.
+
+0.2.3
+ 29 Sep 2002
+ > Fixed harmless type mismatch in some functions.
+ > Added an explanation to the Makefile, and made it more useful.
+  
+0.2.2 
+ 31 Aug 2002 
+ > Updated and improved documentation. 
+   
+0.2.1 
+ 19 Aug 2002 
+ > Fixed the Makefile. 
+   
+0.2.0 
+ 18 Aug 2002 
+ >Added new functions (line, square, filledsquare, circle, filledcircle).
+ >Added PNG info fields. 
+   
+0.1.0 
+ 17 Aug 2002 
+ >Initial release
+

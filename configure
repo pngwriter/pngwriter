@@ -1,0 +1,14 @@
+echo "
+  There is no \"configure\" script for PNGwriter.  Instead, please
+  check that \"make.include\" is a symbolic link to the correct 
+  \"make.include.XXX\" file, where \"XXX\" describes system.
+  Read the README file for more details.
+      
+  PNGwriter no tiene un script \"configure\". En vez de eso, por favor
+  revisa que \"make.include\" sea un link simbolico al
+  \"make.include.XXX\" correcto, donde \"XXX\" es la descripcion
+  de tu sistema. Lee el archivo doc/espaniol/LEAME para obtener
+  mas informacion.
+  
+  "
+      
