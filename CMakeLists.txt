@@ -64,10 +64,15 @@ endforeach(EXAMPLEFILE ${EXAMPLES_SOURCES})
 #
 INSTALL(TARGETS pngwriter LIBRARY DESTINATION lib)
 INSTALL(TARGETS pngwriter_static ARCHIVE DESTINATION lib)
-foreach(EXAMPLENAME ${EXAMPLES_NAMES})
-    INSTALL(TARGETS ${EXAMPLENAME} RUNTIME DESTINATION bin)
-endforeach(EXAMPLENAME ${EXAMPLES_NAMES})
+
+# they are test binaries and should not be installed, but tested
+#foreach(EXAMPLENAME ${EXAMPLES_NAMES})
+#    INSTALL(TARGETS ${EXAMPLENAME} RUNTIME DESTINATION bin)
+#endforeach(EXAMPLENAME ${EXAMPLES_NAMES})
 
 # to do: add pngwriter.h in include/
+#
+
+# to do: install fonts, too?
 #
 
