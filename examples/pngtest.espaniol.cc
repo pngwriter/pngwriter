@@ -44,7 +44,7 @@
   
 #include "../src/pngwriter.h"
 #include <math.h>
-#include <iostream.h>
+#include <iostream>
 #include <string>
 using namespace std;
 #include <time.h>
