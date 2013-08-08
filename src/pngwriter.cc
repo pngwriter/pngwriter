@@ -989,23 +989,23 @@ void pngwriter::close()
    png_convert_from_time_t(&mod_time, gmt);
    png_set_tIME(png_ptr, info_ptr, &mod_time);
    /* key is a 1-79 character description of type char* */
-   char key_title[20] = "Title";
+   char key_title[] = "Title";
    text_ptr[0].key = key_title;
    text_ptr[0].text = texttitle_;
    text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_author[20] = "Author";
+   char key_author[] = "Author";
    text_ptr[1].key = key_author;
    text_ptr[1].text = textauthor_;
    text_ptr[1].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_descr[20] = "Description";
+   char key_descr[] = "Description";
    text_ptr[2].key = key_descr;
    text_ptr[2].text = textdescription_;
    text_ptr[2].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_create[20] = "Creation Time";
+   char key_create[] = "Creation Time";
    text_ptr[3].key = key_create;
    text_ptr[3].text = png_convert_to_rfc1123(png_ptr, &mod_time);
    text_ptr[3].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_software[20] = "Software";
+   char key_software[] = "Software";
    text_ptr[4].key = key_software;
    text_ptr[4].text = textsoftware_;
    text_ptr[4].compression = PNG_TEXT_COMPRESSION_NONE;
