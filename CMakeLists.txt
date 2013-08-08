@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 # Projekt name ################################################################
 #
-project (pngwriter)
+PROJECT(pngwriter)
 
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE PATH
@@ -15,6 +15,10 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 # external library: libPNG (mandatory)
 FIND_PACKAGE(PNG REQUIRED)
 INCLUDE_DIRECTORIES(${PNG_INCLUDE_PATH})
+
+# external library: zlib (mandatory)
+FIND_PACKAGE(ZLIB REQUIRED)
+INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIRS})
 
 # external library: FreeType (optional)
 INCLUDE(FindFreetype)
@@ -36,29 +40,28 @@ INCLUDE_DIRECTORIES(${LIBRARY_INCLUDES})
 
 # build shared library
 ADD_LIBRARY(pngwriter SHARED ${LIBRARY_SOURCES})
-TARGET_LINK_LIBRARIES(pngwriter z png ${FREETYPE_LIBRARIES})
-set_target_properties(pngwriter PROPERTIES COMPILE_FLAGS ${FREETYPE_FLAGS})
+TARGET_LINK_LIBRARIES(pngwriter ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
+SET_TARGET_PROPERTIES(pngwriter PROPERTIES COMPILE_FLAGS ${FREETYPE_FLAGS})
 
 # build static library
 ADD_LIBRARY(pngwriter_static STATIC ${LIBRARY_SOURCES})
 SET_TARGET_PROPERTIES(pngwriter_static PROPERTIES OUTPUT_NAME pngwriter)
-TARGET_LINK_LIBRARIES(pngwriter_static z png ${FREETYPE_LIBRARIES})
-set_target_properties(pngwriter_static PROPERTIES COMPILE_FLAGS ${FREETYPE_FLAGS})
+TARGET_LINK_LIBRARIES(pngwriter_static ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
+SET_TARGET_PROPERTIES(pngwriter_static PROPERTIES COMPILE_FLAGS ${FREETYPE_FLAGS})
 
 # build examples
 SET(EXAMPLES_LIBS pngwriter_static ${FREETYPE_LIBRARIES})
-file(GLOB EXAMPLES_SOURCES ${EXAMPLES_SOURCES}/*.cc)
+FILE(GLOB EXAMPLES_SOURCES ${EXAMPLES_SOURCES}/*.cc)
 
-foreach(EXAMPLEFILE ${EXAMPLES_SOURCES})
+FOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
     GET_FILENAME_COMPONENT(examplename ${EXAMPLEFILE} NAME)
-    string(REPLACE ".cc" "" examplename ${examplename})
+    STRING(REPLACE ".cc" "" examplename ${examplename})
     SET(EXAMPLES_NAMES ${EXAMPLES_NAMES} ${examplename})
-    MESSAGE("Found example: " ${examplename} " (" ${EXAMPLEFILE} ")")
+    #MESSAGE("Found example: " ${examplename} " (" ${EXAMPLEFILE} ")")
 
     ADD_EXECUTABLE(${examplename} ${EXAMPLEFILE})
-    set_target_properties(${examplename} PROPERTIES COMPILE_FLAGS ${FREETYPE_FLAGS})
     TARGET_LINK_LIBRARIES(${examplename} ${EXAMPLES_LIBS})
-endforeach(EXAMPLEFILE ${EXAMPLES_SOURCES})
+ENDFOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
 
 # Installation ################################################################
 #
@@ -70,9 +73,10 @@ INSTALL(TARGETS pngwriter_static ARCHIVE DESTINATION lib)
 #    INSTALL(TARGETS ${EXAMPLENAME} RUNTIME DESTINATION bin)
 #endforeach(EXAMPLENAME ${EXAMPLES_NAMES})
 
-# to do: add pngwriter.h in include/
+# add pngwriter.h in include/
 #
+INSTALL(FILES ${LIBRARY_INCLUDES}/pngwriter.h DESTINATION include)
 
-# to do: install fonts, too?
+# to do: install fonts, to shared/... too?
 #
 
