@@ -7,7 +7,10 @@ PROJECT(pngwriter)
 IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE PATH
         "install prefix" FORCE)
-ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT) 
+ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
+#set helper pathes to find libraries and packages
+set(CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu/")
 
 
 # Dependencies ################################################################
