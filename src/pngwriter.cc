@@ -4334,7 +4334,7 @@ void pngwriter::drawtop(long x1,long y1,long x2,long y2,long x3, int red, int gr
    long cl=((x2-x1)*256)/(y2-y1);
    long cr=((x3-x1)*256)/(y2-y1);
 
-   for(int y=y1; y<y2; y++)
+   for(int y=y1; y<=y2; y++)
      {
 	this->line(posl/256, y, posr/256, y, red, green, blue);
 	posl+=cl;
@@ -4361,7 +4361,7 @@ void pngwriter::drawbottom(long x1,long y1,long x2,long x3,long y3, int red, int
    long cl=((x3-x1)*256)/(y3-y1);
    long cr=((x3-x2)*256)/(y3-y1);
 
-   for(int y=y1; y<y3; y++)
+   for(int y=y1; y<=y3; y++)
      {
 	this->line(posl/256, y, posr/256, y, red, green, blue);
 
