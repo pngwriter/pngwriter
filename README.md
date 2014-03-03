@@ -34,4 +34,4 @@ Please see the original [README](README) files.
 - `examples/pngtest.cc:48` and `examples/pngtest.espaniol.cc:47` fix `#include <iostream>`
 - build the *static* archive **and** a *shared* library
 - fixed compiler warnings for keys in `pngwriter.cc`
-- fixed `filleddiamond()` bug reported in Debian #633405
+- fixed `filleddiamond()` bug reported in [Debian #633405](http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=633405)
