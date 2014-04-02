@@ -42,7 +42,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
 
 # find PNGwriter installation
 #   optional: prefer static libraries over shared ones (but do not force them)
-set(PNGwriter_USE_STATIC_LIBS ON)
+#set(PNGwriter_USE_STATIC_LIBS ON)
 
 #   optional: specifiy (minimal) version / require to find it
 #           (PNGwriter 0.5.4 REQUIRED)
