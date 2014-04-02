@@ -71,6 +71,7 @@ Please see the original [README](README) files.
 ### Changes
 
 - `CMakeLists.txt`: replace that out-dated make.include stuff
+- `FindPNGwriter.cmake`: CMake `find_package` module, [see above](#linking-to-your-project)
 - `examples/pngtest.cc:48` and `examples/pngtest.espaniol.cc:47` fix `#include <iostream>`
 - build the *static* archive **and** a *shared* library
 - fixed compiler warnings for keys in `pngwriter.cc`
