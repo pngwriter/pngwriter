@@ -76,3 +76,5 @@ Please see the original [README](README) files.
 - build the *static* archive **and** a *shared* library
 - fixed compiler warnings for keys in `pngwriter.cc`
 - fixed `filleddiamond()` bug reported in [Debian #633405](http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=633405)
+- fixed memory leak in `pngwriter::readfromfile` reported
+  [here](http://sourceforge.net/p/pngwriter/discussion/238247/thread/15ee786c/)
