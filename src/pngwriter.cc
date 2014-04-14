@@ -985,6 +985,7 @@ void pngwriter::close()
    time_t          gmt;
    png_time        mod_time;
    png_text        text_ptr[5];
+   int             entries = 4;
    time(&gmt);
    png_convert_from_time_t(&mod_time, gmt);
    png_set_tIME(png_ptr, info_ptr, &mod_time);
@@ -1001,15 +1002,21 @@ void pngwriter::close()
    text_ptr[2].key = key_descr;
    text_ptr[2].text = textdescription_;
    text_ptr[2].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_create[] = "Creation Time";
-   text_ptr[3].key = key_create;
-   text_ptr[3].text = png_convert_to_rfc1123(png_ptr, &mod_time);
-   text_ptr[3].compression = PNG_TEXT_COMPRESSION_NONE;
    char key_software[] = "Software";
-   text_ptr[4].key = key_software;
-   text_ptr[4].text = textsoftware_;
+   text_ptr[3].key = key_software;
+   text_ptr[3].text = textsoftware_;
+   text_ptr[3].compression = PNG_TEXT_COMPRESSION_NONE;
+#if defined(PNG_TIME_RFC1123_SUPPORTED)
+   char key_create[] = "Creation Time";
+   text_ptr[4].key = key_create;
+   memcpy(text_ptr[4].text,
+          png_convert_to_rfc1123(png_ptr, &mod_time),
+          29);
+   text_ptr[4].text[sizeof(text_ptr[4].text) - 1] = '\0';
    text_ptr[4].compression = PNG_TEXT_COMPRESSION_NONE;
-   png_set_text(png_ptr, info_ptr, text_ptr, 5);
+   entries++;
+#endif
+   png_set_text(png_ptr, info_ptr, text_ptr, entries);
 
    png_write_info(png_ptr, info_ptr);
    png_write_image(png_ptr, graph_);
@@ -1537,7 +1544,11 @@ int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr
 	fclose(fp);
 	return 0;
      }
+#if (PNG_LIBPNG_VER < 10500)
    if (setjmp((*png_ptr)->jmpbuf)) /*(setjmp(png_jmpbuf(*png_ptr)) )*//////////////////////////////////////
+#else
+   if (png_longjmp(png_ptr,1) )
+#endif
      {
 	png_destroy_read_struct(png_ptr, info_ptr, (png_infopp)NULL);
 	std::cerr << " PNGwriter::read_png_info - ERROR **: This file may be a corrupted PNG file. (setjmp(*png_ptr)->jmpbf) failed)." << std::endl;
