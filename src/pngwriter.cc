@@ -1211,7 +1211,7 @@ void pngwriter::readfromfile(char * name)
    png_structp     png_ptr;
    png_infop       info_ptr;
    unsigned char   **image;
-   unsigned long   width, height;
+   png_uint_32     width, height;
    int bit_depth, color_type, interlace_type;
    //   png_uint_32     i;
    //
