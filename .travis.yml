@@ -23,9 +23,11 @@ script:
 before_script:
   - uname -r
   - lsb_release -a
-# just overwrite the existing
+# kick without checking dependencies
+  - sudo dpkg -r --force-depends libpng12-dev
+  - sudo dpkg -r --force-depends libpng12-0
+  - sudo rm -rf /usr/include/libpng12 /urs/include/png*.h /usr/lib/x86_64-linux-gnu/libpng*
 #  - sudo apt-get remove -qq libpng12-0 libpng12-0:i386
-#  - sudo apt-get install -qq xz-utils
   - sudo dpkg --get-selections
   - wget "$LIBPNG_DOWNLOAD$LIBPNG_VERSION.tar.xz"
   - tar -xJf libpng-$LIBPNG_VERSION.tar.xz
@@ -34,4 +36,5 @@ before_script:
   - ./configure --prefix=/usr
   - make
   - sudo make install
+  - sudo find /usr/lib -name 'libpng*'
   - mkdir -p $BUILD

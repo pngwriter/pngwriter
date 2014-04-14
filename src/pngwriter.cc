@@ -1547,7 +1547,7 @@ int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr
 #if (PNG_LIBPNG_VER < 10500)
    if (setjmp((*png_ptr)->jmpbuf)) /*(setjmp(png_jmpbuf(*png_ptr)) )*//////////////////////////////////////
 #else
-   if (png_longjmp(png_ptr,1) )
+   if (setjmp(png_jmpbuf(*png_ptr)))
 #endif
      {
 	png_destroy_read_struct(png_ptr, info_ptr, (png_infopp)NULL);
