@@ -10,6 +10,11 @@ bugs / flaws, this fork tries to make our lives nicer (wuhu).
 
 Hopefully, the changes will be merged back :)
 
+### Build Status
+
+[![Build Status Master](https://travis-ci.org/ax3l/pngwriter.png?branch=master)]
+(https://travis-ci.org/ax3l/pngwriter "master")
+
 ### Install
 
 - `git clone https://github.com/ax3l/pngwriter.git`
