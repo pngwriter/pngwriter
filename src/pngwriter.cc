@@ -4325,6 +4325,11 @@ void pngwriter::laplacian(double k, double offset)
 // ( <gurkan@linuks.mine.nu>, http://www.linuks.mine.nu/ )
 void pngwriter::drawtop(long x1,long y1,long x2,long y2,long x3, int red, int green, int blue)
 {
+   // avoid division by zero
+   long dy = 1;
+   if(y2!=y1)
+     dy=y2-y1;
+
    // This swaps x2 and x3
    // if(x2>x3) x2^=x3^=x2^=x3;
    if(x2>x3)
@@ -4337,8 +4342,8 @@ void pngwriter::drawtop(long x1,long y1,long x2,long y2,long x3, int red, int gr
    long posl = x1*256;
    long posr = posl;
 
-   long cl=((x2-x1)*256)/(y2-y1);
-   long cr=((x3-x1)*256)/(y2-y1);
+   long cl=((x2-x1)*256)/dy;
+   long cr=((x3-x1)*256)/dy;
 
    for(int y=y1; y<=y2; y++)
      {
