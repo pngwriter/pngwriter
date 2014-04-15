@@ -1748,7 +1748,7 @@ void pngwriter::RGBtoHSV( float r, float g, float b, float *h, float *s, float *
    else
      {
 
-	r = g = b = 0;                // s = 0, v is undefined
+	// s = 0, v is undefined
 	*s = 0;
 	*h = -1;
 	return;
@@ -3361,12 +3361,6 @@ void pngwriter::scale_wh(int finalwidth, int finalheight)
      {
 	std::cerr << " PNGwriter::scale_wh - ERROR **: Negative or zero final width or height not allowed." << std::endl;
      }
-
-   double kx;
-   double ky;
-
-   kx = ((double)finalwidth)/((double)width_);
-   ky = ((double)finalheight)/((double)height_);
 
    pngwriter temp(finalwidth, finalheight, 0, "temp");
 
