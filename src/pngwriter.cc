@@ -667,9 +667,9 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 	  {
 	     //	     graph_[height_-y][3*(x-1) + i] where i goes from 0 to 2
 	     tempindex = 3*x-3;
-	     graph_[height_-y][tempindex] = (char)(floor(((double)red)/257.0));
-	     graph_[height_-y][tempindex+1] = (char)(floor(((double)green)/257.0));
-	     graph_[height_-y][tempindex+2] = (char)(floor(((double)blue)/257.0));
+	     graph_[height_-y][tempindex] = (char)(floor(((double)red)/256.0));
+	     graph_[height_-y][tempindex+1] = (char)(floor(((double)green)/256.0));
+	     graph_[height_-y][tempindex+2] = (char)(floor(((double)blue)/256.0));
 
 	  };
 
@@ -802,12 +802,18 @@ int pngwriter::read(int xxx, int yyy)
 /////////////////////////////////////////////////////
 double  pngwriter::dread(int x, int y, int colour)
 {
-   return double(this->read(x,y,colour))/65535.0;
+   if(bit_depth_ == 8)
+     return double(this->read(x,y,colour))/255.0;
+   else
+     return double(this->read(x,y,colour))/65535.0;
 }
 
 double  pngwriter::dread(int x, int y)
 {
-   return double(this->read(x,y))/65535.0;
+   if(bit_depth_ == 8)
+     return double(this->read(x,y))/255.0;
+   else
+     return double(this->read(x,y))/65535.0;
 }
 
 ///////////////////////////////////////////////////////
