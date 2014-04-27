@@ -1009,10 +1009,13 @@ void pngwriter::close()
 #if defined(PNG_TIME_RFC1123_SUPPORTED)
    char key_create[] = "Creation Time";
    text_ptr[4].key = key_create;
-   memcpy(text_ptr[4].text,
+   char textcrtime[29] = "tIME chunk is not present...";
+   textcrtime[28] = '\0';
+   memcpy(textcrtime,
           png_convert_to_rfc1123(png_ptr, &mod_time),
           29);
-   text_ptr[4].text[sizeof(text_ptr[4].text) - 1] = '\0';
+   textcrtime[sizeof(text_ptr[4].text) - 1] = '\0';
+   text_ptr[4].text = textcrtime;
    text_ptr[4].compression = PNG_TEXT_COMPRESSION_NONE;
    entries++;
 #endif
@@ -1475,6 +1478,7 @@ aliases
    else
      {
 	png_set_gamma(png_ptr, screen_gamma,0.45);
+        file_gamma=0.45;
      }
 
    filegamma_ = file_gamma;
