@@ -1,21 +1,24 @@
 //**********  pngwriter.cc   **********************************************
 //  Author:                    Paul Blackburn
+//                             Axel Huebl https://github.com/ax3l
 //
 //  Email:                     individual61@users.sourceforge.net
 //
-//  Version:                   0.5.4   (19 / II / 2009)
+//  Version:                   0.5.5 (May 2014)
 //
 //  Description:               Library that allows plotting a 48 bit
 //                             PNG image pixel by pixel, which can
 //                             then be opened with a graphics program.
 //
 //  License:                   GNU General Public License
-//                             Copyright 2002, 2003, 2004, 2005, 2006, 2007, 
+//                             Copyright 2002, 2003, 2004, 2005, 2006, 2007,
 //                             2008, 2009 Paul Blackburn
+//                             Copyright 2013, 2014 Axel Huebl
 //
 //  Website: Main:             http://pngwriter.sourceforge.net/
 //           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
 //           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+//           GitHub.com:       https://github.com/ax3l/pngwriter
 //
 //  Documentation:             The header file (pngwriter.h) is commented, but for a
 //                             quick reference document, and support,
@@ -36,7 +39,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program; if not, write to the Free Software
- *     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * */
 

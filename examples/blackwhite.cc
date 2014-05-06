@@ -1,4 +1,8 @@
-/** Example and bug report from Felix Schmitt
+/** Copyright 2014 Felix Schmitt, Axel Huebl
+  *
+  * Example and bug report from Felix Schmitt
+  *
+  * License: GPLv2+
   *
   * https://github.com/ax3l/pngwriter/issues/13
   */

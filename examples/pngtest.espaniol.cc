@@ -1,11 +1,12 @@
 //**********  pngtest.cc   **********************************************
 //  Autor:                     Paul Blackburn
+//                             Axel Huebl https://github.com/ax3l
 //
 //  Email:                     individual61@users.sourceforge.net
 //
-//  Version:                   0.5.4   (19 / II/ 2009)
+//  Version:                   0.5.5 (May 2014)
 //
-//  Descripcion:               Programa de prueba y ejemplo para PNGwriter,
+//  Descripcion:               Programa de prueba y ejemplo para PNGwriter
 //                             una libreria de C++ que permite plotear una imagen PNG
 //                             de 16 bit pixel por pixel, que luego puede
 //                             ser abierta por un programa de graficos.
@@ -13,10 +14,12 @@
 //  Licencia:                   GNU General Public License
 //                             Copyright 2002, 2003, 2004, 2005, 2006, 2007,
 //                             2008, 2009 Paul Blackburn
+//                             Copyright 2013, 2014 Axel Huebl
 //
 //  Website: Principal:        http://pngwriter.sourceforge.net/
 //           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
 //           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+//           GitHub.com:       https://github.com/ax3l/pngwriter
 //
 //  Documentacion:             El archivo header tiene comentarios,
 //                             pero para obtener un documento de referencia
@@ -41,7 +44,7 @@
  * 675 Mass Ave, Cambridge, MA 02139, EEUU.
  * ######################################################################
  * */
-  
+
 #include "../src/pngwriter.h"
 #include <math.h>
 #include <iostream>

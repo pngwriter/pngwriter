@@ -4,12 +4,13 @@
 #       Website: Main:             http://pngwriter.sourceforge.net/
 #                Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
 #                Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+#                GitHub.com:       https://github.com/ax3l/pngwriter
 #  
 #       Author:                    Paul Blackburn
 #
 #       Email:                     individual61@users.sourceforge.net
 #
-#       Version:                   0.5.4   (19 / II / 2009)
+#       Version:                   0.5.5 (May 2014)
 #
 #       Description:               Library that allows plotting a 48 bit
 #                                  PNG image pixel by pixel, which can 

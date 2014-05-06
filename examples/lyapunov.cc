@@ -1,23 +1,26 @@
 //**********  lyapunov.cc   **********************************************
 //  Author:                    Paul Blackburn
+//                             Axel Huebl https://github.com/ax3l
 //
 //  Email:                     individual61@users.sourceforge.net
 //
-//  Version:                   0.5.4   (19 / I / 2009)
+//  Version:                   0.5.5 (May 2014)
 //
 //  Description:               Test and example for PNGwriter,
 //                             a C++ library that enables plotting to a
 //                             PNG image pixel by pixel, which can 
 //                             then be opened with a graphics program.
-//  
+//
 //  License:                   GNU General Public License
 //                             Copyright 2002, 2003, 2004, 2005, 2006, 2007, 
 //                             2008, 2009 Paul Blackburn
-//                             
+//                             Copyright 2013, 2014 Axel Huebl
+//
 //  Website: Main:             http://pngwriter.sourceforge.net/
 //           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
 //           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
-//           
+//           GitHub.com:       https://github.com/ax3l/pngwriter
+//
 //  Documentation:             The PNGwriter header file is commented, but for a
 //                             quick reference document, and support,
 //                             take a look at the website.
@@ -30,16 +33,16 @@
   modify it under the terms of the GNU General Public License as
   published by the Free Software Foundation; either version 2 of
   the License, or (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be
-  useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
   of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-      
-  You should have received a copy of the GNU General Public
-  License along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-  02111-1307  USA
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 ######################################################################
 */
 
