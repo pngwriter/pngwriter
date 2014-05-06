@@ -16,7 +16,7 @@ Not done yet :)
 
 This release is a mainly a bug fix release.
 All closed issues can be found at
-  https://github.com/ax3l/pngwriter/issues?milestone=1&state=closed
+  [Milestone 0.5.5](https://github.com/ax3l/pngwriter/issues?milestone=1&state=closed)
 
 ### Changes to 0.5.4
 
@@ -24,7 +24,7 @@ All closed issues can be found at
   - support for libpng 1.4, 1.5 and 1.6 #10 #11
     (thanks to Daniel Hornung http://sourceforge.net/p/pngwriter/bugs/1 for the 1.4 patch)
   - added alternative cmake based install via `CMakeLists.txt`
-  - build the *static* archive **and** a *shared* library
+  - cmake: build the *static* archive **and** a *shared* library
 
 **Bug Fixes:**
   - `examples/pngtest.cc:48` and `examples/pngtest.espaniol.cc:47` fix `#include <iostream>`

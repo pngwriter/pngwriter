@@ -14,11 +14,9 @@ We (@ax3l and @individual61) are right now preparing a bug fix release
 
 ### Build Status
 
-[![Build Status Master](https://travis-ci.org/ax3l/pngwriter.png?branch=master)]
-(https://travis-ci.org/ax3l/pngwriter "master")
-
-[![Build Status 0.5.5 Release Branch](https://travis-ci.org/ax3l/pngwriter.png?branch=release-0.5.5)]
-(https://travis-ci.org/ax3l/pngwriter "0.5.5 release branch")
+| master branch | 0.5.5 release branch |
+|:-------------:|:--------------------:|
+| [![Build Status Master](https://travis-ci.org/ax3l/pngwriter.png?branch=master)](https://travis-ci.org/ax3l/pngwriter "master") | [![Build Status 0.5.5 Release Branch](https://travis-ci.org/ax3l/pngwriter.png?branch=release-0.5.5)](https://travis-ci.org/ax3l/pngwriter "0.5.5 release branch") |
 
 ### Install
 
