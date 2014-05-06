@@ -9,7 +9,7 @@ IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         "install prefix" FORCE)
 ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
-#set helper pathes to find libraries and packages
+# set helper pathes to find libraries and packages on some 64bit machines
 set(CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu/")
 
 
@@ -81,4 +81,3 @@ INSTALL(FILES ${LIBRARY_INCLUDES}/pngwriter.h DESTINATION include)
 
 # to do: install fonts, to shared/... too?
 #
-

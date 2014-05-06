@@ -8,12 +8,17 @@ repository, Version **0.5.4**.
 Since PNGwriter did not change since 2009 but contains minor
 bugs / flaws, this fork tries to make our lives nicer (wuhu).
 
-Hopefully, the changes will be merged back :)
+~~Hopefully, the changes will be merged back :)~~
+We (@ax3l and @individual61) are right now preparing a bug fix release
+0.5.5 - stay tuned!
 
 ### Build Status
 
 [![Build Status Master](https://travis-ci.org/ax3l/pngwriter.png?branch=master)]
 (https://travis-ci.org/ax3l/pngwriter "master")
+
+[![Build Status 0.5.5 Release Branch](https://travis-ci.org/ax3l/pngwriter.png?branch=release-0.5.5)]
+(https://travis-ci.org/ax3l/pngwriter "0.5.5 release branch")
 
 ### Install
 
@@ -69,17 +74,10 @@ endif(PNGwriter_FOUND)
 
 ### License
 
-*Paul Blackburn* (kudos!) released this piece of software under **GPLv2+**.
+*Paul Blackburn* (kudos!) released this software under **GPLv2+**.
 
 Please see the original [README](README) files.
 
 ### Changes
 
-- `CMakeLists.txt`: replace that out-dated make.include stuff
-- `FindPNGwriter.cmake`: CMake `find_package` module, [see above](#linking-to-your-project)
-- `examples/pngtest.cc:48` and `examples/pngtest.espaniol.cc:47` fix `#include <iostream>`
-- build the *static* archive **and** a *shared* library
-- fixed compiler warnings for keys in `pngwriter.cc`
-- fixed `filleddiamond()` bug reported in [Debian #633405](http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=633405)
-- fixed memory leak in `pngwriter::readfromfile` reported
-  [here](http://sourceforge.net/p/pngwriter/discussion/238247/thread/15ee786c/)
+See the [CHANGELOG.md](CHANGELOG.md).
