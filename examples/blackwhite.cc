@@ -34,7 +34,7 @@ int main(int argc, char **argv)
             int pos_x = 1 + x;
             int pos_y = height - y - 1;
 
-            double color = image.dread(pos_x, pos_y);
+            double color = image.dread(pos_x, pos_y,3);
             //std::cout << "dread val = " << color << std::endl;
             if (color == 0.0)
                 black = true;
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
             if (color == 1.0)
                 white = true;
 
-            int col = image.read(pos_x, pos_y);
+            int col = image.read(pos_x, pos_y,3);
             //std::cout << "read val = " << col << std::endl;
             if (col == 0)
                 black_int = true;
