@@ -146,6 +146,8 @@ class pngwriter
    void drawbottom_blend(long x1,long y1,long x2,long x3,long y3, double opacity, int red, int green, int blue);
    void drawtop_blend(long x1,long y1,long x2,long y2,long x3, double opacity, int red, int green, int blue);
    
+   /* free up memory of member variables and reset internal pointers to NULL */
+   void deleteMembers();
  public:
 
    /* General Notes

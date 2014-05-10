@@ -351,18 +351,51 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 
 };
 
+void pngwriter::deleteMembers()
+{
+   if( filename_ )
+   {
+     delete [] filename_;
+     filename_ = NULL;
+   }
+   if( textauthor_ )
+   {
+     delete [] textauthor_;
+     textauthor_ = NULL;
+   }
+   if( textdescription_ )
+   {
+      delete [] textdescription_;
+      textdescription_ = NULL;
+   }
+   if( texttitle_ )
+   {
+      delete [] texttitle_;
+      texttitle_ = NULL;
+   }
+   if( textsoftware_ )
+   {
+      delete [] textsoftware_;
+      textsoftware_ = NULL;
+   }
+
+   for (int jjj = 0; jjj < height_; jjj++)
+   {
+      free(graph_[jjj]);
+      graph_[jjj] = NULL;
+   }
+   if( graph_ )
+   {
+      free(graph_);
+      graph_ = NULL;
+   }
+}
+
 //Destructor
 ///////////////////////////////////////
 pngwriter::~pngwriter()
 {
-   delete [] filename_;
-   delete [] textauthor_;
-   delete [] textdescription_;
-   delete [] texttitle_;
-   delete [] textsoftware_;
-
-   for (int jjj = 0; jjj < height_; jjj++) free(graph_[jjj]);
-   free(graph_);
+   deleteMembers();
 };
 
 //Constructor for int levels, const char * filename
@@ -542,9 +575,10 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
 pngwriter & pngwriter::operator = (const pngwriter & rhs)
 {
    if( this==&rhs)
-     {
-	return *this;
-     }
+      return *this;
+
+   // free old allocations from member variables
+   deleteMembers();
 
    width_ = rhs.width_;
    height_ = rhs.height_;
