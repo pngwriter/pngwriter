@@ -4645,15 +4645,10 @@ void pngwriter::triangle(int x1, int y1, int x2, int y2, int x3, int y3, int red
 
 void pngwriter::triangle(int x1, int y1, int x2, int y2, int x3, int y3, double red, double green, double blue)
 {
-   
-   this->line(x1, y1, x2, y2, ((int)65535*red), ((int)65535*green), ((int)65535*blue));
-   this->line(x2, y2, x3, y3, ((int)65535*red), ((int)65535*green), ((int)65535*blue));
-   this->line(x3, y3, x1, y1, ((int)65535*red), ((int)65535*green), ((int)65535*blue));
-   
+   this->line(x1, y1, x2, y2, int(65535*red), int(65535*green), int(65535*blue));
+   this->line(x2, y2, x3, y3, int(65535*red), int(65535*green), int(65535*blue));
+   this->line(x3, y3, x1, y1, int(65535*red), int(65535*green), int(65535*blue));
 }
-
-
-
 
 
 void pngwriter::arrow( int x1,int y1,int x2,int y2,int size, double head_angle, double red, double green, double blue)
