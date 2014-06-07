@@ -1,5 +1,6 @@
 Change Log for PNGwriter
 ========================
+**Note**: Changes to PNGwriter prior to version 0.5.4 can be found in the doc/english/CHANGES file.
 
 0.6.0
 -----
