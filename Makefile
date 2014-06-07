@@ -1,52 +1,38 @@
-############ MAKEFILE FOR PNGWRITER ######################################
+########################## PNGwriter #########################################
+#
+#   Website: Main:             http://pngwriter.sourceforge.net/
+#            GitHub.com:       https://github.com/ax3l/pngwriter
+#            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+#            Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
 #
 #
-#       Website: Main:             http://pngwriter.sourceforge.net/
-#                Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-#                Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
-#                GitHub.com:       https://github.com/ax3l/pngwriter
-#  
-#       Author:                    Paul Blackburn
-#                                  Axel Huebl https://github.com/ax3l
+#    Author:                    Paul Blackburn https://github.com/individual61
+#                               Axel Huebl https://github.com/ax3l
 #
-#       Email:                     individual61@users.sourceforge.net
+#    Email:                     individual61@users.sourceforge.net
+#                               axel@users.github.com
 #
-#       Version:                   0.5.5 (May 2014)
+#    Version:                   0.5.5 (June 2014)
 #
-#       Description:               Library that allows plotting a 48 bit
-#                                  PNG image pixel by pixel, which can 
-#                                  then be opened with a graphics program.
-#  
-#       License:                   GNU General Public License
-#                                  Copyright 2002, 2003, 2004, 2005, 2006,
-#                                  2007, 2008, 2009 Paul Blackburn
-#                                  Copyright 2013, 2014 Axel Huebl
-# 
+#    Description:               Library that allows plotting a 48 bit
+#                               PNG image pixel by pixel, which can
+#                               then be opened with a graphics program.
+#
+#    License:                   GNU General Public License
+#                               (C) 2002-2014 Paul Blackburn
+#                               (C) 2013-2014 Axel Huebl
+#
 ##############################################################################
 
-################# IMPORTANT - IMPORTANTE #####################################
+################# IMPORTANT ##################################################
 #
 # Please read the README file for instructions on compilation options.
 #
-# Por favor lee el archivo LEAME en doc/espaniol/  para conocer las 
-# opciones de compilacion.
-#
 ##############################################################################
 
-#   ENGLISH
 # Default installation is for a Linux/UNIX type system. 
 # Makefile options for Mac OS X (with Fink-installed libpng) 
 # are also available. See the README.
-
-#   CASTELLANO/ESPANIOL
-# La instalacion normal es para un sistema tipo Linux/UNIX
-# Existen opciones del Makefile para Mac OS X con libpng y FreeType2 instalado
-# via Fink. Vea el LEAME.
-
-
-
-
-
 
 
 
@@ -90,11 +76,6 @@ intro	:
 	@ echo "#  Important: If you do not have FreeType2 installed, "
 	@ echo "#  see the README for instructions on compiling PNGwriter"
 	@ echo "#  without FreeType2 support."
-	@ echo "#"
-	@ echo "#  Importante: Si no tienes FreeType2 instalado,"
-	@ echo "#  lee el archivo LEAME en doc/espaniol para "
-	@ echo "#  instrucciones acerca de como compilar PNGwriter"
-	@ echo "#  sin soporte para FreeType2. "
 	@ echo "#"	
 	@ echo "#  You have selected to compile PNGwriter $(FT_REPORT)"
 	@ echo "#  FreeType2 support."
@@ -106,7 +87,7 @@ install:  docs
 	@ echo "#"
 	@ echo "#"
 	@ echo "#  PNGwriter $(VERSION)"
-	@ echo "#  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Paul Blackburn"
+	@ echo "#  Copyright 2002-2014 Paul Blackburn, 2013-2014 Axel Huebl"
 	@ echo "#  http://pngwriter.sourceforge.net/"
 	@ echo "#  This library and its associated files are covered"
 	@ echo "#  by the GNU General Public License."
@@ -167,62 +148,36 @@ docs	:
 	rm README.bak
 #
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  libpngwriter.a:# -  libpngwriter.a: $(PREFIX)/lib/#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  libpngwriter.a:# -  libpngwriter.a: $(PREFIX)/lib/#g' > doc/README
 	
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  pngwriter.h:# -  pngwriter.h: $(PREFIX)/include/#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  pngwriter.h:# -  pngwriter.h: $(PREFIX)/include/#g' > doc/README
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  documentation:# -  documentation: $(PREFIX)/share/doc/pngwriter/#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  documentation:# -  documentation: $(PREFIX)/share/doc/pngwriter/#g' > doc/README
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  examples:# -  examples: $(PREFIX)/share/doc/pngwriter/#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  examples:# -  examples: $(PREFIX)/share/doc/pngwriter/#g' > doc/README
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  fonts:# -  fonts: $(PREFIX)/share/pngwriter/fonts/#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  fonts:# -  fonts: $(PREFIX)/share/pngwriter/fonts/#g' > doc/README
 
-	rm doc/english/README.bak
+	rm doc/README.bak
 #
 
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  libpngwriter.a:# -  libpngwriter.a: $(PREFIX)/lib/#g' > doc/espaniol/LEAME
-	
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  pngwriter.h:# -  pngwriter.h: $(PREFIX)/include/#g' > doc/espaniol/LEAME
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  documentacion:# -  documentacion: $(PREFIX)/share/doc/pngwriter/#g' > doc/espaniol/LEAME
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  ejemplos:# -  ejemplos: $(PREFIX)/share/doc/pngwriter/#g' > doc/espaniol/LEAME
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  fonts:# -  fonts: $(PREFIX)/share/pngwriter/fonts/#g' > doc/espaniol/LEAME
-
-	rm doc/espaniol/LEAME.bak
-
-
-
-	rm -f READMEe doc/english/READMEe doc/espaniol/LEAMEe
+	rm -f READMEe doc/READMEe
 
 
 clean	:    
 	cd src; make clean
 	cd examples; make clean
-	cd doc/english; rm -f CHANGES~ README~ LICENSE~ EXAMPLES~ .DS_Store
-	cd doc/espaniol; rm -f CAMBIOS~ LEAME~ LICENCIA~ EJEMPLOS~ .DS_Store
+	cd doc/; rm -f CHANGES~ README~ LICENSE~ EXAMPLES~ .DS_Store
 	rm -f README~ Makefile~ make.include.linux~ make.include.osx~ .DS_Store
 	rm -f make.include.linux.oldcpp~ make.include.osx_test~ doc/.DS_Store
 
@@ -251,55 +206,31 @@ clean	:
 
 	rm README.bak
 
-#
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  libpngwriter.a: $(PREFIX)/lib/# -  libpngwriter.a:#g' > doc/espaniol/LEAME
-	
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  pngwriter.h: $(PREFIX)/include/# -  pngwriter.h:#g' > doc/espaniol/LEAME
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  documentacion: $(PREFIX)/share/doc/pngwriter/# -  documentacion:#g' > doc/espaniol/LEAME
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  ejemplos: $(PREFIX)/share/doc/pngwriter/# -  ejemplos:#g' > doc/espaniol/LEAME
-
-	cp doc/espaniol/LEAME doc/espaniol/LEAME.bak
-	cat doc/espaniol/LEAME.bak | \
-	sed   's# -  fonts: $(PREFIX)/share/pngwriter/fonts/# -  fonts:#g' > doc/espaniol/LEAME
-
-	rm doc/espaniol/LEAME.bak
-
 
 #
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  libpngwriter.a: $(PREFIX)/lib/# -  libpngwriter.a:#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  libpngwriter.a: $(PREFIX)/lib/# -  libpngwriter.a:#g' > doc/README
 	
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  pngwriter.h: $(PREFIX)/include/# -  pngwriter.h:#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  pngwriter.h: $(PREFIX)/include/# -  pngwriter.h:#g' > doc/README
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  documentation: $(PREFIX)/share/doc/pngwriter/# -  documentation:#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  documentation: $(PREFIX)/share/doc/pngwriter/# -  documentation:#g' > doc/README
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  examples: $(PREFIX)/share/doc/pngwriter/# -  examples:#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  examples: $(PREFIX)/share/doc/pngwriter/# -  examples:#g' > doc/README
 
-	cp doc/english/README doc/english/README.bak
-	cat doc/english/README.bak | \
-	sed   's# -  fonts: $(PREFIX)/share/pngwriter/fonts/# -  fonts:#g' > doc/english/README
+	cp doc/README doc/README.bak
+	cat doc/README.bak | \
+	sed   's# -  fonts: $(PREFIX)/share/pngwriter/fonts/# -  fonts:#g' > doc/README
 
-	rm doc/english/README.bak
+	rm doc/README.bak
 
 
-	rm -f READMEe doc/english/READMEe doc/espaniol/LEAMEe
+	rm -f READMEe doc/READMEe
 	
