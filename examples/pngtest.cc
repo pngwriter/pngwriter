@@ -1,31 +1,28 @@
-//**********  pngtest.cc   **********************************************
-//  Author:                    Paul Blackburn
-//                             Axel Huebl https://github.com/ax3l
-//
-//  Email:                     individual61@users.sourceforge.net
-//
-//  Version:                   0.5.5 (May 2014)
-//
-//  Description:               Test and example for PNGwriter,
-//                             a C++ library that enables plotting to a
-//                             PNG image pixel by pixel, which can 
-//                             then be opened with a graphics program.
-//
-//  License:                   GNU General Public License
-//                             Copyright 2002, 2003, 2004, 2005, 2006, 2007,
-//                             2008, 2009 Paul Blackburn
-//                             Copyright 2013, 2014 Axel Huebl
-//
-//  Website: Main:             http://pngwriter.sourceforge.net/
-//           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-//           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
-//           GitHub.com:       https://github.com/ax3l/pngwriter
-//
-//  Documentation:             The PNGwriter header file is commented, but for a
-//                             quick reference document, and support,
-//                             take a look at the website.
-//
-//*************************************************************************
+//########################## pngtest.cc #########################################
+//#
+//#   Website: Main:             http://pngwriter.sourceforge.net/
+//#            GitHub.com:       https://github.com/ax3l/pngwriter
+//#            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+//#            Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+//#
+//#
+//#    Author:                    Paul Blackburn https://github.com/individual61
+//#                               Axel Huebl https://github.com/ax3l
+//#
+//#    Email:                     individual61@users.sourceforge.net
+//#                               axel@users.github.com
+//#
+//#    Version:                   0.5.5 (June 2014)
+//#
+//#    Description:               Library that allows plotting a 48 bit
+//#                               PNG image pixel by pixel, which can
+//#                               then be opened with a graphics program.
+//#
+//#    License:                   GNU General Public License
+//#                               (C) 2002-2014 Paul Blackburn
+//#                               (C) 2013-2014 Axel Huebl
+//#
+//##############################################################################
 
 /*
  * ######################################################################
@@ -207,15 +204,15 @@ int main()
    
    /* getwidth() and getheight()
     * We may not know the size of the image we just read in. 
-    * We find it out like this:
+    * We find out like this:
     * */
    int burrowidth = burro.getwidth();
    int burroheight = burro.getheight();
   
    
    std::cout << "The image that has just been read from disk (burro.png) is " << burro.getheight();
-   std::cout << " pixels high and " << burro.getwidth()<<" pixels wide."<<std::endl;
-   std::cout << "Bit depth is " << burro.getbitdepth()<<std::endl;
+   std::cout << " pixels high and " << burro.getwidth()<< " pixels wide." << std::endl;
+   std::cout << "Bit depth is " << burro.getbitdepth() << std::endl;
    std::cout << "Image gamma is: " << burro.getgamma() << std::endl; 
   
    /* Cover the Donkey
