@@ -10,7 +10,6 @@
 #                               Axel Huebl https://github.com/ax3l
 #
 #    Email:                     individual61@users.sourceforge.net
-#                               axel@users.github.com
 #
 #    Version:                   0.5.5 (June 2014)
 #
@@ -62,7 +61,7 @@ and Windows. Requires libpng and optionally FreeType2 for the text support.
 
 
 REQUIREMENTS
-LibPNG (http://www.libpng.org/) and associated requirements. 
+LibPNG (http://www.libpng.org/) and associated requirements (zlib). 
 PNGwriter requires a properly installed libpng in order to work.
 
 Freetype 2 (http://www.freetype.org)
@@ -253,7 +252,7 @@ In no particular order, thanks to
   concerning readfromfile()
 > Mikkel (mikkel@biosource.dk) for expanding on Sven's code, greatly
   increasing the variety of PNGs that PNGwriter can open.
-> Axel Huebl (ax3l@users.github.com), for instilling the PNGwriter project
+> Axel Huebl (https://github.com/ax3l), for instilling the PNGwriter project
   with new activity after five years. This guy rocks.
 
 Have fun and tell me what you're up to!

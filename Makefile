@@ -10,7 +10,6 @@
 #                               Axel Huebl https://github.com/ax3l
 #
 #    Email:                     individual61@users.sourceforge.net
-#                               axel@users.github.com
 #
 #    Version:                   0.5.5 (June 2014)
 #
@@ -233,4 +232,3 @@ clean	:
 
 
 	rm -f READMEe doc/READMEe
-	

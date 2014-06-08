@@ -10,7 +10,6 @@
 #
 # Alternatively, when compiling, call make with the option P_FREETYPE=1
 
-
 PREFIX=/usr/local
 
 # This is where you enter the location of your ports distribution (for

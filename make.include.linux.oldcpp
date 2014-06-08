@@ -32,4 +32,3 @@ INSTALL=install
 
 
 SELF=make.include.linux.oldcpp
-

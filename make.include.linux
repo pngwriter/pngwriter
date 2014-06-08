@@ -10,7 +10,6 @@
 #
 # Alternatively, when compiling, call make with the option P_FREETYPE=1
 
-
 PREFIX=/usr/local
 
 DESTDIR=
@@ -32,4 +31,3 @@ LIBS= -L../src -L$(PREFIX)/lib/ -lz -lpng -lpngwriter
 INSTALL=install
 
 SELF=make.include.linux
-

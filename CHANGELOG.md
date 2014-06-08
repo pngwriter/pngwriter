@@ -1,6 +1,6 @@
 Change Log for PNGwriter
 ========================
-**Note**: Changes to PNGwriter prior to version 0.5.4 can be found in the doc/english/CHANGES file.
+**Note**: Changes to PNGwriter prior to version 0.5.5 can be found in the doc/CHANGES file.
 
 0.6.0
 -----
@@ -15,7 +15,8 @@ Not done yet :)
 -----
 **Date:** TBA
 
-This release is a mainly a bug fix release.
+This release fixes several bugs, removes Spanish language documentation and example files, and restructures the source distribution somewhat as a result of these changes. 
+
 All closed issues can be found at
   [Milestone 0.5.5](https://github.com/ax3l/pngwriter/issues?milestone=1&state=closed)
 
