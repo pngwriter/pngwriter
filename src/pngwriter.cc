@@ -1,30 +1,27 @@
-//**********  pngwriter.cc   **********************************************
-//  Author:                    Paul Blackburn
-//                             Axel Huebl https://github.com/ax3l
-//
-//  Email:                     individual61@users.sourceforge.net
-//
-//  Version:                   0.5.5 (May 2014)
-//
-//  Description:               Library that allows plotting a 48 bit
-//                             PNG image pixel by pixel, which can
-//                             then be opened with a graphics program.
-//
-//  License:                   GNU General Public License
-//                             Copyright 2002, 2003, 2004, 2005, 2006, 2007,
-//                             2008, 2009 Paul Blackburn
-//                             Copyright 2013, 2014 Axel Huebl
-//
-//  Website: Main:             http://pngwriter.sourceforge.net/
-//           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-//           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
-//           GitHub.com:       https://github.com/ax3l/pngwriter
-//
-//  Documentation:             The header file (pngwriter.h) is commented, but for a
-//                             quick reference document, and support,
-//                             take a look at the website.
-//
-//*************************************************************************
+/********************************* PNGwriter **********************************
+*
+*   Website: Main:             http://pngwriter.sourceforge.net/
+*            GitHub.com:       https://github.com/ax3l/pngwriter
+*            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+*            Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+*
+*
+*    Author:                    Paul Blackburn https://github.com/individual61
+*                               Axel Huebl https://github.com/ax3l
+*
+*    Email:                     individual61@users.sourceforge.net
+*
+*    Version:                   0.5.5 (June 2014)
+*
+*    Description:               Library that allows plotting a 48 bit
+*                               PNG image pixel by pixel, which can
+*                               then be opened with a graphics program.
+*
+*    License:                   GNU General Public License
+*                               (C) 2002-2014 Paul Blackburn
+*                               (C) 2013-2014 Axel Huebl
+*
+******************************************************************************/
 
 /*
  *     This program is free software; you can redistribute it and/or modify
@@ -4777,4 +4774,3 @@ void pngwriter::diamond( int x, int y, int width, int height, double red, double
 {
    this->diamond(  x,  y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) ); 
 }
-

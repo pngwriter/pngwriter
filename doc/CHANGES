@@ -1,25 +1,25 @@
 ########################## PNGwriter #########################################
 #
-#       Website: Main:             http://pngwriter.sourceforge.net/
-#                Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-#                Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
-#                GitHub.com:       https://github.com/ax3l/pngwriter
+#   Website: Main:             http://pngwriter.sourceforge.net/
+#            GitHub.com:       https://github.com/ax3l/pngwriter
+#            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+#            Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
 #
-#       Author:                    Paul Blackburn
-#                                  Axel Huebl
 #
-#       Email:                     individual61@users.sourceforge.net
+#    Author:                    Paul Blackburn https://github.com/individual61
+#                               Axel Huebl https://github.com/ax3l
 #
-#       Version:                   0.5.5 (May 2014)
+#    Email:                     individual61@users.sourceforge.net
 #
-#       Description:               Library that allows plotting a 48 bit
-#                                  PNG image pixel by pixel, which can
-#                                  then be opened with a graphics program.
+#    Version:                   0.5.5 (June 2014)
 #
-#       License:                   GNU General Public License
-#                                  (C) 2002, 2003, 2004, 2005, 2006, 2007,
-#                                  2008, 2009 Paul Blackburn
-#                                  (C) 2013, 2014 Axel Huebl
+#    Description:               Library that allows plotting a 48 bit
+#                               PNG image pixel by pixel, which can
+#                               then be opened with a graphics program.
+#
+#    License:                   GNU General Public License
+#                               (C) 2002-2014 Paul Blackburn
+#                               (C) 2013-2014 Axel Huebl
 #
 ##############################################################################
 
@@ -27,7 +27,7 @@ Changes:
 
 0.5.5 and later
  May 2014
- > see CHANGELOG.md
+ > See CHANGELOG.md at the top level of the PNGwriter source distribution.
 
 0.5.4
  19 February 2009

@@ -1,0 +1,14 @@
+About the Examples
+
+The PNGwriter distribution includes two simple examples to get you started:
+
+* pngtest.cc
+* lyapunov.cc
+
+pngtest.cc, when compiled and run, will generate some PNG files. The source is fully commented, and should give you the confidence to begin writing programs with PNGwriter in no time. 
+
+lyapunov.cc calculates a two-dimensional plot of the lyapunov exponent for the logistic equation where the coefficient R, usually a constant, is replaced by a finite sequence of two values, A and B. Put simply, it makes really pretty pictures. If it is run with '999' as the command-line argument (./lyapunov 999), it will print out instructions for use. 
+
+The pngwriter.h header file is fully commented as well, and should you lose the PNGwriter Quick Reference, or be without internet access to check the website, it will serve as a reference manual.
+
+The Makefile is also fully commented. 
