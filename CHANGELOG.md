@@ -15,7 +15,7 @@ Not done yet :)
 -----
 **Date:** TBA
 
-This release fixes several bugs, removes Spanish language documentation and example files, and restructures the source distribution somewhat as a result of these changes. 
+This release fixes several bugs, removes Spanish language documentation and example files, and restructures the documentation file locations as a result of these changes.
 
 All closed issues can be found at
   [Milestone 0.5.5](https://github.com/ax3l/pngwriter/issues?milestone=1&state=closed)

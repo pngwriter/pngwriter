@@ -11,4 +11,4 @@ lyapunov.cc calculates a two-dimensional plot of the lyapunov exponent for the l
 
 The pngwriter.h header file is fully commented as well, and should you lose the PNGwriter Quick Reference, or be without internet access to check the website, it will serve as a reference manual.
 
-The Makefie is also fully commented. 
+The Makefile is also fully commented. 
