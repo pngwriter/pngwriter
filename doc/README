@@ -98,10 +98,6 @@ you're on OS X, just give make.include.linux a try, and if it doesn't
 work, then tinker with make.include.osx
 
 
-If you are using an old compiler, you may want to use
-'make.include.linux.oldcpp', or alter your own makefile by adding
--DOLD_CPP to the compiler flags. 
-
 If you wish to compile PNGwriter without FreeType2 support, then open
 make.include with your text editor and uncomment the line that says
 
