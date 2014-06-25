@@ -37,3 +37,12 @@ All closed issues can be found at
     [here](http://sourceforge.net/p/pngwriter/discussion/238247/thread/15ee786c/) 
     and again [here](http://sourceforge.net/p/pngwriter/bugs/2/) #5
   - read functions for 8bit images were broken: `read`/`dread` (reported by @f-schmitt-zih) #13
+  - fix compile with new gcc versions and clean c++ includes #30
+  - fix memory leak in `operator=` #23
+  - fix `FilledTriangle` methods (reported by Dongkook Park, Nov 2009) #22
+  - fix `triangle` method rounding/casting error (reported by Andrea Charao, Apr 2009) #19
+    [SF 6e7f2697](http://sourceforge.net/p/pngwriter/discussion/238247/thread/6e7f2697/)
+
+**Misc:**
+  - fixed Clang warnings #32
+  - `OLD_CPP` install removed #30
