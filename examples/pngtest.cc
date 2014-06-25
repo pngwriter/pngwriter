@@ -43,12 +43,12 @@
  * */
 
 #include <pngwriter.h>
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <string>
 using namespace std;
-#include <time.h>
-#include <stdlib.h>
+#include <ctime>
+#include <cstdlib>
 
 int main()
 {

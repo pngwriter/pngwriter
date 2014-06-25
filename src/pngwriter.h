@@ -53,36 +53,21 @@
 
 // REMEMBER TO ADD -DNO_FREETYPE TO YOUR COMPILATION FLAGS IF PNGwriter WAS
 // COMPILED WITHOUT FREETYPE SUPPORT!!!
-// 
+//
+// <png.h> must be included before FreeType headers.
 #ifndef NO_FREETYPE
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #endif
 
-
-
-#ifdef OLD_CPP // For compatibility with older compilers.
-#include <iostream.h>
-#include <math.h>
-#include <wchar.h>
-#include <string.h>
-using namespace std;
-#endif // from ifdef OLD_CPP
-
-#ifndef OLD_CPP // Default situation.
 #include <iostream>
 #include <cmath>
 #include <cwchar>
-#include <string>
-#endif // from ifndef OLD_CPP
+#include <cstring>
 
-
-//png.h must be included before FreeType headers.
-#include <stdlib.h>
-#include <stdio.h>
-#include <setjmp.h>
-
-
+#include <cstdlib>
+#include <cstdio>
+#include <csetjmp>
 
 
 #define PNG_BYTES_TO_CHECK (4)
