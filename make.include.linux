@@ -26,7 +26,7 @@ CXXFLAGS= -O3 -Wall -Wno-deprecated $(FT_ARG)
 
 INC=  -I../src/ -I$(PREFIX)/include/
 
-LIBS= -L../src -L$(PREFIX)/lib/ -lz -lpng -lpngwriter
+LIBS= -L../src -L$(PREFIX)/lib/ -lz -lpngwriter -lpng
 
 INSTALL=install
 

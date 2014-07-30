@@ -42,6 +42,7 @@ All closed issues can be found at
   - fix `FilledTriangle` methods (reported by Dongkook Park, Nov 2009) #22
   - fix `triangle` method rounding/casting error (reported by Andrea Charao, Apr 2009) #19
     [SF 6e7f2697](http://sourceforge.net/p/pngwriter/discussion/238247/thread/6e7f2697/)
+  - fix library order in linker for old makefile installs (reported by Piin-Ruey Pan) #35
 
 **Misc:**
   - fixed Clang warnings #32
