@@ -3,7 +3,6 @@
 *   Website: Main:             http://pngwriter.sourceforge.net/
 *            GitHub.com:       https://github.com/ax3l/pngwriter
 *            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-*            Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
 *
 *
 *    Author:                    Paul Blackburn https://github.com/individual61
