@@ -8,7 +8,8 @@ Change Log for PNGwriter
 
 Not done yet :)
 
-  - `FindPNGwriter.cmake`: CMake `find_package` module, [see above](#linking-to-your-project)
+  - `FindPNGwriter.cmake`: CMake `find_package` module,
+     [see *linking* in README](README.md#linking-to-your-project)
   - #7 #9 #11 #12 #14 #15
 
 0.5.5
@@ -36,7 +37,7 @@ All closed issues can be found at
   - memory leak in `pngwriter::readfromfile` reported
     [here](http://sourceforge.net/p/pngwriter/discussion/238247/thread/15ee786c/) 
     and again [here](http://sourceforge.net/p/pngwriter/bugs/2/) #5
-  - read functions for 8bit images were broken: `read`/`dread` (reported by @f-schmitt-zih) #13
+  - read functions for 8bit images were broken: `read`/`dread` (reported by Felix Schmitt) #13
   - fix compile with new gcc versions and clean c++ includes #30
   - fix memory leak in `operator=` #23
   - fix `FilledTriangle` methods (reported by Dongkook Park, Nov 2009) #22
@@ -47,3 +48,4 @@ All closed issues can be found at
 **Misc:**
   - fixed Clang warnings #32
   - `OLD_CPP` install removed #30
+  - removed freshmeat homepage link
