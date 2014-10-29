@@ -4,7 +4,7 @@
   *
   * License: GPLv2+
   *
-  * https://github.com/ax3l/pngwriter/issues/13
+  * https://github.com/pngwriter/pngwriter/issues/13
   */
 
 #include <pngwriter.h>

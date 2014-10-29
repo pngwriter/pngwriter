@@ -1,7 +1,7 @@
 ########################## PNGwriter #########################################
 #
 #   Website: Main:             http://pngwriter.sourceforge.net/
-#            GitHub.com:       https://github.com/ax3l/pngwriter
+#            GitHub.com:       https://github.com/pngwriter/pngwriter
 #            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
 #
 #
