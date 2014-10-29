@@ -1,26 +1,19 @@
-PNGwriter Fork
-==============
+PNGwriter
+=========
 
-This repository contains an unoffical fork from the
+This repository contains the migrated repositories from
   http://pngwriter.sourceforge.net/
-repository, Version **0.5.4**.
-
-Since PNGwriter did not change since 2009 but contains minor
-bugs / flaws, this fork tries to make our lives nicer (wuhu).
-
-~~Hopefully, the changes will be merged back :)~~
-We (@ax3l and @individual61) are right now preparing a bug fix release
-0.5.5 - stay tuned!
+that are now maintained on GitHub.
 
 ### Build Status
 
-| master branch | 0.5.5 release branch |
+| master branch | development branch |
 |:-------------:|:--------------------:|
-| [![Build Status Master](https://travis-ci.org/ax3l/pngwriter.png?branch=master)](https://travis-ci.org/ax3l/pngwriter "master") | [![Build Status 0.5.5 Release Branch](https://travis-ci.org/ax3l/pngwriter.png?branch=release-0.5.5)](https://travis-ci.org/ax3l/pngwriter "0.5.5 release branch") |
+| [![Build Status Master](https://travis-ci.org/pngwriter/pngwriter.png?branch=master)](https://travis-ci.org/pngwriter/pngwriter "master") | [![Build Status Development Branch](https://travis-ci.org/pngwriter/pngwriter.png?branch=dev)](https://travis-ci.org/pngwriter/pngwriter "development branch") |
 
 ### Install
 
-- `git clone https://github.com/ax3l/pngwriter.git`
+- `git clone https://github.com/pngwriter/pngwriter.git`
 - `mkdir -p build && cd build`
 - `cmake ../pngwriter`
 - `make install` (creates the libs in `lib/` and a `pngwriter.h` in `include/`)
@@ -53,7 +46,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
 #set(PNGwriter_USE_STATIC_LIBS ON)
 
 #   optional: specifiy (minimal) version / require to find it
-#           (PNGwriter 0.5.4 REQUIRED)
+#           (PNGwriter 0.5.5 REQUIRED)
 find_package(PNGwriter)
 
 if(PNGwriter_FOUND)
@@ -72,9 +65,7 @@ endif(PNGwriter_FOUND)
 
 ### License
 
-*Paul Blackburn* (kudos!) released this software under **GPLv2+**.
-
-Please see the original [README](README) files.
+This software is released under **GPLv2+**.
 
 ### Changes
 

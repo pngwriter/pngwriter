@@ -19,7 +19,7 @@ Not done yet :)
 This release fixes several bugs, removes Spanish language documentation and example files, and restructures the documentation file locations as a result of these changes.
 
 All closed issues can be found at
-  [Milestone 0.5.5](https://github.com/ax3l/pngwriter/issues?milestone=1&state=closed)
+  [Milestone 0.5.5](https://github.com/pngwriter/pngwriter/issues?milestone=1&state=closed)
 
 ### Changes to 0.5.4
 
