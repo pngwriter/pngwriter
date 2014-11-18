@@ -123,29 +123,6 @@ install:  docs
 
 
 docs	:
-	cp README README.bak
-	cat README.bak | \
-	sed   's# -  libpngwriter.a:# -  libpngwriter.a: $(PREFIX)/lib/#g' > README
-	
-	cp README README.bak
-	cat README.bak | \
-	sed   's# -  pngwriter.h:# -  pngwriter.h: $(PREFIX)/include/#g' > README
-	
-	cp README README.bak
-	cat README.bak | \
-	sed   's# -  documentation:# -  documentation: $(PREFIX)/share/doc/pngwriter/#g' > README
-	
-	cp README README.bak
-	cat README.bak | \
-	sed   's# -  examples:# -  examples: $(PREFIX)/share/doc/pngwriter/#g' > README
-	
-	cp README README.bak
-	cat README.bak | \
-	sed   's# -  fonts:# -  fonts: $(PREFIX)/share/pngwriter/fonts/#g' > README
-
-	rm README.bak
-#
-
 	cp doc/README doc/README.bak
 	cat doc/README.bak | \
 	sed   's# -  libpngwriter.a:# -  libpngwriter.a: $(PREFIX)/lib/#g' > doc/README
