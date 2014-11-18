@@ -15,18 +15,20 @@ PREFIX=/usr/local
 DESTDIR=
 
 ifdef P_FREETYPE
-FT_ARG = -DNO_FREETYPE
+FT_ARG_CFLAGS = -DNO_FREETYPE
+FT_ARG_LIBS =
 else
-FT_ARG = `freetype-config --cflags` `freetype-config --libs`
+FT_ARG_CFLAGS = `freetype-config --cflags`
+FT_ARG_LIBS = `freetype-config --libs`
 endif
 
 CXX=g++
 
-CXXFLAGS= -O3 -Wall -Wno-deprecated $(FT_ARG)
+CXXFLAGS= -O3 -Wall -Wno-deprecated $(FT_ARG_CFLAGS)
 
 INC=  -I../src/ -I$(PREFIX)/include/
 
-LIBS= -L../src -L$(PREFIX)/lib/ -lz -lpngwriter -lpng
+LIBS= -L../src -L$(PREFIX)/lib/ -lz -lpngwriter -lpng $(FT_ARG_LIBS)
 
 INSTALL=install
 
