@@ -17,7 +17,7 @@ set(CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu/")
 #
 # external library: libPNG (mandatory)
 FIND_PACKAGE(PNG 1.2.9 REQUIRED)
-INCLUDE_DIRECTORIES(${PNG_INCLUDE_PATH})
+INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIRS})
 
 # external library: zlib (mandatory)
 FIND_PACKAGE(ZLIB REQUIRED)
