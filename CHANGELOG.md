@@ -16,7 +16,9 @@ Not done yet :)
 -----
 **Date:** TBA
 
-This release fixes several bugs, removes Spanish language documentation and example files, and restructures the documentation file locations as a result of these changes.
+This release fixes several bugs, removes Spanish language documentation and
+example files, and restructures the documentation file locations as a result of
+these changes.
 
 All closed issues can be found at
   [Milestone 0.5.5](https://github.com/pngwriter/pngwriter/issues?milestone=1&state=closed)
@@ -49,3 +51,4 @@ All closed issues can be found at
   - fixed Clang warnings #32
   - `OLD_CPP` install removed #30
   - removed freshmeat homepage link
+  - speedup of ~20x for allocation of black images #46
