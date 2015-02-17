@@ -28,7 +28,7 @@ that are now maintained on GitHub.
 You can either link manually to the `libpngwriter.a`/`libpngwriter.so` (which can have dependencies to `libpng`, `libz`, `libm`, `libc` and `libfreetype`) or use our CMake module:
 
 ```bash
-wget https://raw.githubusercontent.com/ComputationalRadiationPhysics/picongpu/dev/src/cmake/FindPNGwriter.cmake
+wget https://raw.githubusercontent.com/ComputationalRadiationPhysics/cmake-modules/dev/FindPNGwriter.cmake
 # read its documentation
 cmake -DCMAKE_MODULE_PATH=. --help-module FindPNGwriter | less
 ```
