@@ -43,8 +43,16 @@
 #ifndef PNGWRITER_H
 #define PNGWRITER_H 1
 
-#define PNGWRITER_VERSION 0.55
+#define PNGWRITER_VERSION_MAJOR 0
+#define PNGWRITER_VERSION_MINOR 5
+#define PNGWRITER_VERSION_PATCH 5
 
+/* deprecated old define in style MAJOR.MINORREVISION, e.g., 0.55 for 0.5.5 */
+#define PNGWRITER_PASTE(x,y,z) x ## . ## y ## z
+#define PNGWRITER_EVALUATE(x,y,z) PNGWRITER_PASTE(x,y,z)
+#define PNGWRITER_VERSION PNGWRITER_EVALUATE(PNGWRITER_VERSION_MAJOR, PNGWRITER_VERSION_MINOR, PNGWRITER_VERSION_PATCH)
+
+/* includes */
 #include <png.h>
 #if (PNG_LIBPNG_VER >= 10500)
 #include <zlib.h>
