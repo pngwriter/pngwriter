@@ -9,10 +9,14 @@ env:
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
   matrix:
-    - LIBPNG_VERSION=1.2.51
-    - LIBPNG_VERSION=1.4.13
-    - LIBPNG_VERSION=1.5.18
-    - LIBPNG_VERSION=1.6.12
+    - LIBPNG_VERSION=1.2.53
+    - LIBPNG_VERSION=1.4.16
+    - LIBPNG_VERSION=1.5.22
+    - LIBPNG_VERSION=1.6.17
+
+matrix:
+  allow_failures:
+    - env: LIBPNG_VERSION=1.7.0beta59
 
 script:
   - cd $BUILD
