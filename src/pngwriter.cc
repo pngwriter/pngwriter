@@ -1535,15 +1535,9 @@ aliases
      }
 
    screengamma_ = 2.2;
-   double          file_gamma,screen_gamma;
-   screen_gamma = screengamma_;
-   if (png_get_gAMA(png_ptr, info_ptr, &file_gamma))
+   double          file_gamma;
+   if (!png_get_gAMA(png_ptr, info_ptr, &file_gamma))
      {
-	png_set_gamma(png_ptr,screen_gamma,file_gamma);
-     }
-   else
-     {
-	png_set_gamma(png_ptr, screen_gamma,0.45);
         file_gamma=0.45;
      }
 
