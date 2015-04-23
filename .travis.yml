@@ -15,10 +15,6 @@ env:
     - LIBPNG_VERSION=1.6.17
     - LIBPNG_VERSION=1.7.0beta59
 
-matrix:
-  allow_failures:
-    - env: LIBPNG_VERSION=1.7.0beta59
-
 script:
   - cd $BUILD
   - cmake $TRAVIS_BUILD_DIR
@@ -43,3 +39,8 @@ before_script:
   - sudo make install
   - sudo find /usr/lib -name 'libpng*'
   - mkdir -p $BUILD
+
+after_script:
+  - cp -R $TRAVIS_BUILD_DIR/examples/burro.png .
+  - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
+  - ./pngtest

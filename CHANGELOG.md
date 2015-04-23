@@ -26,7 +26,7 @@ All closed issues can be found at
 ### Changes to 0.5.4
 
 **New Features:**
-  - support for libpng 1.4, 1.5 and 1.6 #10 #11
+  - support for libpng 1.4.X, 1.5.X, 1.6.X and 1.7.0beta59 #10 #11 #54
     (thanks to Daniel Hornung http://sourceforge.net/p/pngwriter/bugs/1 for the 1.4 patch)
   - added alternative cmake based install via `CMakeLists.txt`
   - cmake: build the *static* archive **and** a *shared* library
