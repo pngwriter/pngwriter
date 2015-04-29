@@ -10,7 +10,7 @@ Not done yet :)
 
   - `FindPNGwriter.cmake`: CMake `find_package` module,
      [see *linking* in README](README.md#linking-to-your-project)
-  - #7 #9 #11 #12 #14 #15
+  - #7 #9 #12 #14 #15
 
 0.5.5
 -----
@@ -52,3 +52,5 @@ All closed issues can be found at
   - `OLD_CPP` install removed #30
   - removed freshmeat homepage link
   - speedup of ~20x for allocation of black images #46
+  - `#define PNGWRITER_VERSION` is deprecated, better query `PNGWRITER_VERSION_MAJOR`,
+    `PNGWRITER_VERSION_MINOR` and `PNGWRITER_VERSION_PATCH`
