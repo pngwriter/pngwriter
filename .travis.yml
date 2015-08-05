@@ -13,7 +13,11 @@ env:
     - LIBPNG_VERSION=1.4.16
     - LIBPNG_VERSION=1.5.22
     - LIBPNG_VERSION=1.6.17
-    - LIBPNG_VERSION=1.7.0beta59
+    - LIBPNG_VERSION=1.7.0beta64
+
+matrix:
+  allow_failures:
+    - env: LIBPNG_VERSION=1.7.0beta64
 
 script:
   - cd $BUILD
