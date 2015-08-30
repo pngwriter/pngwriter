@@ -2,19 +2,9 @@ Change Log for PNGwriter
 ========================
 **Note**: Changes to PNGwriter prior to version 0.5.5 can be found in the doc/CHANGES file.
 
-0.6.0
------
-**Date:** TBA
-
-Not done yet :)
-
-  - `FindPNGwriter.cmake`: CMake `find_package` module,
-     [see *linking* in README](README.md#linking-to-your-project)
-  - #7 #9 #12 #14 #15
-
 0.5.5
 -----
-**Date:** TBA
+**Date:** 2015-08-31
 
 This release fixes several bugs, removes Spanish language documentation and
 example files, and restructures the documentation file locations as a result of
@@ -26,7 +16,7 @@ All closed issues can be found at
 ### Changes to 0.5.4
 
 **New Features:**
-  - support for libpng 1.4.X, 1.5.X, 1.6.X and 1.7.0beta59 #10 #11 #54
+  - support for libpng 1.4.X, 1.5.X and 1.6.X #10 #11 #54
     (thanks to Daniel Hornung http://sourceforge.net/p/pngwriter/bugs/1 for the 1.4 patch)
   - added alternative cmake based install via `CMakeLists.txt`
   - cmake: build the *static* archive **and** a *shared* library
@@ -46,6 +36,7 @@ All closed issues can be found at
   - fix `triangle` method rounding/casting error (reported by Andrea Charao, Apr 2009) #19
     [SF 6e7f2697](http://sourceforge.net/p/pngwriter/discussion/238247/thread/6e7f2697/)
   - fix library order in linker for old makefile installs (reported by Piin-Ruey Pan) #35
+  - remove manipulation of gamma after `png_read_update_info()` #56
 
 **Misc:**
   - fixed Clang warnings #32
@@ -53,4 +44,4 @@ All closed issues can be found at
   - removed freshmeat homepage link
   - speedup of ~20x for allocation of black images #46
   - `#define PNGWRITER_VERSION` is deprecated, better query `PNGWRITER_VERSION_MAJOR`,
-    `PNGWRITER_VERSION_MINOR` and `PNGWRITER_VERSION_PATCH`
+    `PNGWRITER_VERSION_MINOR` and `PNGWRITER_VERSION_PATCH` #50
