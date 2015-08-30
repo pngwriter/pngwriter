@@ -11,7 +11,27 @@ that are now maintained on GitHub.
 |:-------------:|:--------------------:|
 | [![Build Status Master](https://travis-ci.org/pngwriter/pngwriter.png?branch=master)](https://travis-ci.org/pngwriter/pngwriter "master") | [![Build Status Development Branch](https://travis-ci.org/pngwriter/pngwriter.png?branch=dev)](https://travis-ci.org/pngwriter/pngwriter "development branch") |
 
+### Feedback
+
+We know PNGwriter was used in many projects over the years but usually the only
+people providing feedback are the ones that need compile support or are *not*
+immediately satisfied with it (incredible, right? ;) ).
+
+Please feel free to
+[open an issue](https://github.com/pngwriter/pngwriter/issues/new)
+and to share the remarkable images that you create with PNGwriter in your
+project/script/school work/...! To contribute, please note your
+- title
+- project link
+- image
+- authors list and a
+- short description
+
+so we can add a user-gallery in the next releases.
+
 ### Install
+
+The preferred way to install PNGwriter is using `CMake`:
 
 - `git clone https://github.com/pngwriter/pngwriter.git`
 - `mkdir -p build && cd build`
@@ -22,6 +42,10 @@ that are now maintained on GitHub.
 - `cmake -DCMAKE_INSTALL_PREFIX=~/myPath/`
 - `make install`
   (installs `libpngwriter.a` and `libpngwriter.so` to `~/myPath/lib/`)
+
+(There is also a pre-created `Makefile` shipped with the source files, but
+since it is not directly portable we deprecated that install method and
+will not support it any longer.)
 
 ### Linking to your project
 
