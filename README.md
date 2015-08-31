@@ -25,7 +25,7 @@ This GitHub was seeded from the PNGwriter repository originally hosted on Source
 
 **New version and a new team member — August 2015 Update**
 
-A long time has passed since PNGwriter's last release. Thanks to the skilled and generous help of Axel Hübl ([@ax3l](http://github.com/ax3l]) many bugs have been fixed, a new compilation procedure is in place, and PNGwriter is now on [GitHub](https://github.com/pngwriter/pngwriter). Axel is now an active and invaluable member of the PNGwriter Team, joining Paul Blackburn ([@individual61](https://github.com/individual61), who created PNGwriter in 2002. Welcome aboard, Axel!
+A long time has passed since PNGwriter's last release. Thanks to the skilled and generous help of Axel Hübl ([@ax3l](http://github.com/ax3l)) many bugs have been fixed, a new compilation procedure is in place, and PNGwriter is now on [GitHub](https://github.com/pngwriter/pngwriter). Axel is now an active and invaluable member of the PNGwriter Team, joining Paul Blackburn ([@individual61](https://github.com/individual61)), who created PNGwriter in 2002. Welcome aboard, Axel!
 
 This nudge to action could not have come at a better time, since the once-respectable host to the PNGwriter project, SourceForge.net, is no longer what we consider a positive contribution to the Open Source community. The PNGwriter website and files currently hosted on SourceForge.net will remain on SourceForge.net, but the current and all future releases will be via PNGwriter's GitHub repository. **Don't forget**!
 
