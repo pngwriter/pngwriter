@@ -10,8 +10,8 @@ PNGwriter is a very easy to use open source graphics library that uses PNG as it
 
 The PNGwriter project's online presence consists of:
 
-    The [PNGwriter website](http://pngwriter.sourceforge.net), with a FAQ, quickstart, examples, and an online copy of the manual.
-    This [PNGwriter GitHub repo](http://github.com/pngwriter/pngwriter), where source code is distributed and collaboration takes place. The distribution includes a PDF copy of the manual.
+* The [PNGwriter website](http://pngwriter.sourceforge.net), with a FAQ, quickstart, examples, and an online copy of the manual.
+* This [PNGwriter GitHub repo](http://github.com/pngwriter/pngwriter), where source code is distributed and collaboration takes place. The distribution includes a PDF copy of the manual.
 
 This GitHub was seeded from the PNGwriter repository originally hosted on SourceForge (and no longer maintained). The last version released on SourceForge was 0.5.4.
 
