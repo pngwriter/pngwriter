@@ -18,8 +18,11 @@ optionally FreeType2 for the text support.
 
 The PNGwriter project's online presence consists of:
 
-- The [PNGwriter website](http://pngwriter.sourceforge.net), with a [FAQ](http://pngwriter.sourceforge.net/),
-  [quickstart](http://pngwriter.sourceforge.net/quickstart-en.php), [examples](http://pngwriter.sourceforge.net/examples-en.php), and an online copy of the [manual](http://pngwriter.sourceforge.net/manual-en.php).
+- The [PNGwriter website](http://pngwriter.sourceforge.net), with a
+- [FAQ](http://pngwriter.sourceforge.net/),
+  [quickstart](http://pngwriter.sourceforge.net/quickstart-en.php),
+  [examples](http://pngwriter.sourceforge.net/examples-en.php), and an online
+  copy of the [manual](http://pngwriter.sourceforge.net/manual-en.php).
 - This [PNGwriter GitHub repo](http://github.com/pngwriter/pngwriter), where
   source code is distributed and collaboration takes place. The distribution
   includes a PDF copy of the manual.
@@ -144,4 +147,6 @@ This software is released under **GPLv2+**.
 
 ### Changes
 
-See the [CHANGELOG.md](CHANGELOG.md). Please note that changes to PNGwriter prior to version 0.5.5 can be found in the doc/CHANGES file.
+See the [CHANGELOG.md](CHANGELOG.md).
+Please note that changes to PNGwriter prior to version 0.5.5 can be found in
+the doc/CHANGES file.
