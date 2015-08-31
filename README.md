@@ -14,6 +14,7 @@ existing PNG images and more. Documentation in English (and Spanish up to
 v0.5.4). Runs under Linux, Unix, Mac OS X and Windows. Requires libpng and
 optionally FreeType2 for the text support.
 
+
 ### Where to find information about PNGwriter
 
 The PNGwriter project's online presence consists of:
@@ -31,11 +32,13 @@ This project was migrated from the PNGwriter repository originally hosted on
 SourceForge (and no longer maintained). The last version released on
 SourceForge will be the present one, 0.5.5.
 
+
 ### Build Status
 
 | master branch | development branch |
 |:-------------:|:--------------------:|
 | [![Build Status Master](https://travis-ci.org/pngwriter/pngwriter.png?branch=master)](https://travis-ci.org/pngwriter/pngwriter "master") | [![Build Status Development Branch](https://travis-ci.org/pngwriter/pngwriter.png?branch=dev)](https://travis-ci.org/pngwriter/pngwriter "development branch") |
+
 
 ### Latest News
 
@@ -61,10 +64,8 @@ Thank you, PNGwriter users, for your patience, bug fixes, and suggestions. I
 hope you are as excited as we are to see where the next thirteen years take
 PNGwriter!
 
-Paul Blackburn
-
-San Jose, California
-
+Paul Blackburn  
+San Jose, California  
 August, 2015
 
 
