@@ -1,4 +1,4 @@
-############## FREETYPE SUPPORT / SOPORTE PARA FREETYPE#####################
+############## FREETYPE SUPPORT #####################
 #
 # Uncomment the following line if you do not wish to compile PNGwriter
 # with FreeType2 support.
@@ -6,18 +6,9 @@
 # all projects that you compile that use PNGwriter must be compiled with
 # -DNO_FREETYPE).
 #
-# Descomenta la siguiente linea si no quieres compilar PNGwriter
-# con soporte para FreeType2.
-# (Nota que si compilas PNGwriter sin soporte para FreeType2, todos los
-# proyectos que usen PNGwriter que compiles deberan ser compilados con
-# -DNO_FREETYPE).
-#
-#
 # P_FREETYPE = 1
 #
-# 
 # Alternatively, when compiling, call make with the option P_FREETYPE=1
-
 
 PREFIX=/usr/local
 
@@ -25,10 +16,6 @@ PREFIX=/usr/local
 # Fink, use /sw and for DawrinPorts/MacPorts use /opt). If you use
 # neither, then just use make.include.linux, and not this file.
 #
-# Aqui es donde especificas la ubicacion de tu ports distribution (para
-# Fink usa /sw y para DarwinPorts/MacPorts usa /opt). Si no usas
-# ninguno de los dos, entonces simplemente usa make.include.linux 
-# en vez de este archivo.
 
 PORTS_LOCATION=/opt
 
@@ -47,7 +34,7 @@ CXXFLAGS= -Wall -O3 -Wno-deprecated $(FT_ARG)
 
 INC= -I../src/ -I$(PREFIX)/include/ -I$(FINK_LOCATION)/include
 
-LIBS= -L../src/ -L$(PREFIX)/lib/ -L$(FINK_LOCATION)/lib/ -lz -lpng -lpngwriter
+LIBS= -L../src/ -L$(PREFIX)/lib/ -L$(FINK_LOCATION)/lib/ -lz -lpngwriter -lpng
 
 INSTALL=install
 

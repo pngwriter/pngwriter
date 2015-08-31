@@ -1,27 +1,26 @@
-//**********  pngwriter.h   **********************************************
-//  Author:                    Paul Blackburn
-//
-//  Email:                     individual61@users.sourceforge.net
-//
-//  Version:                   0.5.4   (19 / II / 2009)
-//
-//  Description:               Library that allows plotting a 48 bit
-//                             PNG image pixel by pixel, which can 
-//                             then be opened with a graphics program.
-//  
-//  License:                   GNU General Public License
-//                             Copyright 2002, 2003, 2004, 2005, 2006, 2007,
-//                             2008, 2009 Paul Blackburn
-//                             
-//  Website: Main:             http://pngwriter.sourceforge.net/
-//           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-//           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
-//           
-//  Documentation:             This header file is commented, but for a
-//                             quick reference document, and support,
-//                             take a look at the website.
-//
-//*************************************************************************
+/********************************* PNGwriter **********************************
+*
+*   Website: Main:             http://pngwriter.sourceforge.net/
+*            GitHub.com:       https://github.com/pngwriter/pngwriter
+*            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+*
+*
+*    Author:                    Paul Blackburn https://github.com/individual61
+*                               Axel Huebl https://github.com/ax3l
+*
+*    Email:                     individual61@users.sourceforge.net
+*
+*    Version:                   0.5.5 (August 2015)
+*
+*    Description:               Library that allows plotting a 48 bit
+*                               PNG image pixel by pixel, which can
+*                               then be opened with a graphics program.
+*
+*    License:                   GNU General Public License
+*                               (C) 2002-2015 Paul Blackburn
+*                               (C) 2013-2015 Axel Huebl
+*
+******************************************************************************/
 
 
 /*
@@ -29,23 +28,31 @@
  *     it under the terms of the GNU General Public License as published by
  *     the Free Software Foundation; either version 2 of the License, or
  *     (at your option) any later version.
- * 
+ *
  *     This program is distributed in the hope that it will be useful,
  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *     GNU General Public License for more details.
- * 
+ *
  *     You should have received a copy of the GNU General Public License
  *     along with this program; if not, write to the Free Software
- *     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
+ *     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
  * */
 
 #ifndef PNGWRITER_H
 #define PNGWRITER_H 1
 
-#define PNGWRITER_VERSION 0.54
+#define PNGWRITER_VERSION_MAJOR 0
+#define PNGWRITER_VERSION_MINOR 5
+#define PNGWRITER_VERSION_PATCH 5
 
+/* deprecated old define in style MAJOR.MINORREVISION, e.g., 0.55 for 0.5.5 */
+#define PNGWRITER_PASTE(x,y,z) x ## . ## y ## z
+#define PNGWRITER_EVALUATE(x,y,z) PNGWRITER_PASTE(x,y,z)
+#define PNGWRITER_VERSION PNGWRITER_EVALUATE(PNGWRITER_VERSION_MAJOR, PNGWRITER_VERSION_MINOR, PNGWRITER_VERSION_PATCH)
+
+/* includes */
 #include <png.h>
 #if (PNG_LIBPNG_VER >= 10500)
 #include <zlib.h>
@@ -53,39 +60,21 @@
 
 // REMEMBER TO ADD -DNO_FREETYPE TO YOUR COMPILATION FLAGS IF PNGwriter WAS
 // COMPILED WITHOUT FREETYPE SUPPORT!!!
-// 
-// RECUERDA AGREGAR -DNO_FREETYPE A TUS OPCIONES DE COMPILACION SI PNGwriter 
-// FUE COMPILADO SIN SOPORTE PARA FREETYPE!!!
-// 
+//
+// <png.h> must be included before FreeType headers.
 #ifndef NO_FREETYPE
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #endif
 
-
-
-#ifdef OLD_CPP // For compatibility with older compilers.
-#include <iostream.h>
-#include <math.h>
-#include <wchar.h>
-#include <string.h>
-using namespace std;
-#endif // from ifdef OLD_CPP
-
-#ifndef OLD_CPP // Default situation.
 #include <iostream>
 #include <cmath>
 #include <cwchar>
-#include <string>
-#endif // from ifndef OLD_CPP
+#include <cstring>
 
-
-//png.h must be included before FreeType headers.
-#include <stdlib.h>
-#include <stdio.h>
-#include <setjmp.h>
-
-
+#include <cstdlib>
+#include <cstdio>
+#include <csetjmp>
 
 
 #define PNG_BYTES_TO_CHECK (4)
@@ -144,6 +133,8 @@ class pngwriter
    void drawbottom_blend(long x1,long y1,long x2,long x3,long y3, double opacity, int red, int green, int blue);
    void drawtop_blend(long x1,long y1,long x2,long y2,long x3, double opacity, int red, int green, int blue);
    
+   /* free up memory of member variables and reset internal pointers to NULL */
+   void deleteMembers();
  public:
 
    /* General Notes
@@ -745,4 +736,3 @@ class pngwriter
 
 
 #endif
-

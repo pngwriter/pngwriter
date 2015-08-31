@@ -1,35 +1,26 @@
 ########################## PNGwriter #########################################
 #
-#       Website: Main:             http://pngwriter.sourceforge.net/
-#                Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-#                Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
+#   Website: Main:             http://pngwriter.sourceforge.net/
+#            GitHub.com:       https://github.com/pngwriter/pngwriter
+#            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
 #
-#       Author:                    Paul Blackburn
 #
-#       Email:                     individual61@users.sourceforge.net
+#    Author:                    Paul Blackburn https://github.com/individual61
+#                               Axel Huebl https://github.com/ax3l
 #
-#       Version:                   0.5.4   (19 / II / 2009)
+#    Email:                     individual61@users.sourceforge.net
 #
-#       Description:               Library that allows plotting a 48 bit
-#                                  PNG image pixel by pixel, which can
-#                                  then be opened with a graphics program.
+#    Version:                   0.5.5 (August 2015)
 #
-#       License:                   GNU General Public License
-#                                  (C) 2002, 2003, 2004, 2005, 2006,
-#                                  2007, 2008, 2009 Paul Blackburn
-##########################################################################
-
-
-PNGwriter
-Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Paul Blackburn
-
-
-
-#######################################################################
-                     IMPORTANT - IMPORTANTE
-The  Spanish README and documentation can be found in doc/espaniol
-El archivo LEAME y la documentacion en castellano esta en doc/espaniol
-#######################################################################
+#    Description:               Library that allows plotting a 48 bit
+#                               PNG image pixel by pixel, which can
+#                               then be opened with a graphics program.
+#
+#    License:                   GNU General Public License
+#                               (C) 2002-2015 Paul Blackburn
+#                               (C) 2013-2015 Axel Huebl
+#
+##############################################################################
 
 
 #######################################################################
@@ -45,27 +36,15 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301, USA.
 #######################################################################
-
-
-
-
-CONTACTS
-Author's Email:                      individual61@users.sourceforge.net
-Home page:                           http://pngwriter.sourceforge.net/
-Sourceforge.net project page:        http://sourceforge.net/projects/pngwriter/
-Freshmeat.net project page:          http://freshmeat.net/projects/pngwriter/
-
-
 
 
 INTRODUCTION
 Hi. Thanks for downloading PNGwriter. I hope you find it
-useful. See doc/english/CHANGES to see what's new.
-
-
-
+useful. See CHANGELOG.md to see what's new (and doc/CHANGES
+ for information about versions prior to 0.5.5).
 
 DESCRIPTION
 PNGwriter is a very easy to use open source graphics library that uses PNG 
@@ -74,15 +53,14 @@ intuitive as possible. It supports plotting and reading in the RGB
 (red, green, blue), HSV (hue, saturation, value/brightness) and CMYK 
 (cyan, magenta, yellow, black) colour spaces, basic shapes, scaling, bilinear 
 interpolation, full TrueType antialiased and rotated text support, bezier curves, 
-opening existing PNG images and more. Documentation in English and Spanish. 
-Runs under Linux, Unix, Mac OS X and Windows. Requires libpng and optionally 
-FreeType2 for the text support.
+opening existing PNG images and more. Runs under Linux, Unix, Mac OS X 
+and Windows. Requires libpng and optionally FreeType2 for the text support.
 
 
 
 
 REQUIREMENTS
-LibPNG (http://www.libpng.org/)
+LibPNG (http://www.libpng.org/) and associated requirements (zlib). 
 PNGwriter requires a properly installed libpng in order to work.
 
 Freetype 2 (http://www.freetype.org)
@@ -118,10 +96,6 @@ header paths for your Fink or MacPorts distribution. In short, if
 you're on OS X, just give make.include.linux a try, and if it doesn't
 work, then tinker with make.include.osx
 
-
-If you are using an old compiler, you may want to use
-'make.include.linux.oldcpp', or alter your own makefile by adding
--DOLD_CPP to the compiler flags. 
 
 If you wish to compile PNGwriter without FreeType2 support, then open
 make.include with your text editor and uncomment the line that says
@@ -171,7 +145,7 @@ install time):
  -  fonts: /usr/local/share/pngwriter/fonts/
 
 Look in examples/ for two examples of PNGwriter's use, and in
-doc/english/EXAMPLES for an explanation.
+doc/EXAMPLES for information about them.
 
 
 
@@ -205,10 +179,8 @@ New versions will appear from time to time so check the web page.
 http://pngwriter.sourceforge.net/
 and
 http://sourceforge.net/projects/pngwriter/
-
-You can also stay updated by checking PNGwriter's freshmeat.net page:
-
-http://freshmeat.net/projects/pngwriter/
+and
+https://github.com/pngwriter/pngwriter
 
 
 
@@ -220,25 +192,16 @@ pngwriter-x.y.z
 |-- README
 |-- configure
 |-- doc
-|   |-- english
-|   |   |-- CHANGES
-|   |   |-- EXAMPLES
-|   |   |-- LICENSE
-|   |   |-- PNGwriterQuickReference_EN.pdf
-|   |   `-- README
-|   `-- espaniol
-|       |-- CAMBIOS
-|       |-- EJEMPLOS
-|       |-- LEAME
-|       |-- LICENCIA
-|       `-- PNGwriterQuickReference_ES.pdf
+|   |-- CHANGES
+|   |-- EXAMPLES
+|   |-- LICENSE
+|   |-- PNGwriterQuickReference_EN.pdf
+|   `-- README
 |-- examples
 |   |-- Makefile
 |   |-- burro.png
 |   |-- lyapunov.cc
-|   |-- lyapunov.espaniol.cc
 |   |-- pngtest.cc
-|   `-- pngtest.espaniol.cc
 |-- fonts
 |   |-- FreeMonoBold.ttf
 |   `-- FreeSansBold.ttf
@@ -264,8 +227,10 @@ In no particular order, thanks to
 > Nadav Rotem, for suggesting the bezier() function.
 > Jeramy Webb (jeramyw@gmail.com), for his generosity.
 > Mike Heller (mkheller@gmail.com), for his generosity.
-> Benjamin Raskob, for bringing to my attention the need for a resize() function.
-> Dr John Charlery, for his continued support with the Windows-specific documentation.
+> Benjamin Raskob, for bringing to my attention the need for a resize()
+  function.
+> Dr John Charlery, for his continued support with the Windows-specific
+  documentation.
 > Tobias Kretz, for pointing out a bug in readfromfile(), and
 > Greg Roelofs and John Bowler on png-implement for their help fixing the bug.
 > Gurkan Sengun (gurkan@linuks.mine.nu, http://www.linuks.mine.nu/)
@@ -278,6 +243,8 @@ In no particular order, thanks to
   concerning readfromfile()
 > Mikkel (mikkel@biosource.dk) for expanding on Sven's code, greatly
   increasing the variety of PNGs that PNGwriter can open.
+> Axel Huebl (https://github.com/ax3l), for instilling the PNGwriter project
+  with new activity after five years. This guy rocks.
 
 Have fun and tell me what you're up to!
 

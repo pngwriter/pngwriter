@@ -1,4 +1,9 @@
-/** Example and bug report from Kevin Ryde
+/** Copyright 2011      Kevin Ryde
+  * Copyright 2013-2014 Axel Huebl
+  *
+  * Example and bug report from Kevin Ryde
+  *
+  * License: GPLv2+
   *
   * http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=633405
   */

@@ -1,28 +1,26 @@
-//**********  lyapunov.cc   **********************************************
-//  Author:                    Paul Blackburn
-//
-//  Email:                     individual61@users.sourceforge.net
-//
-//  Version:                   0.5.4   (19 / I / 2009)
-//
-//  Description:               Test and example for PNGwriter,
-//                             a C++ library that enables plotting to a
-//                             PNG image pixel by pixel, which can 
-//                             then be opened with a graphics program.
-//  
-//  License:                   GNU General Public License
-//                             Copyright 2002, 2003, 2004, 2005, 2006, 2007, 
-//                             2008, 2009 Paul Blackburn
-//                             
-//  Website: Main:             http://pngwriter.sourceforge.net/
-//           Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
-//           Freshmeat.net:    http://freshmeat.net/projects/pngwriter/
-//           
-//  Documentation:             The PNGwriter header file is commented, but for a
-//                             quick reference document, and support,
-//                             take a look at the website.
-//
-//*************************************************************************
+/********************************* PNGwriter **********************************
+*
+*   Website: Main:             http://pngwriter.sourceforge.net/
+*            GitHub.com:       https://github.com/pngwriter/pngwriter
+*            Sourceforge.net:  http://sourceforge.net/projects/pngwriter/
+*
+*
+*    Author:                    Paul Blackburn https://github.com/individual61
+*                               Axel Huebl https://github.com/ax3l
+*
+*    Email:                     individual61@users.sourceforge.net
+*
+*    Version:                   0.5.5 (August 2015)
+*
+*    Description:               Library that allows plotting a 48 bit
+*                               PNG image pixel by pixel, which can
+*                               then be opened with a graphics program.
+*
+*    License:                   GNU General Public License
+*                               (C) 2002-2015 Paul Blackburn
+*                               (C) 2013-2015 Axel Huebl
+*
+******************************************************************************/
 
 /*
 ######################################################################
@@ -30,16 +28,16 @@
   modify it under the terms of the GNU General Public License as
   published by the Free Software Foundation; either version 2 of
   the License, or (at your option) any later version.
-  
+
   This program is distributed in the hope that it will be
-  useful, but WITHOUT ANY WARRANTY; without even the implied warranty 
+  useful, but WITHOUT ANY WARRANTY; without even the implied warranty
   of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-      
-  You should have received a copy of the GNU General Public
-  License along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-  02111-1307  USA
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 ######################################################################
 */
 
@@ -108,8 +106,8 @@
  * */
 
 #include <iostream>
-#include <math.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 #include "../src/pngwriter.h"
 
 void intro1(void); // These are the functions that give the intro and the help.

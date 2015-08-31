@@ -1,0 +1,1487 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1187\cocoasubrtf400
+\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 ArialMT;\f1\froman\fcharset0 Times-Roman;\f2\fmodern\fcharset0 Courier;
+}
+{\colortbl;\red255\green255\blue255;\red204\green204\blue204;\red230\green230\blue230;\red179\green179\blue179;
+\red153\green153\blue153;\red128\green128\blue128;\red102\green102\blue102;\red77\green77\blue77;\red51\green51\blue51;
+\red26\green26\blue26;}
+\margl1440\margr1440\vieww33400\viewh19440\viewkind1\viewscale125
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs48 \cf0 PNGwriter Quick Reference Manual\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f1\b0\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\fs20 \cf0 Version 0.5.5   (August 2015)\
+\'a9 2002-2015 Paul Blackburn (individual61@users.sourceforge.net)\
+\'a9 2013-2015 Axel H\'fcbl \
+\
+
+\fs24 http://pngwriter.sourceforge.net/\
+
+\f1\fs20 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Introduction  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 .\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f1\b0\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 This is the PNGwriter Quick Reference Manual. It is mostly a summary of the functions that PNGwriter provides, but also contains useful information on compilation and usage tips. Note that the 
+\f2 pngwriter.h
+\f1  header file is also well commented. Be sure to look at the Examples section on the website, and to check the examples in 
+\f2 /usr/local/share/doc/pngwriter/
+\f1 . Ultimately, if this documentation is insufficient or you suspect it may be mistaken, you should check the source code\'97most of it isn't that hard to understand!\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\b \cf0 Note: 
+\b0 This document assumes that PNGwriter was installed in 
+\f2\fs18 /usr/local
+\f1\fs20  (in 
+\f2 /usr/local/lib
+\f1 ,   
+\f2 /usr/local/share
+\f1 , etc.). This is the default location. If you chose another installation location, then please keep this in mind as you read the Manual. This is important for knowing what header and library directories you must include at compile time, where the documentation and examples are, where the included fonts are, etc. For example, if you installed PNGwriter from the Debian package, it is installed under
+\f2\fs18  
+\fs20 /usr
+\f1  (in 
+\f2 /usr/lib
+\f1 , 
+\f2\fs18  
+\fs20 /usr/share
+\f1 , etc.).  Or if when installing from source, you gave the command 
+\f2 make install
+\fs18  
+\fs20 PREFIX=$HOME
+\f1  for example, where
+\f2\fs18  
+\fs20 $HOME
+\f1  is the path to your home directory, you'll find PNGwriter's files installed under 
+\f2 $HOME/lib
+\f1 , 
+\f2 $HOME/share
+\f1 , etc.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Summary  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 PNGwriter is a very easy to use open source graphics library that uses PNG as its output format. The interface has been designed to be as simple and intuitive as possible. It supports plotting and reading in the RGB (red, green, blue), HSV (hue, saturation, value/brightness) and CMYK (cyan, magenta, yellow, black) colour spaces, basic shapes, scaling, bilinear interpolation, full TrueType antialiased and rotated text support, bezier curves, opening existing PNG images and more. Documentation in English and Spanish. Runs under Linux, Unix, Mac OS X and Windows. Requires libpng and optionally FreeType2 for the text support.
+\f0\fs32 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f1\fs20 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Contents  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0 \cf0 This document is divided into the following main sections:\
+\
+	- General Notes\
+	- Constructor and assignment operator\
+	- Plotting\
+	- Reading\
+	- Figures\
+	- Text\
+	- Image Size\
+	- File and PNG-specific functions\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Help and Support  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0 \cf0 If you have a problem, question or suggestion, you can post on the PNGwriter forums, since the mailing list is no longer in use. You can also email me directly. \
+\
+PNGwriter's documentation consists of this PDF Manual, the README, the 
+\f2 pngwriter.h
+\f1  header file, the two complete examples included with the source code, and of course, the website, which contains a Frequently Asked Questions section and quite a few interesting examples, among other things.\
+\page \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  General Notes  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . 
+\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Basic Usage
+\f1\b0\fs20 \
+The most basic use of PNGwriter would be the following:\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2\fs18 \cf0 	#include <pngwriter.h>\
+\
+	int main()\
+	\{\
+		pngwriter image(200, 300, 1.0, "out.png");\
+		image.plot(30, 40, 1.0, 0.0, 0.0);\
+		image.close();\
+	\
+		return 0;\
+	\}
+\f1\fs20 \
+\
+This would plot a red dot (1 pixel) in the lower-left corner of the image, on a white background. The file created will be called "out.png", and will be 200 pixels wide and 300 pixels tall.\
+	To get started, read about the constructor, plot(), dread() and close(). Explore the other functions when you feel confident with these. This is the most basic set of functions you will probably use.\
+\
+	It is important to remember that all functions that accept an argument of type "
+\f2 const\'a0char\'a0*
+\f1 " will also accept "
+\f2 char *
+\f1 ".\'a0 This is done so you can have a changing filename (to make many PNG images in series with a different name, for example), and to allow you to use 
+\f2 string
+\f1  type objects which can be easily turned into 
+\f2 const char *
+\f1  (if 
+\f2 theString
+\f1  is an object of type 
+\f2 string
+\f1 , then it can be used as a 
+\f2 const char *
+\f1  by calling 
+\f2 theString.c_str()
+\f1 ). \
+	It is also important to remember that whenever a function has a colour coeffiecient as its argument,  that argument can be either an 
+\f2 int\'a0
+\f1 from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1  or a 
+\f2 double\'a0
+\f1 from 
+\f2 0.0
+\f1  to 
+\f2 1.0
+\f1 . You must make sure that you are calling the function with the type that you want. Remember that 
+\f2 1
+\f1  is an 
+\f2 int
+\f1 , while 
+\f2 1.0
+\f1  is a 
+\f2 double
+\f1 , and will thus determine what version of the function will be used. Do not make the mistake of calling (for example)
+\f2  plot(x, y, 0.0, 0.0, 65535)
+\f1 , because there is no 
+\f2 plot(int, int, double, double, int)
+\f1 . Also, please note that 
+\f2 plot()
+\f1  and 
+\f2 read()
+\f1  (and the functions that use them internally) are protected against entering, for example, a colour coefficient that is over 
+\f2 65535
+\f1  or over 
+\f2 1.0
+\f1 . Similarly, they are protected against negative coefficients. 
+\f2 read()
+\f1  will return 
+\f2 0
+\f1  when called outside the image range. This is actually useful as zero-padding should you need it. \
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Compilation
+\f1\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\b0 \cf0 A typical compilation, assuming PNGwriter was installed in its default location (under 
+\f2 /usr/local
+\f1 ) would look like this:\
+\
+
+\f2 g++ my_program.cc -o my_program `freetype-config --cflags` \
+	-I/usr/local/include  -L/usr/local/lib -lpng -lpngwriter -lz -lfreetype
+\f1 \
+\
+Otherwise, replace 
+\f2 /usr/local
+\f1  above with whatever location you chose at install time. \
+If you did not compile PNGwriter with FreeType support, then remove the FreeType-related flags and add \
+
+\f2 -DNO_FREETYPE
+\f1  above.\
+	The website has additional information about compiling under Windows, though I cannot offer support for this.\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Constructor
+\f1\b0\fs20 \
+The constructor requires the width and the height of the image, the background colour for the image and the filename of the file (a pointer or simply "
+\f2 myfile.png
+\f1 "). The default constructor creates a PNGwriter instance that is 
+\f2 250x250
+\f1 , white background, and filename 
+\f2 "out.png"
+\f1 .  
+\b Tip
+\b0 : The filename can be given as easily as: pngwriter 
+\f2 mypng(300, 300, 0.0, "myfile.png");
+\f1  
+\b Tip
+\b0 : If you are going to create a PNGwriter instance for reading in a file that already exists, then width and height can be 1 pixel, and the size will be automatically adjusted once you use readfromfile().\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f2 \cf0 pngwriter();   \
+pngwriter(const pngwriter &rhs);
+\f1 \
+
+\f2 pngwriter(int\'a0width, int\'a0height, int\'a0backgroundcolour, char\'a0*\'a0filename); \
+pngwriter(	int\'a0width, int\'a0height, double\'a0backgroundcolour, 		 	char\'a0*\'a0filename);\'a0\'a0\'a0\'a0\'a0\'a0\
+pngwriter(	int\'a0width, int\'a0height, int\'a0backgroundcolour, 			const\'a0char\'a0*\'a0filename); \
+pngwriter(	int\'a0width, int\'a0height, double\'a0backgroundcolour, 			const\'a0char\'a0*\'a0filename);\'a0\'a0\'a0\'a0\'a0
+\f1 \'a0\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Assignment Operator
+\f1\b0\fs20 \
+PNGwriter overloads the assignment operator =.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 pngwriter & operator = (const pngwriter & rhs);
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Version Number
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Returns the PNGwriter version number.
+\f2 \
+\
+double\'a0version(void);\
+
+\f1 \
+\page \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Plotting  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Plot
+\f1\b0\fs20 \
+The pixels are numbered starting from (1, 1) and go to (width, height).\'a0 If the colour coefficients are of type 
+\f2 int
+\f1 , \'a0they go from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 . If they are of type 
+\f2 double
+\f1 , they go from
+\f2  0.0
+\f1  to 
+\f2 1.0.
+\f1  
+\b Tip
+\b0 : To plot using red, then specify 
+\f2 plot(x, y, 1.0, 0.0, 0.0)
+\f1 . To make pink, just add a constant value to all three coefficients, like this: 
+\f2 plot(x, y, 1.0, 0.4, 0.4)
+\f1 .  
+\b Tip
+\b0 : If nothing is being plotted to your PNG file, make sure that you remember to close() the instance before your program is finished, and that the x and y position is actually within the bounds of your image. If either is not, then PNGwriter will not complain-- it is up to you to check for this! 
+\b Tip
+\b0 : If you try to plot with a colour coefficient out of range, a maximum or minimum coefficient will be assumed, according to the given coefficient. For example, attempting to plot 
+\f2 plot(x, y, 0.5,-0.2,3.7)
+\f1  will set the green coefficient to 
+\f2 0.0
+\f1  and the blue coefficient to 
+\f2 1.0.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 \
+
+\f2 void plot(int\'a0x, int\'a0y, int\'a0red, int\'a0green, int\'a0blue); \
+void plot(int\'a0x, int\'a0y, double\'a0red, double\'a0green, double\'a0blue); 
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Plot Blend
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Plots the colour given by red, green blue, but blended with the existing pixel value at that position. opacity is a 
+\f2 double\'a0
+\f1 that goes from 
+\f2 0.0
+\f1  to 
+\f2 1.0
+\f1 . For example, 
+\f2 0.0
+\f1  will not change the pixel at all, and 
+\f2 1.0
+\f1  will plot the given colour.  Anything in between will be a blend of both pixel levels. 
+\b Please note
+\b0 : This is neither alpha channel nor PNG transparency chunk support. This merely blends the plotted pixels.\
+
+\f2 \
+void plot_blend(	int\'a0x, int\'a0y, double\'a0opacity,\
+				int\'a0red, int\'a0green, int\'a0blue);\
+void plot_blend(	int\'a0x, int\'a0y, double\'a0opacity, \
+				double\'a0red, double\'a0green, 	double\'a0blue);
+\f1 \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\
+\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Blended Functions
+\f1\b0\fs20 \
+All these functions are identical to their non-blended types. They take an extra argument, opacity, which is a double from 0.0 to 1.0 and represents how much of the original pixel value is retained when plotting the new pixel. In other words, if opacity is 0.7, then after plotting, the new pixel will be 30% of the original colour the pixel was, and 70% of the new colour, whatever that may be. As usual, each function is available in 
+\f2 int
+\f1  or 
+\f2 double
+\f1  versions. 
+\b Please note
+\b0 : This is neither alpha channel nor PNG transparency chunk support. This merely blends the plotted pixels.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void plotHSV_blend(	int x, int y, double opacity,\
+					double hue, double saturation, double value);\
+void plotHSV_blend(	int x, int y, double opacity, \
+					int hue, int saturation, int value);\
+\
+void line_blend(	int xfrom, int yfrom, int xto, int yto,\
+				double opacity, int red, int green,int  blue);\
+void line_blend(	int xfrom, int yfrom, int xto, int yto, \
+				double opacity, double red, double green,double  blue);\
+  \
+void square_blend(	int xfrom, int yfrom, int xto, int yto, \
+				double opacity, int red, int green,int  blue);\
+void square_blend(	int xfrom, int yfrom, int xto, int yto,\
+				double opacity, double red, double green, double  blue);\
+   \
+void filledsquare_blend(	int xfrom, int yfrom, int xto, int yto, \
+						double opacity,\
+						int red, int green,int  blue);\
+void filledsquare_blend(	int xfrom, int yfrom, int xto, int yto,\
+			 			double opacity,\
+						double red, double green,double  blue);\
+\
+\
+\
+void circle_blend(	int xcentre, int ycentre, int radius, \
+				double opacity, int red, int green, int blue);\
+void circle_blend(	int xcentre, int ycentre, int radius,\
+				double opacity, double red, double green, double blue);\
+   \
+void filledcircle_blend(	int xcentre, int ycentre, int radius, \
+						double opacity, \
+						int red, int green, int blue);\
+void filledcircle_blend(	int xcentre, int ycentre, int radius, \
+						double opacity, \
+						double red, double green, double blue);\
+void bezier_blend(	int startPtX, int startPtY,                                                                            \
+	       		int startControlX, int startControlY,                                                                                     \
+	      		int endPtX, int endPtY,                                                                                                   \
+	       		int endControlX, int endControlY,\
+	       		double opacity,\
+	       		double red, double green, double blue);\
+   \
+void bezier_blend(	int startPtX, int startPtY,                                                                            \
+	       		int startControlX, int startControlY,                                                                                     \
+	       		int endPtX, int endPtY,                                                                                                   \
+	      		int endControlX, int endControlY,\
+	       		double opacity,\
+	       		int red, int green, int blue);\
+  \
+void plot_text_blend(	char * face_path, int fontsize, \
+					int x_start, int y_start, double angle, char * text, \
+					double opacity, \
+					double red, double green, double blue);\
+void plot_text_blend(	char * face_path, int fontsize, \
+					int x_start, int y_start, double angle, char * text, \
+					double opacity, \
+					int red, int green, int blue);\
+\
+void plot_text_utf8_blend(char * face_path, int fontsize, \
+					  int x_start, int y_start, double angle, char * text, \
+					  double opacity,\
+					  double red, double green, double blue);\
+void plot_text_utf8_blend(char * face_path, int fontsize, \
+					  int x_start, int y_start, double angle, char * text,\
+ 					  double opacity, \
+					  int red, int green, int blue);\
+\
+void boundary_fill_blend(int xstart, int ystart, \
+		double opacity,\
+		double boundary_red, double boundary_green, double boundary_blue, 		double fill_red, double fill_green, double fill_blue);\
+void boundary_fill_blend(int xstart, int ystart,\
+ 		double opacity, \
+		int boundary_red, int boundary_green, int boundary_blue,\
+		int fill_red, int fill_green, int fill_blue);\
+\
+void flood_fill_blend(	int xstart, int ystart, double opacity,\
+					double fill_red, double fill_green, double fill_blue);\
+void flood_fill_blend(	int xstart, int ystart, double opacity,\
+					int fill_red, int fill_green, int fill_blue);\
+\
+void polygon_blend(int * points, int number_of_points, double opacity,\
+					double red, double green, double blue);\
+void polygon_blend(int * points, int number_of_points, double opacity,\
+					int red, int green, int blue);\
+void plotCMYK_blend(int x, int y, double opacity, \
+				double cyan, double magenta, double yellow, double black);\
+void plotCMYK_blend(int x, int y, double opacity,\
+				int cyan, int magenta, int yellow, int black);
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 \
+\
+Plot HSV
+\f1\b0\fs20 \
+With this function a pixel at coordinates 
+\f2 (x, y)
+\f1  can be set to the desired colour, but with the colour coefficients given in the Hue, Saturation, Value colourspace. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void plotHSV(int\'a0x, int\'a0y, double\'a0hue, double\'a0saturation, double\'a0value);\
+void plotHSV(int\'a0x, int\'a0y, int\'a0hue, int\'a0saturation, int\'a0value); \
+
+\f1 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Plot CMYK
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Plot a point\'a0in the Cyan, Magenta, Yellow, Black colourspace. Please note that this colourspace is lossy, i.e. it cannot reproduce all colours on screen that RGB can. The difference, however, is barely noticeable. The algorithm used is a standard one. The colour components are either doubles from 
+\f2 0.0
+\f1  to 
+\f2 1.0
+\f1  or ints from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 .\
+
+\f2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+\cf0 void plotCMYK(	int\'a0x, int\'a0y,\
+				double\'a0cyan, double\'a0magenta, double\'a0yellow, double\'a0black);\
+void plotCMYK(	int\'a0x, int\'a0y,\
+				int\'a0cyan, int\'a0magenta, int\'a0yellow, int\'a0black);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0    \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Clear
+\f1\b0\fs20 \
+The whole image is set to black.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void clear(void);\'a0\'a0\'a0\'a0
+\f1 \'a0\'a0\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Invert
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Inverts the image in RGB colourspace.\
+
+\f2 \
+void invert(void);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Boundary Fill
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 All pixels adjacent to the start pixel will be filled with the fill colour, until the boundary colour is encountered. For example, calling 
+\f2 boundary_fill()
+\f1  with the boundary colour set to red, on a pixel somewhere inside a red circle, will fill the entire circle with the desired fill colour. If, on the other hand, the circle is not the boundary colour, the rest of the image will be filled. The colour components are either 
+\f2 double
+\f1  from 
+\f2 0.0
+\f1  to 
+\f2 1.0 
+\f1 or 
+\f2 int
+\f1  from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 .\
+
+\f2 \
+\
+void boundary_fill(int\'a0xstart, int\'a0ystart, \
+		double boundary_red, double boundary_green, double\'a0boundary_blue,\
+		double\'a0fill_red, double\'a0fill_green, double\'a0fill_blue);\
+void boundary_fill( int\'a0xstart, int\'a0ystart, \
+				  int boundary_red, int boundary_green, int\'a0boundary_blue,\
+				  int\'a0fill_red, int\'a0fill_green, int\'a0fill_blue) ;\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Flood Fill
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 All pixels adjacent to the start pixel will be filled with the fill colour, if they are the same colour as the start pixel. For example, calling 
+\f2 flood_fill() 
+\f1 somewhere in the interior of a solid blue rectangle will colour the entire rectangle the fill colour. The colour components are either 
+\f2 double
+\f1  from 
+\f2 0.0 
+\f1 to 
+\f2 1.0 
+\f1 or 
+\f2 int
+\f1  from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 .\
+
+\f2 \
+void flood_fill(	int\'a0xstart, int\'a0ystart,\
+				double\'a0fill_red, double\'a0fill_green, double\'a0fill_blue);\
+void flood_fill(	int\'a0xstart, int\'a0ystart,\
+				int\'a0fill_red, int\'a0fill_green, int\'a0fill_blue) ;\
+
+\f1 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Laplacian
+\f1\b0\fs20 \
+This function applies a discrete laplacian to the image, multiplied by a constant factor.   The kernel used in this case is:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f2 \cf0 			1.0  1.0  1.0\
+			1.0 -8.0  1.0\
+			1.0  1.0  1.0
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 Basically, this works as an edge detector. The current pixel is assigned the sum of all neighbouring\
+pixels, multiplied by the corresponding kernel element. For example, imagine a pixel and its 8 neighbours:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f2 \cf0 			1.0      1.0      1.0      0.0      0.0\
+			1.0      1.0    ->1.0<-    0.0      0.0\
+			1.0      1.0      1.0      0.0      0.0
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 This represents a border between white and black, black is on the right. Applying the laplacian to he pixel specified above pixel gives:\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f2 \cf0 			1.0*1.0   +  1.0*1.0    +  0.0*1.0   +  \
+			1.0*1.0   +  1.0*-8.0   +  0.0*1.0   +  \
+			1.0*1.0   +  1.0*1.0    +  0.0*1.0   =  -3.0
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 	Applying this to the pixel to the right of the pixel considered previously, we get a sum of 
+\f2 3.0
+\f1 .  That is, after passing over an edge, we get a high value for the pixel adjacent to the edge. Since PNGwriter limits the colour components if they are off-scale, and the result of the laplacian may be negative, a scale factor and an offset value are included. This might be useful for keeping things within range or for bringing out more detail in the edge detection. The final pixel value will be given by:\
+	
+\f2 final value =  laplacian(original pixel)*k + offset
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\b \cf0 Tip
+\b0 : Try a value of 1.0 for k to start with, and then experiment with other values. 
+\b Tip
+\b0 : It would be difficult to foresee all possible uses of this function, so please feel free to look at the source code and perhaps implement your own if it does not suit your needs.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void laplacian(double k, double offset);
+\f1 \
+\
+\page \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Reading  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . 
+\f1\b0\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Read
+\f1\b0\fs20 \
+With this function we find out what colour the pixel
+\f2  (x, y)
+\f1  is. If "
+\f2 colour
+\f1 " is 
+\f2 1
+\f1 , \'a0it will return the red coefficient, if it is set to 
+\f2 2
+\f1 , the green one, and if \'a0it set to 
+\f2 3
+\f1 , the blue colour coefficient will be returned, and this returned value will be of type 
+\f2 int\'a0
+\f1 and be between 0 and 65535.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 int\'a0read(int\'a0x, int\'a0y, int\'a0colour); 
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Read,  Average
+\f1\b0\fs20 \
+Same as the above, only that the average of the three colour coefficients is returned.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 int\'a0read(int\'a0x, int\'a0y);\'a0\'a0
+\f1 \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 dRead
+\f1\b0\fs20 \
+Same as 
+\f2 read()
+\f1 , but the returned value will be of type 
+\f2 double\'a0
+\f1 and be between 
+\f2 0.0
+\f1  and 
+\f2 1.0
+\f1 .\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 double\'a0dread(int\'a0x, int\'a0y, int\'a0colour); 
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 dRead,  Average
+\f1\b0\fs20 \
+Same as the above, only that the average of the three colour coefficients is returned.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 double\'a0dread(int\'a0x, int\'a0y);\'a0\'a0\'a0
+\f1 \'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Bilinear Interpolation of Image
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Given a floating point\'a0coordinate (
+\f2 x
+\f1  from 0.0 to width, 
+\f2 y
+\f1  from 0.0 to height), this function will return the interpolated colour intensity specified by colour (where red = 
+\f2 1
+\f1 , green = 
+\f2 2
+\f1 , blue = 
+\f2 3
+\f1 ). 
+\f2 bilinear_interpolate_read()
+\f1  returns an 
+\f2 int\'a0
+\f1 from 0 to 65535, and 
+\f2 bilinear_interpolate_dread()
+\f1  returns a 
+\f2 double\'a0
+\f1 from 0.0 to 1.0. 
+\b Tip
+\b0 : Especially useful for enlarging an image.\
+\
+
+\f2 int bilinear_interpolation_read(double\'a0x, double\'a0y, int\'a0colour);\
+double bilinear_interpolation_dread(double\'a0x, double\'a0y, int\'a0colour);\
+\
+
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Read HSV
+\f1\b0\fs20 \
+With this function we find out what colour the pixel (x, y) is, but in the Hue, \'a0Saturation, Value colourspace. If "colour" is 
+\f2 1
+\f1 ,\'a0\'a0it will return the Hue coefficient, if it is set to 
+\f2 2
+\f1 , the Saturation one, and if it set to 
+\f2 3
+\f1 , the Value colour coefficient will be returned, \'a0and this returned value will be of type int\'a0and be between 0 and 65535. 
+\b Important
+\b0 : If you attempt to read the Hue of a pixel that is a shade of grey, the value returned will be nonsensical or even NaN. This is just the way the RGB -> HSV algorithm works: the Hue of grey is not defined. You might want to check whether the pixel you are reading is grey before attempting a readHSV().\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 int\'a0readHSV(int\'a0x, int\'a0y, int\'a0colour); 
+\f1 \
+\'a0\'a0\'a0\'a0\'a0\'a0\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 dRead HSV
+\f1\b0\fs20 \
+Same as the above, but the returned value will be of type double\'a0and be between 
+\f2 0.0
+\f1  and 
+\f2 1.0
+\f1 .\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 double\'a0dreadHSV(int\'a0x, int\'a0y, int\'a0colour);\'a0\'a0\'a0\'a0\'a0
+\f1 \'a0\
+\
+
+\f2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Read CMYK, double\'a0version
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Get a pixel in the Cyan, Magenta, Yellow, Black colourspace. if 'colour' is 
+\f2 1
+\f1 , the Cyan component will be returned as a double\'a0from 
+\f2 0.0
+\f1  to 
+\f2 1.0
+\f1 . If 'colour is 
+\f2 2
+\f1 , the Magenta colour component will be returned, and so on, up to 
+\f2 4
+\f1 .\
+
+\f2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+\cf0 double\'a0dreadCMYK(int\'a0x, int\'a0y, int\'a0colour);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Read CMYK
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Same as the above, but the colour components returned are an int\'a0from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 .\
+
+\f2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+\cf0 int\'a0readCMYK(int\'a0x, int\'a0y, int\'a0colour);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f1 \cf0 \
+\page \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Figures  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 \
+These functions draw basic shapes. Available in both 
+\f2 int 
+\f1 and 
+\f2 double\'a0
+\f1 versions.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Line
+\fs28 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 The line functions use the fast Bresenham algorithm.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f2 \cf0 void line(	int\'a0xfrom, int\'a0yfrom,\
+			int\'a0xto, int\'a0yto, \
+			int\'a0red, int\'a0green, int\'a0blue);\
+void line(	int\'a0xfrom, int\'a0yfrom,\
+			int\'a0xto, int\'a0yto,\
+			double\'a0red, double\'a0green,double\'a0blue);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f0\b\fs24 \cf0 Triangle
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f1 \cf0 Draws a triangle specified by the three pairs of points 
+\f2 (x1, y1)
+\f1 , 
+\f2 (x2, y2)
+\f1 , 
+\f2 (x3, y3)
+\f1 .
+\f2  
+\f1 The colour components are either 
+\f2 double
+\f1 s from 0.0 to 1.0 or 
+\f2 int
+\f1 s from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 .
+\f2 \
+\
+void triangle(	int x1, int y1, int x2, int y2, int x3, int y3, \
+				int red, int green, int blue);\
+void triangle(	int x1, int y1, int x2, int y2, int x3, int y3,\
+				double red, double green, double blue);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f0\b\fs24 \cf0 Filled Triangle, and Filled Triangle, Blended
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f1 \cf0 Draws the triangle specified by the three pairs of points in the colour specified by the colour coefficients. 
+\f2 filledtriangle_blend() 
+\f1 does the same, but blended with the background. See the description for Blended Functions. The colour components are either 
+\f2 double
+\f1 s from 0.0 to 1.0 or 
+\f2 int
+\f1 s from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 .
+\f2 \
+\
+void filledtriangle(	int x1,int y1,int x2,int y2,int x3,int y3,\
+					int red, int green, int blue);\
+void filledtriangle(	int x1,int y1,int x2,int y2,int x3,int y3,\
+					double red, double green, double blue);\
+void filledtriangle_blend(	int x1,int y1,int x2,int y2,int x3,int y3,\
+				double opacity, int red, int green, int blue);\
+void filledtriangle_blend(	int x1,int y1,int x2,int y2,int x3,int y3,\
+				double opacity, double red, double green, double blue);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 \
+\
+Square
+\fs28 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 Despite the name, these functions draw rectangles. 
+\f2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+\cf0 void square(	int\'a0xfrom, int\'a0yfrom,\
+			int\'a0xto, int\'a0yto,\
+			int\'a0red, int\'a0green, int\'a0blue);\
+void square(	int\'a0xfrom, int\'a0yfrom,\
+			int\'a0xto, int\'a0yto,\
+			double\'a0red, double\'a0green, double\'a0blue);\
+void filledsquare(	int\'a0xfrom, int\'a0yfrom,\
+				int\'a0xto, int\'a0yto,\
+				int\'a0red, int\'a0green,int\'a0blue);\
+void filledsquare(	int\'a0xfrom, int\'a0yfrom,\
+				int\'a0xto, int\'a0yto,\
+				double\'a0red, double\'a0green,double\'a0blue);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Circle
+\fs28 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 The circle functions use a fast integer math algorithm. The filled circle functions make use of sqrt(). \
+
+\f2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+\cf0 void circle(	int\'a0xcentre, int\'a0ycentre, int\'a0radius,\
+			int\'a0red, int\'a0green, int\'a0blue);\
+void circle(	int\'a0xcentre, int\'a0ycentre, int\'a0radius,\
+			double\'a0red, double\'a0green, double\'a0blue);\
+void filledcircle(	int\'a0xcentre, int\'a0ycentre, int\'a0radius,\
+				int\'a0red, int\'a0green, int\'a0blue);\
+void filledcircle(	int\'a0xcentre, int\'a0ycentre, int\'a0radius,\
+				double\'a0red, double\'a0green, double\'a0blue);\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720
+
+\f1 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Bezier Curve
+\f1\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\b0 \cf0 (After Frenchman Pierre B\'e9zier from Regie Renault) A collection of formulae for describing curved lines  and surfaces, first used in 1972 to model automobile surfaces.  (from the The Free On-line Dictionary of Computing)  See http://www.moshplant.com/direct-or/bezier/ for one of many available descriptions of bezier curves. There are four points used to define the curve: the two endpoints of the curve are called the anchor points, while the other points, which define the actual curvature, are called handles or control points. Moving the handles lets you modify the shape of the curve. \
+\
+
+\f2 void bezier(  int\'a0startPtX, int\'a0startPtY,                                                                            \
+			int startControlX, int\'a0startControlY, int\'a0endPtX, int\'a0endPtY,                                                                                                   \
+              int\'a0endControlX, int\'a0endControlY,                                                                                         \
+              double\'a0red, double\'a0green, double\'a0blue);\
+\
+\
+void bezier(  int\'a0startPtX, int\'a0startPtY,                                                                            \
+              int\'a0startControlX, int\'a0startControlY, int\'a0endPtX, int\'a0endPtY,                                                                                                   \
+              int\'a0endControlX, int\'a0endControlY,                                                                                         \
+              int\'a0red, int\'a0green, int\'a0blue);
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Polygon
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 This function takes an array of integer values containing the coordinates of the vertexes of a polygon. Note that if you want a closed polygon, you must repeat the first point's coordinates for the last point. It also requires the number of points contained in the array. For example, if you wish to plot a triangle, the array will contain 
+\f2 6
+\f1  elements, and the number of points is 
+\f2 3
+\f1 . Be very careful about this; if you specify the wrong number of points, your program will either segfault or produce points at nonsensical coordinates. The colour components are either 
+\f2 double
+\f1 s from 
+\f2 0.0
+\f1  to 
+\f2 1.0
+\f1  or 
+\f2 int
+\f1 s from 
+\f2 0
+\f1  to 
+\f2 65535
+\f1 .
+\f2 \
+\
+void polygon(	int\'a0* points, int\'a0number_of_points,\
+			double\'a0red, double\'a0green, double\'a0blue);\
+void polygon(	int\'a0* points, int\'a0number_of_points,\
+			int\'a0red, int\'a0green, int\'a0blue);\
+     \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Arrow,  Filled Arrow
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Plots an arrow from 
+\f2 (x1, y1)
+\f1  to 
+\f2 (x2, y2)
+\f1  with the arrowhead at the second point, given the size in pixels and the angle in radians of the arrowhead. The plotted arrow consists of one main line, and two smaller lines originating from the second point. Filled Arrow plots the same, but the arrowhead is a solid triangle. 
+\b Tip
+\b0 : An angle of 
+\f2 10
+\f1  to 
+\f2 30
+\f1  degrees (
+\f2 0.1745
+\f1  to 
+\f2 0.5236
+\f1  radians) looks OK.
+\f2 \
+\
+void arrow( int x1, int y1, int x2, int y2, \
+		int size, double head_angle, double red, double green, double blue);\
+void arrow( int x1, int y1, int x2, int y2, \
+		int size, double head_angle, int red, int green, int blue);\
+\
+void filledarrow(	int x1, int y1, int x2, int y2, \
+				int size, double head_angle, \
+				double red, double green, double blue);\
+void filledarrow(  int x1, int y1, int x2, int y2,\
+				int size, double head_angle,\
+				int red, int green, int blue);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Cross, Maltese Cross
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Plots a simple cross at 
+\f2 (x, y)
+\f1 , with the specified height and width, and in the specified colour. Maltese cross plots a cross, as before, but adds bars at the end of each arm of the cross. The size of these bars is specified with 
+\f2 x_bar_height
+\f1  and 
+\f2 y_bar_width
+\f1 . The cross will look something like this:
+\f2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\fs18 \cf0 						    -----  <-- ( y_bar_width)\
+						      |\
+						      |\
+						  |-------|  <-- ( x_bar_height )\
+						      |\
+						      |\
+						    -----
+\fs20 \
+	\
+void cross(	int x, int y, int xwidth, int yheight, \
+			double red, double green, double blue);\
+void cross( 	int x, int y, int xwidth, int yheight, \
+			int red, int green, int blue);\
+\
+void maltesecross(	int x, int y, int xwidth, int yheight, \
+				int x_bar_height, int y_bar_width, \
+				double red, double green, double blue);\
+void maltesecross( int x, int y, int xwidth, int yheight, \
+				int x_bar_height, int y_bar_width, \
+				int red, int green, int blue);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Diamond, Filled Diamond
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Plots a diamond shape, given the (
+\f2 x
+\f1 , 
+\f2 y
+\f1 ) position, the width and height, and the colour. Filled diamond plots a filled diamond.
+\f2 \
+\
+\
+void diamond(	int x, int y, int width, int height,\
+			int red, int green, int blue);\
+void diamond(	int x, int y, int width, int height, \
+			double red, double green, double blue);\
+\
+void filleddiamond(	int x, int y, int width, int height, \
+					int red, int green, int blue);\
+void filleddiamond(	int x, int y, int width, int height,\
+					double red, double green, double blue);\
+
+\f1 \
+\page \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Text  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . 
+\f2\b0\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Plot Text
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Uses the Freetype2 library to plot text in the image.
+\f2  
+\f1  
+\f2 face_path
+\f1  is the file path to a TrueType font file (
+\f2 .ttf
+\f1 ) (FreeType2 can also handle other types). 
+\f2 fontsize
+\f1  specifices the approximate height of the rendered font in pixels. 
+\f2 x_start
+\f1  and 
+\f2 y_start
+\f1  specify the placement of the lower, left corner of the text string. 
+\f2 angle
+\f1  is the text angle in radians. 
+\f2 text
+\f1  is the text to be rendered.  The colour coordinates can be 
+\f2 doubles
+\f1  from 0.0 to 1.0 or 
+\f2 ints
+\f1  from 0 to 65535. 
+\b Tip
+\b0 : PNGwriter installs a few fonts in 
+\f2 /usr/local/share/pngwriter/fonts
+\f1  to get you started. 
+\b Tip
+\b0 : Remember to add 
+\f2 -DNO_FREETYPE
+\f1  to your compilation flags if PNGwriter was compiled without FreeType support.\
+
+\f2 \
+void plot_text(	char\'a0*\'a0face_path, int\'a0fontsize,\
+				int\'a0x_start, int\'a0y_start, 	double\'a0angle,\
+				char\'a0*\'a0text,\
+				double\'a0red, double\'a0green, double\'a0blue);\
+void plot_text(	char\'a0*\'a0face_path, int\'a0fontsize,\
+				int\'a0x_start, int\'a0y_start, double\'a0angle,\
+				char\'a0*\'a0text,\
+				int\'a0red, int\'a0green, int\'a0blue);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Plot UTF-8 Text 
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Same as the above, but the text to be plotted is encoded in UTF-8. Why would you want this? To be able to plot all characters available in a large TrueType font, for example: for rendering Japenese, Chinese and other languages not restricted to the standard 128 character ASCII space. 
+\b Tip
+\b0 : One quick way to get a string into UTF-8 is to write it in an adequate text editor, and save it as a file in UTF-8 encoding, which can then be read in in binary mode.
+\f2 \
+\
+void plot_text_utf8(	char\'a0*\'a0face_path, int\'a0fontsize,\
+					int\'a0x_start, int\'a0y_start, double\'a0angle,\
+					char\'a0*\'a0text,\
+ 					double\'a0red, double\'a0green, double\'a0blue);\
+void plot_text_utf8(	char\'a0*\'a0face_path, int\'a0fontsize,\
+					int\'a0x_start, int\'a0y_start, double\'a0angle, \
+					char\'a0*\'a0text,\
+ 					int\'a0red, int\'a0green, int\'a0blue);\
+\pard\tx565\tx1133\tx1700\tx2266\tx2832\tx3401\tx3967\tx4535\tx5102\tx5669\tx6235\tx6802
+\cf0 \
+\
+\pard\tx565\tx1133\tx1700\tx2266\tx2832\tx3401\tx3967\tx4535\tx5102\tx5669\tx6235\tx6802
+
+\f0\b\fs24 \cf0 Get Text Width, Get Text Width UTF8
+\f2\b0\fs20 \
+
+\f1 Returns the approximate width, in pixels, of the specified *unrotated* text. It is calculated by adding each letter's width and kerning value (as specified in the TTF file). Note that this will not give the position of the farthest pixel, but it will give a pretty good idea of what area the text will occupy. 
+\b Tip
+\b0 : The text, when plotted unrotated, will fit approximately in a box with its lower left corner at 
+\f2 (x_start, y_start)
+\f1  and upper right at 
+\f2 (x_start + width, y_start + size)
+\f1 , where width is given by 
+\f2 get_text_width()
+\f1  and size is the specified size of the text to be plotted. 
+\b Tip
+\b0 : Text plotted at position 
+\f2 (x_start, y_start)
+\f1 , rotated with a given angle '
+\f2 th
+\f1 ', and of a given '
+\f2 size
+\f1 ' whose width is '
+\f2 width
+\f1 ', will fit approximately inside a rectangle whose corners are at\
+
+\f2\fs18 	(x_start, y_start)\
+	(x_start + width*cos(th), y_start + width*sin(th))\
+	(x_start + width*cos(th) - size*sin(th),y_start+ width*sin(th)+size*cos(th))\
+	(x_start - size*sin(th), y_start + size*cos(th)) 
+\fs20  \
+\
+int get_text_width(char * face_path, int fontsize,  char * text);\
+int get_text_width_utf8(char * face_path, int fontsize, char * text);\
+\
+\
+\
+\
+\page \
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf0  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  Image Size  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 . 
+\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+\cf0 \
+Scale Proportional\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1\b0\fs20 \cf0 Scale the image using bilinear interpolation. If 
+\f2 k
+\f1  is greater than 1.0, the image will be enlarged.  If 
+\f2 k
+\f1  is less than 1.0, the image will be shrunk. Negative or null values of 
+\f2 k
+\f1  are not allowed. The image will be resized and the previous content will be replaced by the scaled image. 
+\b Tip
+\b0 : Use 
+\f2 getheight()
+\f1  and 
+\f2 getwidth()
+\f1  to find out the new width and height of the scaled image. 
+\b Note
+\b0 : After scaling, all images will have a bit depth of 16, even if the original image had a bit depth of 8.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2\b0\fs20 \cf0 void scale_k(double k);
+\f0\b\fs24 \
+\
+\
+Scale Non-Proportional\
+
+\f1\b0\fs20 Scale the image using bilinear interpolation, with different horizontal and vertical scale factors.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2\b0\fs20 \cf0 void scale_kxky(double kx, double ky);
+\f0\b\fs24 \
+\
+Scale to Final Width and Height
+\f1\b0\fs20 \
+\
+Scale the image in such a way as to meet the target width and height. 
+\b Tip
+\b0 : If you want to keep the image proportional, scale_k() might be more appropriate.\
+\
+
+\f2 void scale_wh(int finalwidth, int finalheight);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Resize Image
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Resizes the PNGwriter instance. Note: All image data is set to black (this is  a resizing, not a scaling, of the image).\
+
+\f2 \
+void resize(int\'a0width, int\'a0height);\
+\
+\
+\page \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\b\fs28 \cf2  \cf3 .\cf4  \cf0  \cf2 .\cf5  \cf0  \cf4 .\cf6  \cf0  \cf5 .\cf7  \cf0  \cf6 .\cf8  \cf0  \cf7 .\cf9  \cf0  \cf8 .\cf10  \cf0  \cf9 .\cf0   \cf10 . \cf0  .  File and PNG-Specific Functions  .  \cf10 . \cf0  \cf9 . \cf0  \cf8 . \cf0  \cf7 . \cf0  \cf6 . \cf0  \cf5 . \cf0  \cf4 . \cf0  \cf2 . \cf0  \cf3 .
+\f2\b0\fs20 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Read From File
+\f1\b0\fs20 \
+Opens the existing PNG image, and copy it into this instance of the class. It is important to mention that only some PNG variants are supported. Very generally speaking, most PNG files can now be read (as of version 0.5.4), but if they have an alpha channel it will be completely stripped. If the PNG file uses GIF-style transparency (where one colour is chosen to be transparent), PNGwriter will not read the image properly, but will not complain. Also, if any ancillary chunks are included in the PNG file (chroma, filter, etc.), it will render with a slightly different tonality. For the vast majority of PNGs, this should not be an issue. 
+\b Note
+\b0 : If you read an 8-bit PNG, the internal representation of that instance of PNGwriter will be 8-bit (PNG files of less than 8 bits will be upscaled to 8 bits). To convert it to 16-bit, just loop over all pixels, reading them into a new instance of PNGwriter. New instances of PNGwriter are 16-bit by default.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void readfromfile(char\'a0*\'a0name); \
+void readfromfile(const\'a0char\'a0*\'a0name); \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Close
+\f1\b0\fs20 \
+Close the instance of the class, and write the image to disk.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void close(void); 
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Rename
+\f1\b0\fs20 \
+To rename the file once an instance of PNGwriter has been created. If the argument is a 
+\f2 long unsigned int
+\f1 , for example
+\f2  77
+\f1 , the filename will be changed to  
+\f2 0000000077.png\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 \
+
+\f2 void pngwriter_rename(char\'a0*\'a0newname);\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 \
+void pngwriter_rename(const\'a0char\'a0*\'a0newname);\'a0\'a0\'a0\'a0\'a0
+\f1 \'a0\'a0\'a0\'a0\'a0\'a0\'a0\
+
+\f2 void pngwriter_rename(long unsigned int\'a0index);  \
+ \
+
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Get Height
+\f1\b0\fs20 \
+When you open a PNG with 
+\f2 readfromfile()
+\f1  you can find out its height with this function.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 int\'a0getheight(void);\
+\
+
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Get Width
+\f1\b0\fs20 \
+When you open a PNG with 
+\f2 readfromfile()
+\f1  you can find out its width with this function.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 int\'a0getwidth(void);\
+\
+
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Write PNG
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Writes the PNG image to disk. You can still change the PNGwriter instance after this.     \
+
+\f2 \
+void write_png(void);\
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Set Compression Level
+\f1\b0\fs20 \
+Set the compression level that will be used for the image. 
+\f2 -1
+\f1  is default, 
+\f2 0
+\f1  is none, 
+\f2 9
+\f1  is best compression. \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void setcompressionlevel(int\'a0level);
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Get Bit Depth
+\f1\b0\fs20 \
+When you open a PNG with 
+\f2 readfromfile() 
+\f1 you can find out its bit depth with this function.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 int\'a0getbitdepth(void);
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Get Colour Type
+\f1\b0\fs20 \
+When you open a PNG with 
+\f2 readfromfile() 
+\f1 you can find out its colour type.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 int\'a0getcolortype(void);\
+\
+
+\f1 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Set Gamma Coefficient
+\f1\b0\fs20 \
+Set the image's gamma (file gamma) coefficient. The default value of 
+\f2 0.5
+\f1  should be fine.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f2 \cf0 void setgamma(double\'a0gamma);
+\f1 \
+\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Get Gamma Coefficient
+\f1\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\b0 \cf0 Get the image's gamma coefficient. This is experimental.\
+\
+
+\f2 double\'a0getgamma(void);
+\f1 \
+
+\f2 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f0\b\fs24 \cf0 Set Text
+\f2\b0\fs20 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qj
+
+\f1 \cf0 Sets the text information in the PNG header. If it is not called, the default is used.\
+
+\f2 \
+void settext(	char\'a0*\'a0title, char\'a0*\'a0author,\
+			char\'a0*\'a0description, char\'a0*\'a0software);\
+void settext(	const\'a0char\'a0*\'a0title, const\'a0char\'a0*\'a0author,\
+			const\'a0char\'a0*\'a0description, const\'a0char\'a0*\'a0software);\
+}
