@@ -2336,11 +2336,11 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
 void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, double green, double blue)
 {
    double temp;
-   for(int j=1; j<bitmap->rows+1; j++)
+   for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
      {
-	for(int i=1; i< bitmap->width + 1; i++)
+	for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
 	  {
-	     temp = (double)(bitmap->buffer[(j-1)*bitmap->width + (i-1)] )/255.0;
+	     temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
 
 	     if(temp)
 	       {
@@ -4082,11 +4082,11 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 void pngwriter::my_draw_bitmap_blend( FT_Bitmap * bitmap, int x, int y, double opacity, double red, double green, double blue)
 {
    double temp;
-   for(int j=1; j<bitmap->rows+1; j++)
+   for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
      {
-	for(int i=1; i< bitmap->width + 1; i++)
+	for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
 	  {
-	     temp = (double)(bitmap->buffer[(j-1)*bitmap->width + (i-1)] )/255.0;
+	     temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
 
 	     if(temp)
 	       {
