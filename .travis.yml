@@ -6,6 +6,9 @@ compiler:
 
 env:
   global:
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "G+A/6+l+PoiGxXx4hUdf1/RnpK2/2F5vcBmjRWpzMRvA7GP2CRcM6N+jpG1/XB8Ko1d2QP8/hypcA6gHywycFGedWqgg51ol416oZnVwNjFjvDAB0Emh5nadHMA/gfdeMIoyaS1I8KISDReTaw8dygKuGpRdqdcU7EHfHUKBkJY="
     - CXXFLAGS="-Werror"
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
@@ -19,6 +22,16 @@ env:
 matrix:
   allow_failures:
     - env: LIBPNG_VERSION=1.7.0beta64
+
+addons:
+  coverity_scan:
+    project:
+      name: "pngwriter/pngwriter"
+      description: "C++ library for creating PNG images"
+    notification_email: axel.huebl@plasma.ninja
+    build_command_prepend: "cmake $TRAVIS_BUILD_DIR"
+    build_command:   "make"
+    branch_pattern: coverity_scan
 
 script:
   - cd $BUILD
