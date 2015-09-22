@@ -96,7 +96,6 @@ class pngwriter
    int width_;
    int  backgroundcolour_;
    int bit_depth_;
-   int rowbytes_;
    int colortype_;
    int compressionlevel_;
    bool transformation_; // Required by Mikkel's patch
