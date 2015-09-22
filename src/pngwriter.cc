@@ -3120,7 +3120,7 @@ double pngwriter::dreadCMYK(int x, int y, int colour)
    if((colour !=1)&&(colour !=2)&&(colour !=3)&&(colour !=4))
      {
 	std::cerr << " PNGwriter::dreadCMYK - WARNING **: Invalid argument: should be 1, 2, 3 or 4, is " << colour << std::endl;
-	return 0;
+	return 0.0;
      }
 
    double black, red, green, blue, ired, igreen, iblue, iblack;
@@ -3168,8 +3168,6 @@ double pngwriter::dreadCMYK(int x, int y, int colour)
      {
 	return black;
      }
-
-   return 0.0;
 }
 
 int pngwriter::readCMYK(int x, int y, int colour)
@@ -3232,9 +3230,6 @@ int pngwriter::readCMYK(int x, int y, int colour)
      {
 	return (int)( (black)*65535);
      }
-
-   return 0;
-
 }
 
 void pngwriter::scale_k(double k)
