@@ -3117,12 +3117,6 @@ double pngwriter::dreadCMYK(int x, int y, int colour)
  *     Yellow  = (1-Blue-Black)/(1-Black)
  *
  * */
-   if((colour !=1)&&(colour !=2)&&(colour !=3)&&(colour !=4))
-     {
-	std::cerr << " PNGwriter::dreadCMYK - WARNING **: Invalid argument: should be 1, 2, 3 or 4, is " << colour << std::endl;
-	return 0.0;
-     }
-
    double black, red, green, blue, ired, igreen, iblue, iblack;
    //add error detection here
    // not much to detect, really
@@ -3149,24 +3143,16 @@ double pngwriter::dreadCMYK(int x, int y, int colour)
 
    iblack = 1.0 - black;
 
-   if(colour == 1)
+   switch( colour )
      {
-	return ((ired-black)/iblack);
-     }
-
-   if(colour == 2)
-     {
-	return ((igreen-black)/iblack);
-     }
-
-   if(colour == 3)
-     {
-	return ((iblue-black)/iblack);
-     }
-
-   if(colour == 4)
-     {
-	return black;
+	case 1: return ((ired-black)/iblack);
+	case 2: return ((igreen-black)/iblack);
+	case 3: return ((iblue-black)/iblack);
+	case 4: return black;
+	default:
+		std::cerr << " PNGwriter::dreadCMYK - WARNING **: Invalid argument: should be 1, 2, 3 or 4, is "
+			<< colour << std::endl;
+		return 0.0;
      }
 }
 
@@ -3179,12 +3165,6 @@ int pngwriter::readCMYK(int x, int y, int colour)
  *     Yellow  = (1-Blue-Black)/(1-Black)
  *
  * */
-   if((colour !=1)&&(colour !=2)&&(colour !=3)&&(colour !=4))
-     {
-	std::cerr << " PNGwriter::readCMYK - WARNING **: Invalid argument: should be 1, 2, 3 or 4, is " << colour << std::endl;
-	return 0;
-     }
-
    double black, red, green, blue, ired, igreen, iblue, iblack;
    //add error detection here
    // not much to detect, really
@@ -3211,24 +3191,16 @@ int pngwriter::readCMYK(int x, int y, int colour)
 
    iblack = 1.0 - black;
 
-   if(colour == 1)
+   switch( colour )
      {
-	return (int)( ((ired-black)/(iblack))*65535);
-     }
-
-   if(colour == 2)
-     {
-	return (int)( ((igreen-black)/(iblack))*65535);
-     }
-
-   if(colour == 3)
-     {
-	return (int)( ((iblue-black)/(iblack))*65535);
-     }
-
-   if(colour == 4)
-     {
-	return (int)( (black)*65535);
+	case 1: return (int)( ((ired-black)/(iblack))*65535);
+	case 2: return (int)( ((igreen-black)/(iblack))*65535);
+	case 3: return (int)( ((iblue-black)/(iblack))*65535);
+	case 4: return (int)( (black)*65535);
+	default:
+		std::cerr << " PNGwriter::readCMYK - WARNING **: Invalid argument: should be 1, 2, 3 or 4, is "
+			<< colour << std::endl;
+		return 0;
      }
 }
 
