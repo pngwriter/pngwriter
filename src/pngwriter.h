@@ -68,6 +68,7 @@
 #endif
 
 #include <iostream>
+#include <ios>
 #include <cmath>
 #include <cwchar>
 #include <cstring>

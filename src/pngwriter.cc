@@ -2104,7 +2104,11 @@ void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_st
 
 	/* Load glyph image into the slot (erase previous one) */
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) { std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error "<< std::hex << error <<")." << std::endl; return;}
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
+	  std::cerr.copyfmt(std::ios(NULL));
+	  return;
+	}
 
 	/* Convert to an anti-aliased bitmap */
 	//	error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
@@ -2242,11 +2246,23 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
 
    /* Initialize FT Library object */
    error = FT_Init_FreeType( &library );
-   if (error) { std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Could not init Library."<< std::endl; return;}
+   if (error) {
+     std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Could not init Library." << std::endl;
+     delete[] ucs4text;
+     return;
+   }
 
    /* Initialize FT face object */
    error = FT_New_Face( library,face_path,0,&face );
-   if ( error == FT_Err_Unknown_File_Format ) { std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Font was opened, but type not supported."<< std::endl; return; } else if (error){ std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file."<< std::endl; return; }
+   if ( error == FT_Err_Unknown_File_Format ) {
+     std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Font was opened, but type not supported." << std::endl;
+     delete[] ucs4text;
+     return;
+   } else if (error) {
+     std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file." << std::endl;
+     delete[] ucs4text;
+     return;
+   }
 
    /* Set the Char size */
    error = FT_Set_Char_Size( face,          /* handle to face object           */
@@ -2287,18 +2303,31 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Set char size error." << std::endl; return;};
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Set char size error." << std::endl;
+	  delete[] ucs4text;
+	  return;
+	}
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, ucs4text[n] );
 
 	/* Load glyph image into the slot (erase previous one) */
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) { std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error "<< std::hex << error <<")." << std::endl; return;}
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
+	  std::cerr.copyfmt(std::ios(NULL));
+	  delete[] ucs4text;
+	  return;
+	}
 
 	/* Convert to an anti-aliased bitmap */
 	error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
-	if (error) { std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Render glyph error." << std::endl; return;}
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Render glyph error." << std::endl;
+	  delete[] ucs4text;
+	  return;
+	}
 
 	/* Now, draw to our target surface */
 	my_draw_bitmap( &slot->bitmap,
@@ -2442,7 +2471,11 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 
 	/* Load glyph image into the slot (erase previous one) */
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) { std::cerr << " PNGwriter::get_text_width - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error "<< std::hex << error <<")." << std::endl; return 0;}
+	if (error) {
+	  std::cerr << " PNGwriter::get_text_width - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
+	  std::cerr.copyfmt(std::ios(NULL));
+	  return 0;
+	}
 
 	/* Convert to an anti-aliased bitmap */
 	//	error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
@@ -2585,11 +2618,23 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 
    /* Initialize FT Library object */
    error = FT_Init_FreeType( &library );
-   if (error) { std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Could not init Library."<< std::endl; return 0;}
+   if (error) {
+     std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Could not init Library." << std::endl;
+     delete[] ucs4text;
+     return 0;
+   }
 
    /* Initialize FT face object */
    error = FT_New_Face( library,face_path,0,&face );
-   if ( error == FT_Err_Unknown_File_Format ) { std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Font was opened, but type not supported."<< std::endl; return 0; } else if (error){ std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file."<< std::endl; return 0; }
+   if ( error == FT_Err_Unknown_File_Format ) {
+     std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Font was opened, but type not supported." << std::endl;
+     delete[] ucs4text;
+     return 0;
+   } else if (error) {
+     std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file." << std::endl;
+     delete[] ucs4text;
+     return 0;
+   }
 
    /* Set the Char size */
    error = FT_Set_Char_Size( face,          /* handle to face object           */
@@ -2630,18 +2675,31 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Set char size error." << std::endl; return 0;};
+	if (error) {
+	  std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Set char size error." << std::endl;
+	  delete[] ucs4text;
+	  return 0;
+	}
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, ucs4text[n] );
 
 	/* Load glyph image into the slot (erase previous one) */
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) { std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error "<< std::hex << error <<")." << std::endl; return 0;}
+	if (error) {
+	  std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
+	  std::cerr.copyfmt(std::ios(NULL));
+	  delete[] ucs4text;
+	  return 0;
+	}
 
 	/* Convert to an anti-aliased bitmap */
 	error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
-	if (error) { std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Render glyph error." << std::endl; return 0;}
+	if (error) {
+	  std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: FreeType: Render glyph error." << std::endl;
+	  delete[] ucs4text;
+	  return 0;
+	}
 
 	/* Now, draw to our target surface */
 /*	my_draw_bitmap( &slot->bitmap,
@@ -3848,7 +3906,11 @@ void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, in
 
 	/* Load glyph image into the slot (erase previous one) */
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error "<< std::hex << error <<")." << std::endl; return;}
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
+	  std::cerr.copyfmt(std::ios(NULL));
+	  return;
+	}
 
 	/* Convert to an anti-aliased bitmap */
 	//	error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
@@ -3987,11 +4049,23 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 
    /* Initialize FT Library object */
    error = FT_Init_FreeType( &library );
-   if (error) { std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Could not init Library."<< std::endl; return;}
+   if (error) {
+     std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Could not init Library." << std::endl;
+     delete[] ucs4text;
+     return;
+   }
 
    /* Initialize FT face object */
    error = FT_New_Face( library,face_path,0,&face );
-   if ( error == FT_Err_Unknown_File_Format ) { std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Font was opened, but type not supported."<< std::endl; return; } else if (error){ std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file."<< std::endl; return; }
+   if ( error == FT_Err_Unknown_File_Format ) {
+     std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Font was opened, but type not supported." << std::endl;
+     delete[] ucs4text;
+     return;
+   } else if (error) {
+     std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file." << std::endl;
+     delete[] ucs4text;
+     return;
+   }
 
    /* Set the Char size */
    error = FT_Set_Char_Size( face,          /* handle to face object           */
@@ -4032,18 +4106,31 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Set char size error." << std::endl; return;};
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Set char size error." << std::endl;
+	  delete[] ucs4text;
+	  return;
+	}
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, ucs4text[n] );
 
 	/* Load glyph image into the slot (erase previous one) */
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) { std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error "<< std::hex << error <<")." << std::endl; return;}
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
+	  std::cout.copyfmt(std::ios(NULL));
+	  delete[] ucs4text;
+	  return;
+	}
 
 	/* Convert to an anti-aliased bitmap */
 	error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
-	if (error) { std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Render glyph error." << std::endl; return;}
+	if (error) {
+	  std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Render glyph error." << std::endl;
+	  delete[] ucs4text;
+	  return;
+	}
 
 	/* Now, draw to our target surface */
 	my_draw_bitmap_blend( &slot->bitmap,
