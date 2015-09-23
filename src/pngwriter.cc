@@ -1320,7 +1320,7 @@ void pngwriter::readfromfile(char * name)
 	return;
      }
 
-   if(!read_png_image(fp, png_ptr, info_ptr, &image, &width, &height))
+   if(!read_png_image(fp, png_ptr, info_ptr, &image, width, height))
      {
 	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl;
 	// fp has been closed already if read_png_image() fails.
@@ -1356,7 +1356,7 @@ void pngwriter::readfromfile(char * name)
 	png_read_update_info(png_ptr, info_ptr); 
      } 
    
-   if(!read_png_image(fp, png_ptr, info_ptr, &image, &width, &height)) 
+   if(!read_png_image(fp, png_ptr, info_ptr, &image, width, height))
      { 
 	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl; 
 	// fp has been closed already if read_png_image() fails. 
@@ -1433,7 +1433,7 @@ void pngwriter::readfromfile(char * name)
 	colortype_ = color_type; 
      } 
    
-   if(!read_png_image(fp, png_ptr, info_ptr, &image, &width, &height)) 
+   if(!read_png_image(fp, png_ptr, info_ptr, &image, width, height))
      { 
 	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl; 
 	// fp has been closed already if read_png_image() fails. 
@@ -1633,35 +1633,35 @@ int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr
 
 ////////////////////////////////////////////////////////////
 int pngwriter::read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
-			      png_bytepp *image, png_uint_32 *width, png_uint_32 *height)
+                              png_bytepp *image, png_uint_32& width, png_uint_32& height)
 {
    unsigned int i,j;
 
-   *width = png_get_image_width(png_ptr, info_ptr);
-   *height = png_get_image_height(png_ptr, info_ptr);
+   width = png_get_image_width(png_ptr, info_ptr);
+   height = png_get_image_height(png_ptr, info_ptr);
 
-   if( width == NULL)
+   if( width == 0 )
      {
-	std::cerr << " PNGwriter::read_png_image - ERROR **: png_get_image_width() returned NULL pointer." << std::endl;
+	std::cerr << " PNGwriter::read_png_image - ERROR **: png_get_image_width() returned 0." << std::endl;
 	fclose(fp);
 	return 0;
      }
 
-   if( height == NULL)
+   if( height == 0 )
      {
-	std::cerr << " PNGwriter::read_png_image - ERROR **: png_get_image_height() returned NULL pointer." << std::endl;
+	std::cerr << " PNGwriter::read_png_image - ERROR **: png_get_image_height() returned 0." << std::endl;
 	fclose(fp);
 	return 0;
      }
 
-   if ((*image = (png_bytepp)malloc(*height * sizeof(png_bytep))) == NULL)
+   if ((*image = (png_bytepp)malloc(height * sizeof(png_bytep))) == NULL)
      {
 	std::cerr << " PNGwriter::read_png_image - ERROR **: Could not allocate memory for reading image." << std::endl;
 	fclose(fp);
 	return 0;
 	//exit(EXIT_FAILURE);
      }
-   for (i = 0; i < *height; i++)
+   for (i = 0; i < height; i++)
      {
 	(*image)[i] = (png_bytep)malloc(png_get_rowbytes(png_ptr, info_ptr));
 	if ((*image)[i] == NULL)
