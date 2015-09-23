@@ -1464,8 +1464,6 @@ void pngwriter::readfromfile(char * name)
    //Graph now is the image.
    graph_ = image;
 
-   rowbytes_ = png_get_rowbytes(png_ptr, info_ptr);
-
 	// This was part of the original source, but has been moved up.
 /*
    png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
