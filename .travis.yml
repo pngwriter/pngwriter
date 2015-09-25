@@ -1,14 +1,13 @@
 language: cpp
 
+sudo: false
+
 env:
   global:
     # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
     #   via the "travis encrypt" command using the project repo's public key
     - secure: "G+A/6+l+PoiGxXx4hUdf1/RnpK2/2F5vcBmjRWpzMRvA7GP2CRcM6N+jpG1/XB8Ko1d2QP8/hypcA6gHywycFGedWqgg51ol416oZnVwNjFjvDAB0Emh5nadHMA/gfdeMIoyaS1I8KISDReTaw8dygKuGpRdqdcU7EHfHUKBkJY="
     - CXXFLAGS="-Werror"
-    - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
-  matrix:
-    - LIBPNG_VERSION=1.6.17
 
 addons:
   coverity_scan:
@@ -19,3 +18,5 @@ addons:
     build_command_prepend: "cmake $TRAVIS_BUILD_DIR"
     build_command:   "make"
     branch_pattern: coverity_scan
+
+script: exit 0
