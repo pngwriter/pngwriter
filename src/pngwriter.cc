@@ -1077,14 +1077,13 @@ void pngwriter::close()
    text_ptr[4].key = key_create;
    char textcrtime[29] = "tIME chunk is not present...";
 #if (PNG_LIBPNG_VER < 10600)
-   textcrtime[28] = '\0';
    memcpy(textcrtime,
           png_convert_to_rfc1123(png_ptr, &mod_time),
           29);
-   textcrtime[sizeof(text_ptr[4].text) - 1] = '\0';
 #else
    png_convert_to_rfc1123_buffer(textcrtime, &mod_time);
 #endif
+   textcrtime[sizeof(textcrtime) - 1] = '\0';
    text_ptr[4].text = textcrtime;
    text_ptr[4].compression = PNG_TEXT_COMPRESSION_NONE;
    entries++;
