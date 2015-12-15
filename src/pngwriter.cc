@@ -10,7 +10,7 @@
 *
 *    Email:                     individual61@users.sourceforge.net
 *
-*    Version:                   0.5.5 (August 2015)
+*    Version:                   0.5.6 (December 2015)
 *
 *    Description:               Library that allows plotting a 48 bit
 *                               PNG image pixel by pixel, which can
