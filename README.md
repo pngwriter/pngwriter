@@ -30,7 +30,7 @@ The PNGwriter project's online presence consists of:
 
 This project was migrated from the PNGwriter repository originally hosted on
 SourceForge (and no longer maintained). The last version released on
-SourceForge will be the present one, 0.5.5.
+SourceForge was 0.5.5.
 
 
 ### Build Status
@@ -125,7 +125,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
 #set(PNGwriter_USE_STATIC_LIBS ON)
 
 #   optional: specifiy (minimal) version / require to find it
-#           (PNGwriter 0.5.5 REQUIRED)
+#           (PNGwriter 0.5.6 REQUIRED)
 find_package(PNGwriter)
 
 if(PNGwriter_FOUND)
