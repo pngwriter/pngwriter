@@ -1,6 +1,5 @@
 Change Log for PNGwriter
 ========================
-**Note**: Changes to PNGwriter prior to version 0.5.5 can be found in the doc/CHANGES file.
 
 0.5.6
 -----
@@ -68,3 +67,6 @@ All closed issues can be found at
   - speedup of ~20x for allocation of black images #46
   - `#define PNGWRITER_VERSION` is deprecated, better query `PNGWRITER_VERSION_MAJOR`,
     `PNGWRITER_VERSION_MINOR` and `PNGWRITER_VERSION_PATCH` #50
+
+
+**Note**: Changes to PNGwriter prior to version 0.5.5 can be found in the doc/CHANGES file.
