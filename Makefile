@@ -10,7 +10,7 @@
 #
 #    Email:                     individual61@users.sourceforge.net
 #
-#    Version:                   0.5.5 (August 2015)
+#    Version:                   0.5.6 (December 2015)
 #
 #    Description:               Library that allows plotting a 48 bit
 #                               PNG image pixel by pixel, which can
@@ -39,7 +39,7 @@
 include make.include
 
 MAJVERSION=0
-MINVERSION=5.5
+MINVERSION=5.6
 VERSION=$(MAJVERSION).$(MINVERSION)
 
 
@@ -64,7 +64,7 @@ intro	:
 	@ echo "#"
 	@ echo "#"
 	@ echo "#  PNGwriter $(VERSION)"
-	@ echo "#  Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Paul Blackburn"
+	@ echo "#  Copyright 2002-2015 Paul Blackburn, 2013-2015 Axel Huebl"
 	@ echo "#  http://pngwriter.sourceforge.net/"
 	@ echo "#  This library and its associated files are covered"
 	@ echo "#  by the GNU General Public License."

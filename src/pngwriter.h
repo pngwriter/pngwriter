@@ -10,7 +10,7 @@
 *
 *    Email:                     individual61@users.sourceforge.net
 *
-*    Version:                   0.5.5 (August 2015)
+*    Version:                   0.5.6 (December 2015)
 *
 *    Description:               Library that allows plotting a 48 bit
 *                               PNG image pixel by pixel, which can
@@ -45,9 +45,9 @@
 
 #define PNGWRITER_VERSION_MAJOR 0
 #define PNGWRITER_VERSION_MINOR 5
-#define PNGWRITER_VERSION_PATCH 5
+#define PNGWRITER_VERSION_PATCH 6
 
-/* deprecated old define in style MAJOR.MINORREVISION, e.g., 0.55 for 0.5.5 */
+/* deprecated old define in style MAJOR.MINORREVISION, e.g., 0.56 for 0.5.6 */
 #define PNGWRITER_PASTE(x,y,z) x ## . ## y ## z
 #define PNGWRITER_EVALUATE(x,y,z) PNGWRITER_PASTE(x,y,z)
 #define PNGWRITER_VERSION PNGWRITER_EVALUATE(PNGWRITER_VERSION_MAJOR, PNGWRITER_VERSION_MINOR, PNGWRITER_VERSION_PATCH)
