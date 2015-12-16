@@ -10,10 +10,11 @@ env:
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
   matrix:
-    - LIBPNG_VERSION=1.2.53
-    - LIBPNG_VERSION=1.4.16
-    - LIBPNG_VERSION=1.5.22
-    - LIBPNG_VERSION=1.6.17
+    - LIBPNG_VERSION=1.2.53 FREETYPE=ON
+    - LIBPNG_VERSION=1.2.53 FREETYPE=OFF
+    - LIBPNG_VERSION=1.4.16 FREETYPE=ON
+    - LIBPNG_VERSION=1.5.22 FREETYPE=ON
+    - LIBPNG_VERSION=1.6.17 FREETYPE=ON
     - LIBPNG_VERSION=1.7.0beta65
 
 matrix:
@@ -25,6 +26,10 @@ script:
   - cmake $TRAVIS_BUILD_DIR
   - make
   - sudo make install
+# tests
+  - cp -R $TRAVIS_BUILD_DIR/examples/burro.png .
+  - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
+  - ./pngtest
 
 before_script:
   - uname -r
@@ -32,7 +37,8 @@ before_script:
 # kick without checking dependencies
   - sudo dpkg -r --force-depends libpng12-dev
   - sudo dpkg -r --force-depends libpng12-0
-  - sudo rm -rf /usr/include/libpng12 /urs/include/png*.h /usr/lib/x86_64-linux-gnu/libpng*
+  - if [ "$FREETYPE" == "OFF" ]; then sudo dpkg -r --force-depends libfreetype6; sudo rm -rf /usr/include/freetype* /usr/lib/x86_64-linux-gnu/libfreetype*; fi
+  - sudo rm -rf /usr/include/libpng12 /usr/include/png*.h /usr/lib/x86_64-linux-gnu/libpng*
 #  - sudo apt-get remove -qq libpng12-0 libpng12-0:i386
   - sudo dpkg --get-selections
   - wget "$LIBPNG_DOWNLOAD$LIBPNG_VERSION.tar.xz"
@@ -44,8 +50,3 @@ before_script:
   - sudo make install
   - sudo find /usr/lib -name 'libpng*'
   - mkdir -p $BUILD
-
-after_script:
-  - cp -R $TRAVIS_BUILD_DIR/examples/burro.png .
-  - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
-  - ./pngtest
