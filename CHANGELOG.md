@@ -4,7 +4,7 @@ Change Log for PNGwriter
 
 0.5.6
 -----
-**Date:** 2015-12-15
+**Date:** 2015-12-16
 
 This release fixes a bug with creation time meta data and refactors several
 internal methods based on coverity-scan reports.
