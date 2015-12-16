@@ -6,6 +6,7 @@ compiler:
 
 env:
   global:
+    - CXXFLAGS="-Werror"
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
   matrix:
@@ -13,11 +14,11 @@ env:
     - LIBPNG_VERSION=1.4.16
     - LIBPNG_VERSION=1.5.22
     - LIBPNG_VERSION=1.6.17
-    - LIBPNG_VERSION=1.7.0beta64
+    - LIBPNG_VERSION=1.7.0beta65
 
 matrix:
   allow_failures:
-    - env: LIBPNG_VERSION=1.7.0beta64
+    - env: LIBPNG_VERSION=1.7.0beta65
 
 script:
   - cd $BUILD

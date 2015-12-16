@@ -1,6 +1,28 @@
 Change Log for PNGwriter
 ========================
-**Note**: Changes to PNGwriter prior to version 0.5.5 can be found in the doc/CHANGES file.
+
+0.5.6
+-----
+**Date:** 2015-12-16
+
+This release fixes a bug with creation time meta data and refactors several
+internal methods based on coverity-scan reports.
+
+All closed issues can be found at
+  [Milestone 0.5.6](https://github.com/pngwriter/pngwriter/issues?q=milestone%3A0.5.6)
+
+### Changes to 0.5.5
+
+**Bug Fixes:**
+  - creation time was randomly malformed and could cause memory corruption #76
+  - fix memory leak in `ucs4text` on error, restore `std::cerr` state #70
+
+**Misc:**
+  - internal method `read_png_image` refactored #71
+  - remove dead code in `readCMYK` #68
+  - remove unused private member `rowbytes_` #69
+  - add a set of compiler warnings for gcc, clang, icc, gpi #65
+
 
 0.5.5
 -----
@@ -45,3 +67,6 @@ All closed issues can be found at
   - speedup of ~20x for allocation of black images #46
   - `#define PNGWRITER_VERSION` is deprecated, better query `PNGWRITER_VERSION_MAJOR`,
     `PNGWRITER_VERSION_MINOR` and `PNGWRITER_VERSION_PATCH` #50
+
+
+**Note**: Changes to PNGwriter prior to version 0.5.5 can be found in the doc/CHANGES file.

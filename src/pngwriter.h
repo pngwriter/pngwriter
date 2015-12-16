@@ -10,7 +10,7 @@
 *
 *    Email:                     individual61@users.sourceforge.net
 *
-*    Version:                   0.5.5 (August 2015)
+*    Version:                   0.5.6 (December 2015)
 *
 *    Description:               Library that allows plotting a 48 bit
 *                               PNG image pixel by pixel, which can
@@ -45,9 +45,9 @@
 
 #define PNGWRITER_VERSION_MAJOR 0
 #define PNGWRITER_VERSION_MINOR 5
-#define PNGWRITER_VERSION_PATCH 5
+#define PNGWRITER_VERSION_PATCH 6
 
-/* deprecated old define in style MAJOR.MINORREVISION, e.g., 0.55 for 0.5.5 */
+/* deprecated old define in style MAJOR.MINORREVISION, e.g., 0.56 for 0.5.6 */
 #define PNGWRITER_PASTE(x,y,z) x ## . ## y ## z
 #define PNGWRITER_EVALUATE(x,y,z) PNGWRITER_PASTE(x,y,z)
 #define PNGWRITER_VERSION PNGWRITER_EVALUATE(PNGWRITER_VERSION_MAJOR, PNGWRITER_VERSION_MINOR, PNGWRITER_VERSION_PATCH)
@@ -68,6 +68,7 @@
 #endif
 
 #include <iostream>
+#include <ios>
 #include <cmath>
 #include <cwchar>
 #include <cstring>
@@ -96,7 +97,6 @@ class pngwriter
    int width_;
    int  backgroundcolour_;
    int bit_depth_;
-   int rowbytes_;
    int colortype_;
    int compressionlevel_;
    bool transformation_; // Required by Mikkel's patch
@@ -109,7 +109,7 @@ class pngwriter
    int check_if_png(char *file_name, FILE **fp);
    int read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr);
    int read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
- 		       png_bytepp *image, png_uint_32 *width, png_uint_32 *height);
+ 		       png_bytepp *image, png_uint_32& width, png_uint_32& height);
    void flood_fill_internal( int xstart, int ystart,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
    void flood_fill_internal_blend( int xstart, int ystart, double opacity,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
 
