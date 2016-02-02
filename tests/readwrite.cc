@@ -11,9 +11,6 @@
 #include <cstring>      // memcpy
 #include <pngwriter.h>
 
-
-unsigned int const nValuesToTest = 1000;
-unsigned int const nMaxRepetitions = 65535;
 unsigned int const nMaxPixelsPerDimension = 2048;
 unsigned int const nImageDimsToTest = 20;
 char const * const tmpFile = "tmp-jhuio87er9r.png";
@@ -121,6 +118,7 @@ int testReadWrite( void )
 
 int testWithOnePixel( void )
 {
+    unsigned int const nValuesToTest = 1000;
     unsigned int iValuesFlawed = 0;
     srand(16546485);
     for ( unsigned int i = 0; i < nValuesToTest; ++i )
