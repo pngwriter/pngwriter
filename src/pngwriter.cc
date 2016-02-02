@@ -1329,121 +1329,121 @@ void pngwriter::readfromfile(char * name)
    //stuff should now be in image[][].
 
  */ //End of code as it was before Sven's patch.
-   
+
    //Sven's patch starts here
    ////////////////////////////////////
- 
+
    /*
-     
-   if(!read_png_info(fp, &png_ptr, &info_ptr)) 
+
+   if(!read_png_info(fp, &png_ptr, &info_ptr))
      {
-	 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl; 
-	// fp has been closed already if read_png_info() fails. 
-	return; 
-     } 
-   
-   // UPDATE: Query info struct to get header info BEFORE reading the image  
-   
-   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL); 
-   bit_depth_ = bit_depth; 
-   colortype_ = color_type; 
-   
-   if(color_type == PNG_COLOR_TYPE_PALETTE) 
-     { 
-	png_set_expand(png_ptr); 
-	png_read_update_info(png_ptr, info_ptr); 
-     } 
-   
+
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl;
+	// fp has been closed already if read_png_info() fails.
+	return;
+     }
+
+   // UPDATE: Query info struct to get header info BEFORE reading the image
+
+   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+   bit_depth_ = bit_depth;
+   colortype_ = color_type;
+
+   if(color_type == PNG_COLOR_TYPE_PALETTE)
+     {
+	png_set_expand(png_ptr);
+	png_read_update_info(png_ptr, info_ptr);
+     }
+
    if(!read_png_image(fp, png_ptr, info_ptr, &image, width, height))
-     { 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl; 
-	// fp has been closed already if read_png_image() fails. 
-	return; 
-     } 
-   
-   //stuff should now be in image[][]. 
+     {
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl;
+	// fp has been closed already if read_png_image() fails.
+	return;
+     }
+
+   //stuff should now be in image[][].
    */
    //Sven's patch ends here.
    ////////////////////////////////
-   
+
    // Mikkel's patch starts here
    // ///////////////////////////////////
-   
-   if(!read_png_info(fp, &png_ptr, &info_ptr)) 
+
+   if(!read_png_info(fp, &png_ptr, &info_ptr))
      {
-	 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl; 
-	// fp has been closed already if read_png_info() fails. 
-	  return; 
-     } 
-   
-   //Input transformations  
-   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL); 
-   bit_depth_ = bit_depth; 
-   colortype_ = color_type; 
-   
-    
+
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl;
+	// fp has been closed already if read_png_info() fails.
+	  return;
+     }
+
+   //Input transformations
+   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+   bit_depth_ = bit_depth;
+   colortype_ = color_type;
+
+
    // Changes palletted image to RGB
-   if(color_type == PNG_COLOR_TYPE_PALETTE /*&& bit_depth<8*/) 
-     { 
-	// png_set_expand(png_ptr);  
+   if(color_type == PNG_COLOR_TYPE_PALETTE /*&& bit_depth<8*/)
+     {
+	// png_set_expand(png_ptr);
 	png_set_palette_to_rgb(png_ptr);  // Just an alias of png_set_expand()
-	transformation_ = 1; 
-     } 
-   
+	transformation_ = 1;
+     }
+
    // Transforms grescale images of less than 8 bits to 8 bits.
-   if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth<8) 
-     { 
-	// png_set_expand(png_ptr); 
+   if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth<8)
+     {
+	// png_set_expand(png_ptr);
 	png_set_expand_gray_1_2_4_to_8(png_ptr);  // Just an alias of the above.
-	transformation_ = 1; 
-     } 
-   
+	transformation_ = 1;
+     }
+
    // Completely strips the alpha channel.
-   if(color_type & PNG_COLOR_MASK_ALPHA) 
-     { 
-	png_set_strip_alpha(png_ptr); 
-	transformation_ = 1; 
-     } 
-   
+   if(color_type & PNG_COLOR_MASK_ALPHA)
+     {
+	png_set_strip_alpha(png_ptr);
+	transformation_ = 1;
+     }
+
    // Converts greyscale images to RGB.
-   if(color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) // Used to be RGB, fixed it. 
-     { 
-	png_set_gray_to_rgb(png_ptr); 
-	transformation_ = 1; 
-     } 
-	 
+   if(color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) // Used to be RGB, fixed it.
+     {
+	png_set_gray_to_rgb(png_ptr);
+	transformation_ = 1;
+     }
+
 	 // If any of the above were applied,
-   if(transformation_) 
-     { 
+   if(transformation_)
+     {
 	 // png_set_gray_to_rgb(png_ptr);   //Is this really needed here?
-	 
-	 // After setting the transformations, libpng can update your png_info structure to reflect any transformations 
-	 // you've requested with this call. This is most useful to update the info structure's rowbytes field so you can 
-	 // use it to allocate your image memory. This function will also update your palette with the correct screen_gamma 
+
+	 // After setting the transformations, libpng can update your png_info structure to reflect any transformations
+	 // you've requested with this call. This is most useful to update the info structure's rowbytes field so you can
+	 // use it to allocate your image memory. This function will also update your palette with the correct screen_gamma
 	 // and background if these have been given with the calls above.
-	 
-	png_read_update_info(png_ptr, info_ptr); 
-	
+
+	png_read_update_info(png_ptr, info_ptr);
+
 	// Just in case any of these have changed?
-	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL); 
-	bit_depth_ = bit_depth; 
-	colortype_ = color_type; 
-     } 
-   
+	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+	bit_depth_ = bit_depth;
+	colortype_ = color_type;
+     }
+
    if(!read_png_image(fp, png_ptr, info_ptr, &image, width, height))
-     { 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl; 
-	// fp has been closed already if read_png_image() fails. 
-	return; 
-     } 
-   
+     {
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl;
+	// fp has been closed already if read_png_image() fails.
+	return;
+     }
+
    //stuff should now be in image[][].
-   
+
    // Mikkel's patch ends here
    // //////////////////////////////
-   // 
+   //
    if( image == NULL)
      {
 	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". Can't assign memory (after read_png_image(), image is NULL)." << std::endl;
@@ -1498,7 +1498,7 @@ void pngwriter::readfromfile(char * name)
 
 // Thanks to Mikkel's patch, PNGwriter should now be able to handle these color types:
 
-/* 
+/*
 color_type     - describes which color/alpha channels are present.
                      PNG_COLOR_TYPE_GRAY                        (bit depths 1, 2, 4, 8, 16)
                      PNG_COLOR_TYPE_GRAY_ALPHA                        (bit depths 8, 16)
@@ -1508,28 +1508,28 @@ color_type     - describes which color/alpha channels are present.
 
                      PNG_COLOR_MASK_PALETTE
                      PNG_COLOR_MASK_COLOR
-					 
-color types.  Note that not all combinations are legal 
+
+color types.  Note that not all combinations are legal
 #define PNG_COLOR_TYPE_GRAY 0
 #define PNG_COLOR_TYPE_PALETTE  (PNG_COLOR_MASK_COLOR (2) | PNG_COLOR_MASK_PALETTE (1) )
 #define PNG_COLOR_TYPE_RGB        (PNG_COLOR_MASK_COLOR (2) )
 #define PNG_COLOR_TYPE_RGB_ALPHA  (PNG_COLOR_MASK_COLOR (2) | PNG_COLOR_MASK_ALPHA (4) )
 #define PNG_COLOR_TYPE_GRAY_ALPHA (PNG_COLOR_MASK_ALPHA (4) )
 
-aliases 
+aliases
 #define PNG_COLOR_TYPE_RGBA  PNG_COLOR_TYPE_RGB_ALPHA
 #define PNG_COLOR_TYPE_GA  PNG_COLOR_TYPE_GRAY_ALPHA
 
- These describe the color_type field in png_info. 
- color type masks 
+ These describe the color_type field in png_info.
+ color type masks
 #define PNG_COLOR_MASK_PALETTE    1
 #define PNG_COLOR_MASK_COLOR      2
 #define PNG_COLOR_MASK_ALPHA      4
 
 
 					 */
-					 
-					 
+
+
    if(colortype_ !=2)
      {
 	std::cerr << " PNGwriter::readfromfile() - WARNING **: Input file is of unsupported type (bad color_type). Output will be unpredictable.\n";
@@ -1576,16 +1576,16 @@ int pngwriter::check_if_png(char *file_name, FILE **fp)
 	fclose(*fp);
 	return 0;
      }
-   
-   if (png_sig_cmp( (png_bytep) sig, (png_size_t)0, PNG_BYTES_TO_CHECK) /*png_check_sig((png_bytep) sig, PNG_BYTES_TO_CHECK)*/ ) 
+
+   if (png_sig_cmp( (png_bytep) sig, (png_size_t)0, PNG_BYTES_TO_CHECK) /*png_check_sig((png_bytep) sig, PNG_BYTES_TO_CHECK)*/ )
      {
 	std::cerr << " PNGwriter::check_if_png - ERROR **: File " << file_name << " does not appear to be a valid PNG file. png_check_sig() failed." << std::endl;
 	fclose(*fp);
 	return 0;
      }
-   
-   
-   
+
+
+
    return 1; //Success
 }
 
@@ -2389,7 +2389,7 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
 
 int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 {
-   
+
    FT_Library  library;
    FT_Face     face;
    FT_Matrix   matrix;      // transformation matrix
@@ -2496,11 +2496,11 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 	previous = glyph_index;
      }
 
-   
+
    /* Free the face and the library objects */
    FT_Done_Face    ( face );
    FT_Done_FreeType( library );
-   
+
    return (int)( ((double)pen.x)/64.0 );
 }
 
@@ -2719,7 +2719,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
    FT_Done_FreeType( library );
 
    delete[] ucs4text;
- 
+
    return (int) (((double) pen.x)/64.0);
 }
 
@@ -4565,13 +4565,13 @@ void pngwriter::filledtriangle(int x1,int y1,int x2,int y2,int x3,int y3, int re
 //Double (bug found by Dave Wilks. Was: (int) red*65535, should have been (int) (red*65535).
 void pngwriter::filledtriangle(int x1,int y1,int x2,int y2,int x3,int y3, double red, double green, double blue)
 {
-   this->filledtriangle(x1, y1, x2, y2, x3, y3, (int) (red*65535), (int) (green*65535),  (int) (blue*65535)); 
+   this->filledtriangle(x1, y1, x2, y2, x3, y3, (int) (red*65535), (int) (green*65535),  (int) (blue*65535));
 }
 
 //Blend, double. (bug found by Dave Wilks. Was: (int) red*65535, should have been (int) (red*65535).
 void pngwriter::filledtriangle_blend(int x1,int y1,int x2,int y2,int x3,int y3, double opacity, double red, double green, double blue)
 {
-   this->filledtriangle_blend( x1, y1, x2, y2, x3, y3,  opacity,  (int) (red*65535), (int) (green*65535),  (int) (blue*65535)); 
+   this->filledtriangle_blend( x1, y1, x2, y2, x3, y3,  opacity,  (int) (red*65535), (int) (green*65535),  (int) (blue*65535));
 }
 
 //Blend, int
@@ -4597,7 +4597,7 @@ void pngwriter::filledtriangle_blend(int x1,int y1,int x2,int y2,int x3,int y3, 
 	y2^=y3^=y2^=y3;
      }
 	 */
-	 
+
 	 if(y2<y1)
      {
 	// x2^=x1^=x2^=x1;
@@ -4731,7 +4731,7 @@ void pngwriter::arrow( int x1,int y1,int x2,int y2,int size, double head_angle, 
    double th = 3.141592653589793 + head_angle;
    double costh = cos(th);
    double sinth = sin(th);
-   double t1, t2, r;   
+   double t1, t2, r;
    t1 = ((x2-x1)*costh - (y2-y1)*sinth);
    t2 = ((x2-x1)*sinth + (y2-y1)*costh);
    r = sqrt(t1*t1 + t2*t2);
@@ -4741,16 +4741,16 @@ void pngwriter::arrow( int x1,int y1,int x2,int y2,int size, double head_angle, 
    this->line(x2, y2, int(x2 + advancex), int(y2 + advancey), red, green, blue);
    t1 = (x2-x1)*costh + (y2-y1)*sinth;
    t2 =   (y2-y1)*costh - (x2-x1)*sinth;
- 
+
    advancex  = size*t1/r;
    advancey  = size*t2/r;
    this->line(x2, y2, int(x2 + advancex), int(y2 + advancey), red, green, blue);
 }
-   
+
 void pngwriter::filledarrow( int x1,int y1,int x2,int y2,int size, double head_angle, double red, double green, double blue)
 {
    int p1x, p2x, p3x, p1y, p2y, p3y;
-   
+
    this->line(x1, y1, x2, y2, red, green, blue);
    double th = 3.141592653589793 + head_angle;
    double costh = cos(th);
@@ -4763,7 +4763,7 @@ void pngwriter::filledarrow( int x1,int y1,int x2,int y2,int size, double head_a
 
    r1 = sqrt(t11*t11 + t21*t21);
    r2 = sqrt(t12*t12 + t22*t22);
-   
+
    double advancex1  = size*t11/r1;
    double advancey1  = size*t21/r1;
    double advancex2  = size*t12/r2;
@@ -4771,16 +4771,16 @@ void pngwriter::filledarrow( int x1,int y1,int x2,int y2,int size, double head_a
 
    p1x = x2;
    p1y = y2;
-   
+
    p2x = int(x2 + advancex1);
    p2y = int(y2 + advancey1);
 
    p3x = int(x2 + advancex2);
    p3y = int(y2 + advancey2);
 
-   
+
    this->filledtriangle( p1x,  p1y,  p2x,  p2y,  p3x,  p3y, red, green,  blue);
-   
+
 }
 
 void pngwriter::arrow( int x1,int y1,int x2,int y2,int size, double head_angle, int red, int green, int blue)
@@ -4814,12 +4814,12 @@ void pngwriter::maltesecross( int x, int y, int xwidth, int yheight, int x_bar_h
 
 void pngwriter::cross( int x, int y, int xwidth, int yheight, double red, double green, double blue)
 {
-   this->cross( x, y, xwidth, yheight, int(65535*red), int(65535*green), int(65535*blue)); 
+   this->cross( x, y, xwidth, yheight, int(65535*red), int(65535*green), int(65535*blue));
 }
 
 void pngwriter::maltesecross( int x, int y, int xwidth, int yheight, int x_bar_height, int y_bar_width, double red, double green, double blue)
 {
-   this->maltesecross( x, y, xwidth, yheight, x_bar_height, y_bar_width, int(65535*red), int(65535*green), int(65535*blue)); 
+   this->maltesecross( x, y, xwidth, yheight, x_bar_height, y_bar_width, int(65535*red), int(65535*green), int(65535*blue));
 }
 
 
@@ -4842,10 +4842,10 @@ void pngwriter::diamond( int x, int y, int width, int height, int red, int green
 
 void pngwriter::filleddiamond( int x, int y, int width, int height, double red, double green, double blue)
 {
-   this->filleddiamond(  x, y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) ); 
+   this->filleddiamond(  x, y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) );
 }
 
 void pngwriter::diamond( int x, int y, int width, int height, double red, double green, double blue)
 {
-   this->diamond(  x,  y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) ); 
+   this->diamond(  x,  y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) );
 }
