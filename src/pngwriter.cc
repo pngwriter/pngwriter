@@ -750,113 +750,107 @@ void pngwriter::plot(int x, int y, double red, double green, double blue)
 ///////////////////////////////////////////////////////////////
 int pngwriter::read(int x, int y, int colour) const
 {
-   int temp1,temp2;
+    if((colour !=1)&&(colour !=2)&&(colour !=3))
+    {
+        std::cerr << " PNGwriter::read - WARNING **: Invalid argument: should be 1, 2 or 3, is " << colour << std::endl;
+        return 0;
+    }
 
-   if((colour !=1)&&(colour !=2)&&(colour !=3))
-     {
-	std::cerr << " PNGwriter::read - WARNING **: Invalid argument: should be 1, 2 or 3, is " << colour << std::endl;
-	return 0;
-     }
+    if( ( x>0 ) && ( x <= (this->width_) ) && ( y>0 ) && ( y <= (this->height_) ) )
+    {
 
-   if( ( x>0 ) && ( x <= (this->width_) ) && ( y>0 ) && ( y <= (this->height_) ) )
-     {
+        if(bit_depth_ == 16)
+        {
+            int const temp2 = 6*(x-1);
+            if(colour == 1)
+            {
+                return (graph_[(height_-y)][temp2])*256 + graph_[height_-y][temp2+1];
+            }
 
-	if(bit_depth_ == 16)
-	  {
-	     temp2=6*(x-1);
-	     if(colour == 1)
-	       {
-		  temp1 = (graph_[(height_-y)][temp2])*256 + graph_[height_-y][temp2+1];
-		  return temp1;
-	       }
+            if(colour == 2)
+            {
+                return (graph_[height_-y][temp2+2])*256 + graph_[height_-y][temp2+3];
+            }
 
-	     if(colour == 2)
-	       {
-		  temp1 = (graph_[height_-y][temp2+2])*256 + graph_[height_-y][temp2+3];
-		  return temp1;
-	       }
+            if(colour == 3)
+            {
+                return (graph_[height_-y][temp2+4])*256 + graph_[height_-y][temp2+5];
+            }
+        }
 
-	     if(colour == 3)
-	       {
-		  temp1 = (graph_[height_-y][temp2+4])*256 + graph_[height_-y][temp2+5];
-		  return temp1;
-	       }
-	  }
+        if(bit_depth_ == 8)
+        {
+            int const temp2 = 3*(x-1);
+            if(colour == 1)
+            {
+                int temp1 = graph_[height_-y][temp2];
+                return temp1*256;
+            }
 
-	if(bit_depth_ == 8)
-	  {
-	     temp2=3*(x-1);
-	     if(colour == 1)
-	       {
-		  temp1 = graph_[height_-y][temp2];
-		  return temp1*256;
-	       }
+            if(colour == 2)
+            {
+                int temp1 =  graph_[height_-y][temp2+1];
+                return temp1*256;
+            }
 
-	     if(colour == 2)
-	       {
-		  temp1 =  graph_[height_-y][temp2+1];
-		  return temp1*256;
-	       }
+            if(colour == 3)
+            {
+                int temp1 =  graph_[height_-y][temp2+2];
+                return temp1*256;
+            }
+        }
+    }
+    else
+    {
+        return 0;
+    }
 
-	     if(colour == 3)
-	       {
-		  temp1 =  graph_[height_-y][temp2+2];
-		  return temp1*256;
-	       }
-	  }
-     }
-   else
-     {
-	return 0;
-     }
-
-   std::cerr << " PNGwriter::read - WARNING **: Returning 0 because of bitdepth/colour type mismatch."<< std::endl;
-   return 0;
+    std::cerr << " PNGwriter::read - WARNING **: Returning 0 because of bitdepth/colour type mismatch."<< std::endl;
+    return 0;
 }
 
 ///////////////////////////////////////////////////////////////
 int pngwriter::read(int xxx, int yyy) const
 {
-   int temp1,temp2,temp3,temp4,temp5;
-
-   if(
-      ( xxx>0 ) &&
-      ( xxx <= (this->width_) ) &&
-      ( yyy>0 ) &&
-      ( yyy <= (this->height_) )
+    if(
+        ( xxx>0 ) &&
+        ( xxx <= (this->width_) ) &&
+        ( yyy>0 ) &&
+        ( yyy <= (this->height_) )
       )
-     {
-	if(bit_depth_ == 16)
-	  {
-	     //	temp1 = (graph_[(height_-yyy)][6*(xxx-1)])*256 + graph_[height_-yyy][6*(xxx-1)+1];
-	     temp5=6*xxx;
-	     temp1 = (graph_[(height_-yyy)][temp5-6])*256 + graph_[height_-yyy][temp5-5];
-	     temp2 = (graph_[height_-yyy][temp5-4])*256 + graph_[height_-yyy][temp5-3];
-	     temp3 = (graph_[height_-yyy][temp5-2])*256 + graph_[height_-yyy][temp5-1];
-	     temp4 =  int((temp1+temp2+temp3)/3.0);
-	  }
-	else if(bit_depth_ == 8)
-	  {
-	     //	temp1 = graph_[height_-yyy][3*(xxx-1)];
-	     temp5 = 3*xxx;
-	     temp1 = graph_[height_-yyy][temp5-3];
-	     temp2 =  graph_[height_-yyy][temp5-2];
-	     temp3 =  graph_[height_-yyy][temp5-1];
-	     temp4 =  int((temp1+temp2+temp3)/3.0);
-	  }
-	else
-	  {
-	     std::cerr << " PNGwriter::read - WARNING **: Invalid bit depth! Returning 0 as average value." << std::endl;
-	     temp4 = 0;
-	  }
+    {
+        int temp4;
+        
+        if(bit_depth_ == 16)
+        {
+            //	temp1 = (graph_[(height_-yyy)][6*(xxx-1)])*256 + graph_[height_-yyy][6*(xxx-1)+1];
+            int const temp5 = 6*xxx;
+            int const temp1 = (graph_[(height_-yyy)][temp5-6])*256 + graph_[height_-yyy][temp5-5];
+            int const temp2 = (graph_[height_-yyy][temp5-4])*256 + graph_[height_-yyy][temp5-3];
+            int const temp3 = (graph_[height_-yyy][temp5-2])*256 + graph_[height_-yyy][temp5-1];
+            temp4 =  int((temp1+temp2+temp3)/3.0);
+        }
+        else if(bit_depth_ == 8)
+        {
+            //	temp1 = graph_[height_-yyy][3*(xxx-1)];
+            int const temp5 = 3*xxx;
+            int const temp1 = graph_[height_-yyy][temp5-3];
+            int const temp2 =  graph_[height_-yyy][temp5-2];
+            int const temp3 =  graph_[height_-yyy][temp5-1];
+            temp4 =  int((temp1+temp2+temp3)/3.0);
+        }
+        else
+        {
+            std::cerr << " PNGwriter::read - WARNING **: Invalid bit depth! Returning 0 as average value." << std::endl;
+            temp4 = 0;
+        }
 
-	return temp4;
-
-     }
-   else
-     {
-	return 0;
-     }
+        return temp4;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 /////////////////////////////////////////////////////
@@ -1556,7 +1550,7 @@ void pngwriter::readfromfile(const char * name)
 }
 
 /////////////////////////////////////////////////////////
-int pngwriter::check_if_png(char *file_name, FILE **fp) const
+int pngwriter::check_if_png(char *file_name, FILE **fp)
 {
    char    sig[PNG_BYTES_TO_CHECK];
 
@@ -1590,7 +1584,7 @@ int pngwriter::check_if_png(char *file_name, FILE **fp) const
 }
 
 ///////////////////////////////////////////////////////
-int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr) const
+int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr)
 {
    *png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    if (*png_ptr == NULL)
@@ -1630,7 +1624,7 @@ int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr
 
 ////////////////////////////////////////////////////////////
 int pngwriter::read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
-                              png_bytepp *image, png_uint_32& width, png_uint_32& height) const
+                              png_bytepp *image, png_uint_32& width, png_uint_32& height)
 {
    unsigned int i,j;
 
@@ -1712,7 +1706,7 @@ void pngwriter::setgamma(double gamma)
 //  which is a page that belongs to Nan C. Schaller, though
 //  these algorithms appear to be the work of Eugene Vishnevsky.
 //////////////////////////////////////////////
-void pngwriter::HSVtoRGB( double *r, double *g, double *b, double h, double s, double v ) const
+void pngwriter::HSVtoRGB( double *r, double *g, double *b, double h, double s, double v )
 {
    // r,g,b values are from 0 to 1
    // h = [0,1], s = [0,1], v = [0,1]
@@ -1771,7 +1765,7 @@ void pngwriter::HSVtoRGB( double *r, double *g, double *b, double h, double s, d
      }
 }
 
-void pngwriter::RGBtoHSV( float r, float g, float b, float *h, float *s, float *v ) const
+void pngwriter::RGBtoHSV( float r, float g, float b, float *h, float *s, float *v )
 {
 
    float min=0.0; //These values are not used.
@@ -1960,27 +1954,25 @@ void pngwriter::bezier(  int startPtX, int startPtY,
 			 int endControlX, int endControlY,
 			 double red, double green, double blue)
 {
+    double cx = 3.0*(startControlX - startPtX);
+    double bx = 3.0*(endControlX - startControlX) - cx;
+    double ax = double(endPtX - startPtX - cx - bx);
 
-   double cx = 3.0*(startControlX - startPtX);
-   double bx = 3.0*(endControlX - startControlX) - cx;
-   double ax = double(endPtX - startPtX - cx - bx);
+    double cy = 3.0*(startControlY - startPtY);
+    double by = 3.0*(endControlY - startControlY) - cy;
+    double ay = double(endPtY - startPtY - cy - by);
 
-   double cy = 3.0*(startControlY - startPtY);
-   double by = 3.0*(endControlY - startControlY) - cy;
-   double ay = double(endPtY - startPtY - cy - by);
+    double x = startPtX;
+    double y = startPtY;
 
-   double x,y,newx,newy;
-   x = startPtX;
-   y = startPtY;
-
-   for(double t = 0.0; t<=1.005; t += 0.005)
-     {
-	newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-	newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-	this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
-	x = newx;
-	y = newy;
-     }
+    for(double t = 0.0; t<=1.005; t += 0.005)
+    {
+        double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+        double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+        this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
+        x = newx;
+        y = newy;
+    }
 }
 
 //int version of bezier
@@ -2171,7 +2163,7 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -2179,7 +2171,7 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
@@ -2387,7 +2379,7 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
 
 //put in freetype section
 
-int pngwriter::get_text_width(char * face_path, int fontsize, char * text) const
+int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 {
    
    FT_Library  library;
@@ -2505,7 +2497,7 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text) const
 }
 
 
-int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text) const
+int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 {
    FT_Library  library;
    FT_Face     face;
@@ -2543,7 +2535,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -2551,7 +2543,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
@@ -2753,14 +2745,14 @@ void pngwriter::plot_text_utf8( char *, int, int, int, double, char *, double, d
 }
 
 //////////// Get text width
-int pngwriter::get_text_width(char *, int, char *) const
+int pngwriter::get_text_width(char *, int, char *)
 {
    std::cerr << " PNGwriter::get_text_width - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
 }
 
 
-int pngwriter::get_text_width_utf8(char *, int,  char *) const
+int pngwriter::get_text_width_utf8(char *, int,  char *)
 {
    std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
@@ -3746,27 +3738,26 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
 			       double opacity,
 			       double red, double green, double blue)
 {
+    double cx = 3.0*(startControlX - startPtX);
+    double bx = 3.0*(endControlX - startControlX) - cx;
+    double ax = double(endPtX - startPtX - cx - bx);
 
-   double cx = 3.0*(startControlX - startPtX);
-   double bx = 3.0*(endControlX - startControlX) - cx;
-   double ax = double(endPtX - startPtX - cx - bx);
+    double cy = 3.0*(startControlY - startPtY);
+    double by = 3.0*(endControlY - startControlY) - cy;
+    double ay = double(endPtY - startPtY - cy - by);
 
-   double cy = 3.0*(startControlY - startPtY);
-   double by = 3.0*(endControlY - startControlY) - cy;
-   double ay = double(endPtY - startPtY - cy - by);
+    double x,y;
+    x = startPtX;
+    y = startPtY;
 
-   double x,y,newx,newy;
-   x = startPtX;
-   y = startPtY;
-
-   for(double t = 0.0; t<=1.005; t += 0.005)
-     {
-	newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-	newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-	this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
-	x = newx;
-	y = newy;
-     }
+    for(double t = 0.0; t<=1.005; t += 0.005)
+    {
+        double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+        double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+        this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
+        x = newx;
+        y = newy;
+    }
 }
 
 void pngwriter::bezier_blend(  int startPtX, int startPtY,
@@ -3941,7 +3932,7 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -3949,7 +3940,7 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
