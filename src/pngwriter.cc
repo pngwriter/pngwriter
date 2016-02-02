@@ -748,7 +748,7 @@ void pngwriter::plot(int x, int y, double red, double green, double blue)
 };
 
 ///////////////////////////////////////////////////////////////
-int pngwriter::read(int x, int y, int colour)
+int pngwriter::read(int x, int y, int colour) const
 {
    int temp1,temp2;
 
@@ -815,7 +815,7 @@ int pngwriter::read(int x, int y, int colour)
 }
 
 ///////////////////////////////////////////////////////////////
-int pngwriter::read(int xxx, int yyy)
+int pngwriter::read(int xxx, int yyy) const
 {
    int temp1,temp2,temp3,temp4,temp5;
 
@@ -860,7 +860,7 @@ int pngwriter::read(int xxx, int yyy)
 }
 
 /////////////////////////////////////////////////////
-double  pngwriter::dread(int x, int y, int colour)
+double  pngwriter::dread(int x, int y, int colour) const
 {
    if(bit_depth_ == 8)
      return double(this->read(x,y,colour))/255.0;
@@ -868,7 +868,7 @@ double  pngwriter::dread(int x, int y, int colour)
      return double(this->read(x,y,colour))/65535.0;
 }
 
-double  pngwriter::dread(int x, int y)
+double  pngwriter::dread(int x, int y) const
 {
    if(bit_depth_ == 8)
      return double(this->read(x,y))/255.0;
@@ -1556,7 +1556,7 @@ void pngwriter::readfromfile(const char * name)
 }
 
 /////////////////////////////////////////////////////////
-int pngwriter::check_if_png(char *file_name, FILE **fp)
+int pngwriter::check_if_png(char *file_name, FILE **fp) const
 {
    char    sig[PNG_BYTES_TO_CHECK];
 
@@ -1590,7 +1590,7 @@ int pngwriter::check_if_png(char *file_name, FILE **fp)
 }
 
 ///////////////////////////////////////////////////////
-int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr)
+int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr) const
 {
    *png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    if (*png_ptr == NULL)
@@ -1630,7 +1630,7 @@ int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr
 
 ////////////////////////////////////////////////////////////
 int pngwriter::read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
-                              png_bytepp *image, png_uint_32& width, png_uint_32& height)
+                              png_bytepp *image, png_uint_32& width, png_uint_32& height) const
 {
    unsigned int i,j;
 
@@ -1677,28 +1677,28 @@ int pngwriter::read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
 }
 
 ///////////////////////////////////
-int pngwriter::getheight(void)
+int pngwriter::getheight(void) const
 {
    return height_;
 }
 
-int pngwriter::getwidth(void)
+int pngwriter::getwidth(void) const
 {
    return width_;
 }
 
 
-int pngwriter::getbitdepth(void)
+int pngwriter::getbitdepth(void) const
 {
    return bit_depth_;
 }
 
-int pngwriter::getcolortype(void)
+int pngwriter::getcolortype(void) const
 {
    return colortype_;
 }
 
-double pngwriter::getgamma(void)
+double pngwriter::getgamma(void) const
 {
    return filegamma_;
 }
@@ -1712,7 +1712,7 @@ void pngwriter::setgamma(double gamma)
 //  which is a page that belongs to Nan C. Schaller, though
 //  these algorithms appear to be the work of Eugene Vishnevsky.
 //////////////////////////////////////////////
-void pngwriter::HSVtoRGB( double *r, double *g, double *b, double h, double s, double v )
+void pngwriter::HSVtoRGB( double *r, double *g, double *b, double h, double s, double v ) const
 {
    // r,g,b values are from 0 to 1
    // h = [0,1], s = [0,1], v = [0,1]
@@ -1771,7 +1771,7 @@ void pngwriter::HSVtoRGB( double *r, double *g, double *b, double h, double s, d
      }
 }
 
-void pngwriter::RGBtoHSV( float r, float g, float b, float *h, float *s, float *v )
+void pngwriter::RGBtoHSV( float r, float g, float b, float *h, float *s, float *v ) const
 {
 
    float min=0.0; //These values are not used.
@@ -1856,7 +1856,7 @@ void pngwriter::plotHSV(int x, int y, int hue, int saturation, int value)
 
 //
 //////////////////////////////////////////////////////////////////////////////////
-double pngwriter::dreadHSV(int x, int y, int colour)
+double pngwriter::dreadHSV(int x, int y, int colour) const
 {
    if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
      {
@@ -1899,7 +1899,7 @@ double pngwriter::dreadHSV(int x, int y, int colour)
 
 //
 //////////////////////////////////////////////////////////////////////////////////
-int pngwriter::readHSV(int x, int y, int colour)
+int pngwriter::readHSV(int x, int y, int colour) const
 {
    if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
      {
@@ -2387,7 +2387,7 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
 
 //put in freetype section
 
-int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
+int pngwriter::get_text_width(char * face_path, int fontsize, char * text) const
 {
    
    FT_Library  library;
@@ -2505,7 +2505,7 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 }
 
 
-int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
+int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text) const
 {
    FT_Library  library;
    FT_Face     face;
@@ -2753,14 +2753,14 @@ void pngwriter::plot_text_utf8( char *, int, int, int, double, char *, double, d
 }
 
 //////////// Get text width
-int pngwriter::get_text_width(char *, int, char *)
+int pngwriter::get_text_width(char *, int, char *) const
 {
    std::cerr << " PNGwriter::get_text_width - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
 }
 
 
-int pngwriter::get_text_width_utf8(char *, int,  char *)
+int pngwriter::get_text_width_utf8(char *, int,  char *) const
 {
    std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
@@ -2770,7 +2770,7 @@ int pngwriter::get_text_width_utf8(char *, int,  char *)
 #endif
 
 /////////////////////////////////////
-int pngwriter::bilinear_interpolation_read(double x, double y, int colour)
+int pngwriter::bilinear_interpolation_read(double x, double y, int colour) const
 {
 
    int inty, intx;
@@ -2873,7 +2873,7 @@ int pngwriter::bilinear_interpolation_read(double x, double y, int colour)
 
 };
 
-double pngwriter::bilinear_interpolation_dread(double x, double y, int colour)
+double pngwriter::bilinear_interpolation_dread(double x, double y, int colour) const
 {
    return double(this->bilinear_interpolation_read(x,y,colour))/65535.0;
 };
@@ -3163,7 +3163,7 @@ void pngwriter::plotCMYK(int x, int y, int cyan, int magenta, int yellow, int bl
 		   );
 }
 
-double pngwriter::dreadCMYK(int x, int y, int colour)
+double pngwriter::dreadCMYK(int x, int y, int colour) const
 {
 /*
  * Black   = minimum(1-Red,1-Green,1-Blue)
@@ -3211,7 +3211,7 @@ double pngwriter::dreadCMYK(int x, int y, int colour)
      }
 }
 
-int pngwriter::readCMYK(int x, int y, int colour)
+int pngwriter::readCMYK(int x, int y, int colour) const
 {
 /*
  * Black   = minimum(1-Red,1-Green,1-Blue)
