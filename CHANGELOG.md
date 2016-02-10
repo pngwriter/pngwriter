@@ -49,7 +49,7 @@ All closed issues can be found at
   - `filleddiamond()` bug reported in
     [Debian #633405](http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=633405) #6
   - memory leak in `pngwriter::readfromfile` reported
-    [here](http://sourceforge.net/p/pngwriter/discussion/238247/thread/15ee786c/) 
+    [here](http://sourceforge.net/p/pngwriter/discussion/238247/thread/15ee786c/)
     and again [here](http://sourceforge.net/p/pngwriter/bugs/2/) #5
   - read functions for 8bit images were broken: `read`/`dread` (reported by Felix Schmitt) #13
   - fix compile with new gcc versions and clean c++ includes #30
