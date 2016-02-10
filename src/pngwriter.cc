@@ -750,107 +750,113 @@ void pngwriter::plot(int x, int y, double red, double green, double blue)
 ///////////////////////////////////////////////////////////////
 int pngwriter::read(int x, int y, int colour) const
 {
-    if((colour !=1)&&(colour !=2)&&(colour !=3))
-    {
-        std::cerr << " PNGwriter::read - WARNING **: Invalid argument: should be 1, 2 or 3, is " << colour << std::endl;
-        return 0;
-    }
+   int temp1,temp2;
 
-    if( ( x>0 ) && ( x <= (this->width_) ) && ( y>0 ) && ( y <= (this->height_) ) )
-    {
+   if((colour !=1)&&(colour !=2)&&(colour !=3))
+     {
+	std::cerr << " PNGwriter::read - WARNING **: Invalid argument: should be 1, 2 or 3, is " << colour << std::endl;
+	return 0;
+     }
 
-        if(bit_depth_ == 16)
-        {
-            int const temp2 = 6*(x-1);
-            if(colour == 1)
-            {
-                return (graph_[(height_-y)][temp2])*256 + graph_[height_-y][temp2+1];
-            }
+   if( ( x>0 ) && ( x <= (this->width_) ) && ( y>0 ) && ( y <= (this->height_) ) )
+     {
 
-            if(colour == 2)
-            {
-                return (graph_[height_-y][temp2+2])*256 + graph_[height_-y][temp2+3];
-            }
+	if(bit_depth_ == 16)
+	  {
+	     temp2=6*(x-1);
+	     if(colour == 1)
+	       {
+		  temp1 = (graph_[(height_-y)][temp2])*256 + graph_[height_-y][temp2+1];
+		  return temp1;
+	       }
 
-            if(colour == 3)
-            {
-                return (graph_[height_-y][temp2+4])*256 + graph_[height_-y][temp2+5];
-            }
-        }
+	     if(colour == 2)
+	       {
+		  temp1 = (graph_[height_-y][temp2+2])*256 + graph_[height_-y][temp2+3];
+		  return temp1;
+	       }
 
-        if(bit_depth_ == 8)
-        {
-            int const temp2 = 3*(x-1);
-            if(colour == 1)
-            {
-                int temp1 = graph_[height_-y][temp2];
-                return temp1*256;
-            }
+	     if(colour == 3)
+	       {
+		  temp1 = (graph_[height_-y][temp2+4])*256 + graph_[height_-y][temp2+5];
+		  return temp1;
+	       }
+	  }
 
-            if(colour == 2)
-            {
-                int temp1 =  graph_[height_-y][temp2+1];
-                return temp1*256;
-            }
+	if(bit_depth_ == 8)
+	  {
+	     temp2=3*(x-1);
+	     if(colour == 1)
+	       {
+		  temp1 = graph_[height_-y][temp2];
+		  return temp1*256;
+	       }
 
-            if(colour == 3)
-            {
-                int temp1 =  graph_[height_-y][temp2+2];
-                return temp1*256;
-            }
-        }
-    }
-    else
-    {
-        return 0;
-    }
+	     if(colour == 2)
+	       {
+		  temp1 =  graph_[height_-y][temp2+1];
+		  return temp1*256;
+	       }
 
-    std::cerr << " PNGwriter::read - WARNING **: Returning 0 because of bitdepth/colour type mismatch."<< std::endl;
-    return 0;
+	     if(colour == 3)
+	       {
+		  temp1 =  graph_[height_-y][temp2+2];
+		  return temp1*256;
+	       }
+	  }
+     }
+   else
+     {
+	return 0;
+     }
+
+   std::cerr << " PNGwriter::read - WARNING **: Returning 0 because of bitdepth/colour type mismatch."<< std::endl;
+   return 0;
 }
 
 ///////////////////////////////////////////////////////////////
 int pngwriter::read(int xxx, int yyy) const
 {
-    if(
-        ( xxx>0 ) &&
-        ( xxx <= (this->width_) ) &&
-        ( yyy>0 ) &&
-        ( yyy <= (this->height_) )
-      )
-    {
-        int temp4;
-        
-        if(bit_depth_ == 16)
-        {
-            //	temp1 = (graph_[(height_-yyy)][6*(xxx-1)])*256 + graph_[height_-yyy][6*(xxx-1)+1];
-            int const temp5 = 6*xxx;
-            int const temp1 = (graph_[(height_-yyy)][temp5-6])*256 + graph_[height_-yyy][temp5-5];
-            int const temp2 = (graph_[height_-yyy][temp5-4])*256 + graph_[height_-yyy][temp5-3];
-            int const temp3 = (graph_[height_-yyy][temp5-2])*256 + graph_[height_-yyy][temp5-1];
-            temp4 =  int((temp1+temp2+temp3)/3.0);
-        }
-        else if(bit_depth_ == 8)
-        {
-            //	temp1 = graph_[height_-yyy][3*(xxx-1)];
-            int const temp5 = 3*xxx;
-            int const temp1 = graph_[height_-yyy][temp5-3];
-            int const temp2 =  graph_[height_-yyy][temp5-2];
-            int const temp3 =  graph_[height_-yyy][temp5-1];
-            temp4 =  int((temp1+temp2+temp3)/3.0);
-        }
-        else
-        {
-            std::cerr << " PNGwriter::read - WARNING **: Invalid bit depth! Returning 0 as average value." << std::endl;
-            temp4 = 0;
-        }
+   int temp1,temp2,temp3,temp4,temp5;
 
-        return temp4;
-    }
-    else
-    {
-        return 0;
-    }
+   if(
+      ( xxx>0 ) &&
+      ( xxx <= (this->width_) ) &&
+      ( yyy>0 ) &&
+      ( yyy <= (this->height_) )
+      )
+     {
+	if(bit_depth_ == 16)
+	  {
+	     //	temp1 = (graph_[(height_-yyy)][6*(xxx-1)])*256 + graph_[height_-yyy][6*(xxx-1)+1];
+	     temp5=6*xxx;
+	     temp1 = (graph_[(height_-yyy)][temp5-6])*256 + graph_[height_-yyy][temp5-5];
+	     temp2 = (graph_[height_-yyy][temp5-4])*256 + graph_[height_-yyy][temp5-3];
+	     temp3 = (graph_[height_-yyy][temp5-2])*256 + graph_[height_-yyy][temp5-1];
+	     temp4 =  int((temp1+temp2+temp3)/3.0);
+	  }
+	else if(bit_depth_ == 8)
+	  {
+	     //	temp1 = graph_[height_-yyy][3*(xxx-1)];
+	     temp5 = 3*xxx;
+	     temp1 = graph_[height_-yyy][temp5-3];
+	     temp2 =  graph_[height_-yyy][temp5-2];
+	     temp3 =  graph_[height_-yyy][temp5-1];
+	     temp4 =  int((temp1+temp2+temp3)/3.0);
+	  }
+	else
+	  {
+	     std::cerr << " PNGwriter::read - WARNING **: Invalid bit depth! Returning 0 as average value." << std::endl;
+	     temp4 = 0;
+	  }
+
+	return temp4;
+
+     }
+   else
+     {
+	return 0;
+     }
 }
 
 /////////////////////////////////////////////////////
@@ -1954,25 +1960,25 @@ void pngwriter::bezier(  int startPtX, int startPtY,
 			 int endControlX, int endControlY,
 			 double red, double green, double blue)
 {
-    double cx = 3.0*(startControlX - startPtX);
-    double bx = 3.0*(endControlX - startControlX) - cx;
-    double ax = double(endPtX - startPtX - cx - bx);
+   double cx = 3.0*(startControlX - startPtX);
+   double bx = 3.0*(endControlX - startControlX) - cx;
+   double ax = double(endPtX - startPtX - cx - bx);
 
-    double cy = 3.0*(startControlY - startPtY);
-    double by = 3.0*(endControlY - startControlY) - cy;
-    double ay = double(endPtY - startPtY - cy - by);
+   double cy = 3.0*(startControlY - startPtY);
+   double by = 3.0*(endControlY - startControlY) - cy;
+   double ay = double(endPtY - startPtY - cy - by);
 
-    double x = startPtX;
-    double y = startPtY;
+   double x = startPtX;
+   double y = startPtY;
 
-    for(double t = 0.0; t<=1.005; t += 0.005)
-    {
-        double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-        double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-        this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
-        x = newx;
-        y = newy;
-    }
+   for(double t = 0.0; t<=1.005; t += 0.005)
+     {
+       double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+       double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+       this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
+       x = newx;
+       y = newy;
+     }
 }
 
 //int version of bezier
@@ -3738,26 +3744,26 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
 			       double opacity,
 			       double red, double green, double blue)
 {
-    double cx = 3.0*(startControlX - startPtX);
-    double bx = 3.0*(endControlX - startControlX) - cx;
-    double ax = double(endPtX - startPtX - cx - bx);
+   double cx = 3.0*(startControlX - startPtX);
+   double bx = 3.0*(endControlX - startControlX) - cx;
+   double ax = double(endPtX - startPtX - cx - bx);
 
-    double cy = 3.0*(startControlY - startPtY);
-    double by = 3.0*(endControlY - startControlY) - cy;
-    double ay = double(endPtY - startPtY - cy - by);
+   double cy = 3.0*(startControlY - startPtY);
+   double by = 3.0*(endControlY - startControlY) - cy;
+   double ay = double(endPtY - startPtY - cy - by);
 
-    double x,y;
-    x = startPtX;
-    y = startPtY;
+   double x,y;
+   x = startPtX;
+   y = startPtY;
 
-    for(double t = 0.0; t<=1.005; t += 0.005)
-    {
-        double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-        double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-        this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
-        x = newx;
-        y = newy;
-    }
+   for(double t = 0.0; t<=1.005; t += 0.005)
+     {
+       double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+       double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+       this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
+       x = newx;
+       y = newy;
+     }
 }
 
 void pngwriter::bezier_blend(  int startPtX, int startPtY,
