@@ -30,6 +30,7 @@ script:
   - cp -R $TRAVIS_BUILD_DIR/examples/burro.png .
   - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
   - ./pngtest
+  - ./readwrite
 
 before_script:
   - uname -r

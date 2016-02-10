@@ -744,7 +744,9 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 
 void pngwriter::plot(int x, int y, double red, double green, double blue)
 {
-   this->plot(x,y,int(red*65535),int(green*65535),int(blue*65535));
+    /* assuming values >= 0 adding +0.5 will round them to the nearest
+     *      * integer when typecasting it */
+    this->plot(x,y,int(red*65535+0.5),int(green*65535+0.5),int(blue*65535+0.5));
 };
 
 ///////////////////////////////////////////////////////////////
