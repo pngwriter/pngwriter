@@ -106,9 +106,9 @@ class pngwriter
    double screengamma_;
    void circle_aux(int xcentre, int ycentre, int x, int y, int red, int green, int blue);
    void circle_aux_blend(int xcentre, int ycentre, int x, int y, double opacity, int red, int green, int blue);
-   int check_if_png(char *file_name, FILE **fp);
-   int read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr);
-   int read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
+   int static check_if_png(char *file_name, FILE **fp);
+   int static read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr);
+   int static read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
  		       png_bytepp *image, png_uint_32& width, png_uint_32& height);
    void flood_fill_internal( int xstart, int ystart,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
    void flood_fill_internal_blend( int xstart, int ystart, double opacity,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
@@ -122,8 +122,8 @@ class pngwriter
     * which is a page that belongs to Nan C. Schaller, though
     * these algorithms appear to be the work of Eugene Vishnevsky. 
     * */
-   void HSVtoRGB( double *r, double *g, double *b, double h, double s, double v ); 
-   void RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
+   void static HSVtoRGB( double *r, double *g, double *b, double h, double s, double v ); 
+   void static RGBtoHSV( float r, float g, float b, float *h, float *s, float *v );
 
    /* drwatop(), drawbottom() and filledtriangle() were contributed by Gurkan Sengun
     * ( <gurkan@linuks.mine.nu>, http://www.linuks.mine.nu/ )
@@ -234,12 +234,12 @@ class pngwriter
     * Note that if you call read() on a pixel outside the image range, the value returned
     * will be 0.
     * */
-   int read(int x, int y, int colour);  
+   int read(int x, int y, int colour) const;
 
    /* Read, Average
     * Same as the above, only that the average of the three colour coefficients is returned.
     */
-   int read(int x, int y);              
+   int read(int x, int y) const;
    
   /* dRead
    * With this function we find out what colour the pixel (x, y) is. If "colour" is 1,
@@ -248,12 +248,12 @@ class pngwriter
    * and this returned value will be of type double and be between 0.0 and 1.0.
    * Note that if you call dread() outside the image range, the value returned will be 0.0
    * */
-   double dread(int x, int y, int colour);   
+   double dread(int x, int y, int colour) const;
    
    /* dRead, Average
     * Same as the above, only that the average of the three colour coefficients is returned.
     */
-   double dread(int x, int y);             
+   double dread(int x, int y) const;
    
    /* Read HSV
     * With this function we find out what colour the pixel (x, y) is, but in the Hue, 
@@ -268,7 +268,7 @@ class pngwriter
     * Tip: This is especially useful for categorizing sections of the image according 
     * to their colour. 
     * */
-   int readHSV(int x, int y, int colour);  
+   int readHSV(int x, int y, int colour) const;
     
   /* dRead HSV
    * With this function we find out what colour the pixel (x, y) is, but in the Hue, 
@@ -277,7 +277,7 @@ class pngwriter
    * it set to 3, the Value colour coefficient will be returned,
    * and this returned value will be of type double and be between 0.0 and 1.0.
    * */
-   double dreadHSV(int x, int y, int colour);    
+   double dreadHSV(int x, int y, int colour) const;
    
    /* Clear
     * The whole image is set to black.
@@ -346,12 +346,12 @@ class pngwriter
    /* Get Height
     * When you open a PNG with readfromfile() you can find out its height with this function.
     * */
-   int getheight(void);
+   int getheight(void) const;
    
    /* Get Width
     * When you open a PNG with readfromfile() you can find out its width with this function.
     * */
-   int getwidth(void);
+   int getwidth(void) const;
 
    /* Set Compression Level
     * Set the compression level that will be used for the image. -1 is to use the  default,
@@ -366,14 +366,14 @@ class pngwriter
     * When you open a PNG with readfromfile() you can find out its bit depth with this function.
     * Mostly for troubleshooting uses.
     * */
-   int getbitdepth(void);
+   int getbitdepth(void) const;
    
    /* Get Colour Type
     * When you open a PNG with readfromfile() you can find out its colour type (libpng categorizes 
     * different styles of image data with this number).
     * Mostly for troubleshooting uses.
     * */
-   int getcolortype(void);
+   int getcolortype(void) const;
    
    /* Set Gamma Coeff
     * Set the image's gamma (file gamma) coefficient. This is experimental, but use it if your image's colours seem too bright
@@ -386,7 +386,7 @@ class pngwriter
    /* Get Gamma Coeff
     * Get the image's gamma coefficient. This is experimental.
     * */
-   double getgamma(void);
+   double getgamma(void) const;
 
    /* Bezier Curve
     * (After Frenchman Pierre Bezier from Regie Renault)
@@ -465,8 +465,8 @@ class pngwriter
     * bilinear_interpolate_dread() returns a double from 0.0 to 1.0.
     * Tip: Especially useful for enlarging an image.
     * */
-   int bilinear_interpolation_read(double x, double y, int colour);
-   double bilinear_interpolation_dread(double x, double y, int colour);
+   int bilinear_interpolation_read(double x, double y, int colour) const;
+   double bilinear_interpolation_dread(double x, double y, int colour) const;
    
    /* Plot Blend
     * Plots the colour given by red, green blue, but blended with the existing pixel
@@ -533,12 +533,12 @@ class pngwriter
     * Get a pixel in the Cyan, Magenta, Yellow, Black colourspace. if 'colour' is 1, the Cyan component will be returned
     * as a double from 0.0 to 1.0. If 'colour is 2, the Magenta colour component will be returned, and so on, up to 4.
     * */
-   double dreadCMYK(int x, int y, int colour);
+   double dreadCMYK(int x, int y, int colour) const;
 
    /* Read CMYK
     * Same as the above, but the colour components returned are an int from 0 to 65535.
     * */
-   int readCMYK(int x, int y, int colour);
+   int readCMYK(int x, int y, int colour) const;
 
    /* Scale Proportional
     * Scale the image using bilinear interpolation. If k is greater than 1.0, the image will be enlarged.
@@ -727,9 +727,9 @@ class pngwriter
     *     4  (x_start - size*sin(angle), y_start + size*cos(angle))  
     * */
    
-   int get_text_width(char * face_path, int fontsize,  char * text);
+   int static get_text_width(char * face_path, int fontsize,  char * text);
 
-   int get_text_width_utf8(char * face_path, int fontsize, char * text);
+   int static get_text_width_utf8(char * face_path, int fontsize, char * text);
    
    
 };

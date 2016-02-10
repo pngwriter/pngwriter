@@ -748,7 +748,7 @@ void pngwriter::plot(int x, int y, double red, double green, double blue)
 };
 
 ///////////////////////////////////////////////////////////////
-int pngwriter::read(int x, int y, int colour)
+int pngwriter::read(int x, int y, int colour) const
 {
    int temp1,temp2;
 
@@ -815,7 +815,7 @@ int pngwriter::read(int x, int y, int colour)
 }
 
 ///////////////////////////////////////////////////////////////
-int pngwriter::read(int xxx, int yyy)
+int pngwriter::read(int xxx, int yyy) const
 {
    int temp1,temp2,temp3,temp4,temp5;
 
@@ -860,7 +860,7 @@ int pngwriter::read(int xxx, int yyy)
 }
 
 /////////////////////////////////////////////////////
-double  pngwriter::dread(int x, int y, int colour)
+double  pngwriter::dread(int x, int y, int colour) const
 {
    if(bit_depth_ == 8)
      return double(this->read(x,y,colour))/255.0;
@@ -868,7 +868,7 @@ double  pngwriter::dread(int x, int y, int colour)
      return double(this->read(x,y,colour))/65535.0;
 }
 
-double  pngwriter::dread(int x, int y)
+double  pngwriter::dread(int x, int y) const
 {
    if(bit_depth_ == 8)
      return double(this->read(x,y))/255.0;
@@ -1677,28 +1677,28 @@ int pngwriter::read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
 }
 
 ///////////////////////////////////
-int pngwriter::getheight(void)
+int pngwriter::getheight(void) const
 {
    return height_;
 }
 
-int pngwriter::getwidth(void)
+int pngwriter::getwidth(void) const
 {
    return width_;
 }
 
 
-int pngwriter::getbitdepth(void)
+int pngwriter::getbitdepth(void) const
 {
    return bit_depth_;
 }
 
-int pngwriter::getcolortype(void)
+int pngwriter::getcolortype(void) const
 {
    return colortype_;
 }
 
-double pngwriter::getgamma(void)
+double pngwriter::getgamma(void) const
 {
    return filegamma_;
 }
@@ -1856,7 +1856,7 @@ void pngwriter::plotHSV(int x, int y, int hue, int saturation, int value)
 
 //
 //////////////////////////////////////////////////////////////////////////////////
-double pngwriter::dreadHSV(int x, int y, int colour)
+double pngwriter::dreadHSV(int x, int y, int colour) const
 {
    if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
      {
@@ -1899,7 +1899,7 @@ double pngwriter::dreadHSV(int x, int y, int colour)
 
 //
 //////////////////////////////////////////////////////////////////////////////////
-int pngwriter::readHSV(int x, int y, int colour)
+int pngwriter::readHSV(int x, int y, int colour) const
 {
    if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
      {
@@ -1960,7 +1960,6 @@ void pngwriter::bezier(  int startPtX, int startPtY,
 			 int endControlX, int endControlY,
 			 double red, double green, double blue)
 {
-
    double cx = 3.0*(startControlX - startPtX);
    double bx = 3.0*(endControlX - startControlX) - cx;
    double ax = double(endPtX - startPtX - cx - bx);
@@ -1969,17 +1968,16 @@ void pngwriter::bezier(  int startPtX, int startPtY,
    double by = 3.0*(endControlY - startControlY) - cy;
    double ay = double(endPtY - startPtY - cy - by);
 
-   double x,y,newx,newy;
-   x = startPtX;
-   y = startPtY;
+   double x = startPtX;
+   double y = startPtY;
 
    for(double t = 0.0; t<=1.005; t += 0.005)
      {
-	newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-	newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-	this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
-	x = newx;
-	y = newy;
+       double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+       double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+       this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
+       x = newx;
+       y = newy;
      }
 }
 
@@ -2171,7 +2169,7 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -2179,7 +2177,7 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
@@ -2543,7 +2541,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -2551,7 +2549,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
@@ -2770,7 +2768,7 @@ int pngwriter::get_text_width_utf8(char *, int,  char *)
 #endif
 
 /////////////////////////////////////
-int pngwriter::bilinear_interpolation_read(double x, double y, int colour)
+int pngwriter::bilinear_interpolation_read(double x, double y, int colour) const
 {
 
    int inty, intx;
@@ -2873,7 +2871,7 @@ int pngwriter::bilinear_interpolation_read(double x, double y, int colour)
 
 };
 
-double pngwriter::bilinear_interpolation_dread(double x, double y, int colour)
+double pngwriter::bilinear_interpolation_dread(double x, double y, int colour) const
 {
    return double(this->bilinear_interpolation_read(x,y,colour))/65535.0;
 };
@@ -3163,7 +3161,7 @@ void pngwriter::plotCMYK(int x, int y, int cyan, int magenta, int yellow, int bl
 		   );
 }
 
-double pngwriter::dreadCMYK(int x, int y, int colour)
+double pngwriter::dreadCMYK(int x, int y, int colour) const
 {
 /*
  * Black   = minimum(1-Red,1-Green,1-Blue)
@@ -3211,7 +3209,7 @@ double pngwriter::dreadCMYK(int x, int y, int colour)
      }
 }
 
-int pngwriter::readCMYK(int x, int y, int colour)
+int pngwriter::readCMYK(int x, int y, int colour) const
 {
 /*
  * Black   = minimum(1-Red,1-Green,1-Blue)
@@ -3746,7 +3744,6 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
 			       double opacity,
 			       double red, double green, double blue)
 {
-
    double cx = 3.0*(startControlX - startPtX);
    double bx = 3.0*(endControlX - startControlX) - cx;
    double ax = double(endPtX - startPtX - cx - bx);
@@ -3755,17 +3752,17 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
    double by = 3.0*(endControlY - startControlY) - cy;
    double ay = double(endPtY - startPtY - cy - by);
 
-   double x,y,newx,newy;
+   double x,y;
    x = startPtX;
    y = startPtY;
 
    for(double t = 0.0; t<=1.005; t += 0.005)
      {
-	newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-	newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-	this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
-	x = newx;
-	y = newy;
+       double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+       double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+       this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
+       x = newx;
+       y = newy;
      }
 }
 
@@ -3941,7 +3938,7 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -3949,7 +3946,7 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
