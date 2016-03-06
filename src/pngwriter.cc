@@ -51,67 +51,11 @@ pngwriter::pngwriter()
 //Copy Constructor
 //////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter(const pngwriter &rhs)
+: filename_(NULL), textauthor_(NULL), textdescription_(NULL), texttitle_(NULL), textsoftware_(NULL), graph_(NULL)
 {
-   width_ = rhs.width_;
-   height_ = rhs.height_;
-   backgroundcolour_ = rhs.backgroundcolour_;
-   compressionlevel_ = rhs.compressionlevel_;
-   filegamma_ = rhs.filegamma_;
-   transformation_ = rhs.transformation_;;
-
-   filename_ = new char[strlen(rhs.filename_)+1];
-   textauthor_ = new char[strlen(rhs.textauthor_)+1];
-   textdescription_ = new char[strlen(rhs.textdescription_)+1];
-   textsoftware_ = new char[strlen(rhs.textsoftware_)+1];
-   texttitle_ = new char[strlen(rhs.texttitle_)+1];
-
-   strcpy(filename_, rhs.filename_);
-   strcpy(textauthor_, rhs.textauthor_);
-   strcpy(textdescription_, rhs.textdescription_);
-   strcpy(textsoftware_,rhs.textsoftware_);
-   strcpy(texttitle_, rhs.texttitle_);
-
-   int kkkk;
-
-   bit_depth_ = rhs.bit_depth_;
-   colortype_= rhs.colortype_;
-   screengamma_ = rhs.screengamma_;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-   int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
-     {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
-	  {
-	     //   graph_[vhhh][6*hhh + i ] i=0 to 5
-	     tempindex=6*hhh;
-	     graph_[vhhh][tempindex] = rhs.graph_[vhhh][tempindex];
-	     graph_[vhhh][tempindex+1] = rhs.graph_[vhhh][tempindex+1];
-	     graph_[vhhh][tempindex+2] = rhs.graph_[vhhh][tempindex+2];
-	     graph_[vhhh][tempindex+3] = rhs.graph_[vhhh][tempindex+3];
-	     graph_[vhhh][tempindex+4] = rhs.graph_[vhhh][tempindex+4];
-	     graph_[vhhh][tempindex+5] = rhs.graph_[vhhh][tempindex+5];
-	  }
-     }
-
+   /* the call to deleteMembers in the copy assignment method is no problem,
+    * because of the initializer list */
+   (*this) = rhs;
 };
 
 //Constructor for int colour levels, char * filename
