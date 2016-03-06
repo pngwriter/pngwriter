@@ -156,13 +156,16 @@ void pngwriter::deleteMembers()
       textsoftware_ = NULL;
    }
 
-   for (int jjj = 0; jjj < height_; jjj++)
-   {
-      free(graph_[jjj]);
-      graph_[jjj] = NULL;
-   }
    if( graph_ )
    {
+      for (int jjj = 0; jjj < height_; jjj++)
+      {
+         if ( graph_[jjj] )
+         {
+            free(graph_[jjj] );
+            graph_[jjj] = NULL;
+         }
+      }
       free(graph_);
       graph_ = NULL;
    }
