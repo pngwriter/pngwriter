@@ -45,68 +45,8 @@
 ////////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter()
 {
-
-   filename_ = new char[255];
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_  = new char[255];
-   textsoftware_ = new char[255];
-
-   strcpy(filename_, "out.png");
-   width_ = 250;
-   height_ = 250;
-   backgroundcolour_ = 65535;
-   compressionlevel_ = -2;
-   filegamma_ = 0.5;
-   transformation_ = 0;
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, "out.png");
-
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
-     {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
-	  {
-	     //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-};
+   createNewPngwriter( 250, 250, 65535, "out.png" );
+}
 
 //Copy Constructor
 //////////////////////////////////////////////////////////////////////////
@@ -178,187 +118,15 @@ pngwriter::pngwriter(const pngwriter &rhs)
 //////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
 {
-   width_ = x;
-   height_ = y;
-   backgroundcolour_ = backgroundcolour;
-   compressionlevel_ = -2;
-   filegamma_ = 0.6;
-   transformation_ = 0;
-
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
-
-   if((width_<0)||(height_<0))
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **: Constructor called with negative height or width. Setting width and height to 1." << std::endl;
-	width_ = 1;
-	height_ = 1;
-     }
-
-   if(backgroundcolour_ >65535)
-     {
-	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour greater than 65535. Setting to 65535."<<std::endl;
-	backgroundcolour_ = 65535;
-     }
-
-   if(backgroundcolour_ <0)
-     {
-	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour lower than 0. Setting to 0."<<std::endl;
-	backgroundcolour_ = 0;
-     }
-
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   if(backgroundcolour_ == 0)
-     for(int vhhh = 0; vhhh<height_;vhhh++)
-       memset( graph_[vhhh],
-               (char) backgroundcolour_,
-               width_*6 );
-   else
-   {
-   int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
-     {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
-	  {
-	     //graph_[vhhh][6*hhh + i] i = 0  to 5
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-   }
-};
+   createNewPngwriter( x, y, backgroundcolour, (const char *) filename );
+}
 
 //Constructor for double levels, char * filename
 /////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 {
-   width_ = x;
-   height_ = y;
-   compressionlevel_ = -2;
-   filegamma_ = 0.6;
-   transformation_ = 0;
-   backgroundcolour_ = int(backgroundcolour*65535);
-
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
-
-   if((width_<0)||(height_<0))
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **: Constructor called with negative height or width. Setting width and height to 1." << std::endl;
-	width_ = 1;
-	height_ = 1;
-     }
-
-   if(backgroundcolour_ >65535)
-     {
-	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour greater than 1.0. Setting to 1.0."<<std::endl;
-	backgroundcolour_ = 65535;
-     }
-
-   if(backgroundcolour_ < 0)
-     {
-	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour lower than 0.0. Setting to 0.0."<<std::endl;
-	backgroundcolour_ = 0;
-     }
-
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   if(backgroundcolour_ == 0)
-     for(int vhhh = 0; vhhh<height_;vhhh++)
-       memset( graph_[vhhh],
-               (char) backgroundcolour_,
-               width_*6 );
-   else
-   {
-   int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
-     {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
-	  {
-	     // graph_[vhhh][tempindex + i] where i = 0 to 5
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-   }
-};
+   createNewPngwriter( x, y, backgroundcolour, (const char *) filename );
+}
 
 void pngwriter::deleteMembers()
 {
@@ -407,9 +175,7 @@ pngwriter::~pngwriter()
    deleteMembers();
 };
 
-//Constructor for int levels, const char * filename
-//////////////////////////////////////////////////////////////
-pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
+void pngwriter::createNewPngwriter(int x, int y, int backgroundcolour, const char * filename)
 {
    width_ = x;
    height_ = y;
@@ -439,7 +205,7 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
 
    if(backgroundcolour_ >65535)
      {
-	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour greater than 65535. Setting to 65535."<<std::endl;
+	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour greater than 65535 (or 1.0 for double). Setting to 65535."<<std::endl;
 	backgroundcolour_ = 65535;
      }
 
@@ -498,100 +264,21 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
 	  }
      }
    }
-};
+}
+
+//Constructor for int levels, const char * filename
+//////////////////////////////////////////////////////////////
+pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
+{
+   createNewPngwriter( x, y, backgroundcolour, filename );
+}
 
 //Constructor for double levels, const char * filename
 /////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filename)
 {
-   width_ = x;
-   height_ = y;
-   compressionlevel_ = -2;
-   backgroundcolour_ = int(backgroundcolour*65535);
-   filegamma_ = 0.6;
-   transformation_ = 0;
-
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
-
-   if((width_<0)||(height_<0))
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **: Constructor called with negative height or width. Setting width and height to 1." << std::endl;
-	width_ = 1;
-	height_ = 1;
-     }
-
-   if(backgroundcolour_ >65535)
-     {
-	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour greater than 65535. Setting to 65535."<<std::endl;
-	backgroundcolour_ = 65535;
-     }
-
-   if(backgroundcolour_ <0)
-     {
-	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour lower than 0. Setting to 0."<<std::endl;
-	backgroundcolour_ = 0;
-     }
-
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   if(backgroundcolour_ == 0)
-     for(int vhhh = 0; vhhh<height_;vhhh++)
-       memset( graph_[vhhh],
-               (char) backgroundcolour_,
-               width_*6 );
-   else
-   {
-   int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
-     {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
-	  {
-	     //etc
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-   }
-};
+   createNewPngwriter( x, y, int(backgroundcolour*65535), filename );
+}
 
 // Overloading operator =
 /////////////////////////////////////////////////////////
