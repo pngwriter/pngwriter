@@ -611,20 +611,7 @@ void pngwriter::pngwriter_rename(long unsigned int index)
 ///////////////////////////////////////////////////////
 void pngwriter::settext(char * title, char * author, char * description, char * software)
 {
-   delete [] textauthor_;
-   delete [] textdescription_;
-   delete [] texttitle_;
-   delete [] textsoftware_;
-
-   textauthor_ = new char[strlen(author)+1];
-   textdescription_ = new char[strlen(description)+1];
-   textsoftware_ = new char[strlen(software)+1];
-   texttitle_ = new char[strlen(title)+1];
-
-   strcpy(texttitle_, title);
-   strcpy(textauthor_, author);
-   strcpy(textdescription_, description);
-   strcpy(textsoftware_, software);
+   settext( (const char *) title, (const char *) author, (const char *) description, (const char *) software );
 };
 
 ///////////////////////////////////////////////////////
