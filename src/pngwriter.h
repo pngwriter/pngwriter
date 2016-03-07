@@ -114,6 +114,7 @@ class pngwriter
    void flood_fill_internal_blend( int xstart, int ystart, double opacity,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
 
 #ifndef NO_FREETYPE
+   void static convertToUcs4( const char * const text, FT_ULong ** converted, int * r_num_chars );
    void my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, double green, double blue);
    void my_draw_bitmap_blend( FT_Bitmap * bitmap, int x, int y,double opacity,  double red, double green, double blue);
 #endif
@@ -444,6 +445,8 @@ class pngwriter
     * */
    void plot_text(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue);
    void plot_text(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue);
+   void plot_text(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue);
+   void plot_text(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue);
 
 
    /* Plot UTF-8 Text
@@ -455,6 +458,8 @@ class pngwriter
     * */
    void plot_text_utf8(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue);
    void plot_text_utf8(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue);
+   void plot_text_utf8(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue);
+   void plot_text_utf8(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue);
 
 
    /* Bilinear Interpolation of Image
@@ -606,9 +611,13 @@ class pngwriter
 
    void plot_text_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue);
    void plot_text_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, int red, int green, int blue);
+   void plot_text_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue);
+   void plot_text_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, int red, int green, int blue);
 
    void plot_text_utf8_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue);
    void plot_text_utf8_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, int red, int green, int blue);
+   void plot_text_utf8_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue);
+   void plot_text_utf8_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, int red, int green, int blue);
 
    void boundary_fill_blend(int xstart, int ystart, double opacity, double boundary_red,double boundary_green,double boundary_blue,double fill_red, double fill_green, double fill_blue) ;
    void boundary_fill_blend(int xstart, int ystart, double opacity, int boundary_red,int boundary_green,int boundary_blue,int fill_red, int fill_green, int fill_blue) ;
@@ -727,9 +736,11 @@ class pngwriter
     *     4  (x_start - size*sin(angle), y_start + size*cos(angle))
     * */
 
-   int static get_text_width(char * face_path, int fontsize,  char * text);
+   int static get_text_width(char * face_path, int fontsize, char * text);
+   int static get_text_width(const char * face_path, int fontsize, const char * text);
 
    int static get_text_width_utf8(char * face_path, int fontsize, char * text);
+   int static get_text_width_utf8(const char * face_path, int fontsize, const char * text);
 
 
 };
