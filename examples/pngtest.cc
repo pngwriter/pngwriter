@@ -333,10 +333,11 @@ int main()
    int const textwidth = pngwriter::get_text_width_utf8( font_path.c_str(), 16, "0123456789ABC" );
    stringstream msg;
    msg << "width = " << textwidth;
-   texts.filledarrow( 50,70, 50+textwidth,70, 10, 30.0, 0.0,0.0,0.0 );
-   texts.filledarrow( 50+textwidth,70, 50,70, 10, 30.0, 0.0,0.0,0.0 );
+   float const degToRad = 2.0*3.14159/360.0;
+   texts.filledarrow( 50,70, 50+textwidth,70, 10, 30.0*degToRad, 0.0,0.0,0.0 );
+   texts.filledarrow( 50+textwidth,70, 50,70, 10, 30.0*degToRad, 0.0,0.0,0.0 );
    texts.plot_text( font_path.c_str(), 16, 50, 85, 0, msg.str().c_str(), 1.0, 0.0, 1.0 );
-   texts.plot_text_blend( font_path.c_str(), 16, 50, 85, -30.0, "blended and 30 deg.", 0.5, 0.0, 0.8, 0.0 );
+   texts.plot_text_blend( font_path.c_str(), 16, 150, 30, 80.0*degToRad, "blended and 80 deg.", 0.5, 0.0, 0.0, 0.0 );
    /* The UCS4 codes were created with:
     *   `echo -n '<unicode char here if terminal supports i>' | hexdump`
     * The output will be something like:
@@ -351,7 +352,7 @@ int main()
     * After switching every two byte pairs because of endianness we get:
     *   "\xe2\x98\xba\x00"
     */
-   texts.plot_text_utf8_blend( font_path.c_str(), 16, 200, 200, 10.0, ":):)|\xc9\xb8|\xe2\x98\xba\x00|", 0.5, 0.8, 0.0, 0.0 );
+   texts.plot_text_utf8_blend( font_path.c_str(), 16, 100, 200, 10.0*degToRad, ":):)|\xc9\xb8|\xe2\x98\xba\x00|", 0.5, 0.8, 0.0, 0.0 );
 
    std::cout << "Writing to disk...";
    texts.close();
