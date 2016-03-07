@@ -48,6 +48,21 @@
 using namespace std;
 #include <ctime>
 #include <cstdlib>
+#include <cstdio>
+
+bool file_exists( const char * const name )
+{
+   FILE *file = fopen( name, "r" );
+   if ( file )
+   {
+      fclose(file);
+      return true;
+   }
+   else
+   {
+      return false;
+   }
+}
 
 int main()
 {
@@ -196,8 +211,13 @@ int main()
     * Now we specify the path to the file we wish to place into
     * the PNGwriter instance "burro":
     * */
-   std::cout << "Opening burro.png...";
-   burro.readfromfile("burro.png"); //It really is that easy.
+   std::string burro_path = std::string( "burro.png" );
+   if ( not file_exists( burro_path.c_str() ) )
+      burro_path = std::string( "../examples/burro.png" );
+   if ( not file_exists( burro_path.c_str() ) )
+      burro_path = std::string( "./examples/burro.png" );
+   std::cout << "Opening '" << burro_path << "'...";
+   burro.readfromfile( burro_path.c_str() ); //It really is that easy.
    std::cout << " done." << std::endl;
 
    /* getwidth() and getheight()
