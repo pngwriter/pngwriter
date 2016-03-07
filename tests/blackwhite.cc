@@ -1,4 +1,4 @@
-/** Copyright 2014 Felix Schmitt, Axel Huebl
+/** Copyright 2014-2016 Felix Schmitt, Axel Huebl
   *
   * Example and bug report from Felix Schmitt
   *

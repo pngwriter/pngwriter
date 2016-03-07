@@ -27,10 +27,15 @@ script:
   - make
   - sudo make install
 # tests
-  - cp -R $TRAVIS_BUILD_DIR/examples/burro.png .
   - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
   - ./pngtest
   - ./readwrite
+  # read channel range test
+  - ./blackwhite bw_16bit_rgb_20x20.png
+  - ./blackwhite bw_16bit_rgba_20x20.png
+  # fails, see #89
+  #- ./blackwhite bw_8bit_rgba_20x20.png
+  #- ./blackwhite bw_8bit_rgb_20x20.png
 
 before_script:
   - uname -r
