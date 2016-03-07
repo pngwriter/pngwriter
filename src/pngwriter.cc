@@ -766,13 +766,13 @@ int pngwriter::read(int x, int y, int colour) const
 	if(bit_depth_ == 16)
 	  {
 	     /* In these cases *256 is correct, because what we actually are
-          * doing is bitshifting by 8 bit and then appending the next lower
-          * 8 bit.
-          * These lines are inefficient. Bitshifting and bitwise anding may
-          * have better performance than multiplication and addition.
-          * We could also just convert (unsigned char*) to (uint16_t*).
-          * If the open file function does it in the same way, then this
-          * method makes no assumptions about platform endianness */
+	      * doing is bitshifting by 8 bit and then appending the next lower
+	      * 8 bit.
+	      * These lines are inefficient. Bitshifting and bitwise anding may
+	      * have better performance than multiplication and addition.
+	      * We could also just convert (unsigned char*) to (uint16_t*).
+	      * If the open file function does it in the same way, then this
+	      * method makes no assumptions about platform endianness */
 	     temp2=6*(x-1);
 	     if(colour == 1)
 	       {
