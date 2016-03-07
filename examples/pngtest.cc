@@ -339,18 +339,9 @@ int main()
    texts.plot_text( font_path.c_str(), 16, 50, 85, 0, msg.str().c_str(), 1.0, 0.0, 1.0 );
    texts.plot_text_blend( font_path.c_str(), 16, 150, 30, 80.0*degToRad, "blended and 80 deg.", 0.5, 0.0, 0.0, 0.0 );
    /* The UCS4 codes were created with:
-    *   `echo -n '<unicode char here if terminal supports i>' | hexdump`
-    * The output will be something like:
-    *   0000000 b8c9
-    *   0000002
-    * The long numbers are only addresses, and b8c9 has the problem that
-    * freetype seems to want it the exact other way around, meaning:
-    *   "\xc9\xb8"
-    * @see https://en.wikipedia.org/wiki/Byte_order_mark
-    * The smiley icon gives:
-    *   0000000 98e2 00ba
-    * After switching every two byte pairs because of endianness we get:
-    *   "\xe2\x98\xba\x00"
+    *   `... | hd`
+    * E.g. for the smiley the output will be:
+    *   00000000  e2 98 ba                                          |...|
     */
    texts.plot_text_utf8_blend( font_path.c_str(), 16, 100, 200, 10.0*degToRad, ":):)|\xc9\xb8|\xe2\x98\xba\x00|", 0.5, 0.8, 0.0, 0.0 );
 
