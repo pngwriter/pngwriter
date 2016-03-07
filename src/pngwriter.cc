@@ -1524,47 +1524,7 @@ double pngwriter::dreadHSV(int x, int y, int colour) const
 //////////////////////////////////////////////////////////////////////////////////
 int pngwriter::readHSV(int x, int y, int colour) const
 {
-   if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
-     {
-
-	float * huep;
-	float * saturationp;
-	float * valuep;
-	float red,green,blue;
-	float hue, saturation, value;
-
-	red = float(dread(x,y,1));
-	green = float(dread(x,y,2));
-	blue = float(dread(x,y,3));
-
-	huep = &hue;
-	saturationp = &saturation;
-	valuep = &value;
-
-	RGBtoHSV( red,  green,  blue, huep,  saturationp, valuep );
-
-	if(colour == 1)
-	  {
-	     return int(65535*(double(hue)/360.0));
-	  }
-
-	else if(colour == 2)
-	  {
-	     return int(65535*saturation);
-	  }
-
-	else if(colour == 3)
-	  {
-	     return int(65535*value);
-	  }
-
-	std::cerr << " PNGwriter::readHSV - ERROR **: Called with wrong colour argument: should be 1, 2 or 3; was: " << colour << "." << std::endl;
-	return 0;
-     }
-   else
-     {
-	return 0;
-     }
+   return (int)( dreadHSV( x, y, colour )*65535 );
 }
 
 void pngwriter::setcompressionlevel(int level)
