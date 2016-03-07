@@ -45,9 +45,24 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <sstream>
 using namespace std;
 #include <ctime>
 #include <cstdlib>
+
+bool file_exists( const char * const name )
+{
+   FILE *file = fopen( name, "r" );
+   if ( file )
+   {
+      fclose(file);
+      return true;
+   }
+   else
+   {
+      return false;
+   }
+}
 
 int main()
 {
@@ -292,7 +307,58 @@ int main()
    std::cout << " done.";
    std::cout << "\nWriting to disk...";
    triangles.close();
-   std::cout << " done.";
-   std::cout << "\n\npngtest has finished. Take a look at the PNG images that have been created!\n";
+   std::cout << " done." << std::endl;
+
+#ifndef NO_FREETYPE
+   /////////////////////////////////////////////////////////////////////
+
+   /* Text rendering tests
+    * To demonstrate the use and usefulness of plotHSV(), we will
+    * generate a rainbow.
+    * We will use the function plotHSV that
+    * plots a pixel at x, y with the colour given in the HSV colourspace
+    * (hue, saturation, value), instead of the traditional RGB.
+    * */
+
+   std::cout << "\nCreating texts.png...";
+   pngwriter texts(300,300,1.0,"texts.png");
+   std::cout << " done." <<endl;
+   std::cout << "Plotting...";
+
+   std::string font_path = std::string( "../fonts/FreeMono.ttf" );
+   if ( not file_exists( font_path.c_str() ) )
+      font_path = std::string( "./fonts/FreeMono.ttf" );
+
+   texts.plot_text_utf8( font_path.c_str(), 16, 50, 50, 0, "0123456789ABC", 1.0, 0.0, 1.0 );
+   int const textwidth = pngwriter::get_text_width_utf8( font_path.c_str(), 16, "0123456789ABC" );
+   stringstream msg;
+   msg << "width = " << textwidth;
+   texts.filledarrow( 50,70, 50+textwidth,70, 10, 30.0, 0.0,0.0,0.0 );
+   texts.filledarrow( 50+textwidth,70, 50,70, 10, 30.0, 0.0,0.0,0.0 );
+   texts.plot_text( font_path.c_str(), 16, 50, 85, 0, msg.str().c_str(), 1.0, 0.0, 1.0 );
+   texts.plot_text_blend( font_path.c_str(), 16, 50, 85, -30.0, "blended and 30 deg.", 0.5, 0.0, 0.8, 0.0 );
+   /* The UCS4 codes were created with:
+    *   `echo -n '<unicode char here if terminal supports i>' | hexdump`
+    * The output will be something like:
+    *   0000000 b8c9
+    *   0000002
+    * The long numbers are only addresses, and b8c9 has the problem that
+    * freetype seems to want it the exact other way around, meaning:
+    *   "\xc9\xb8"
+    * @see https://en.wikipedia.org/wiki/Byte_order_mark
+    * The smiley icon gives:
+    *   0000000 98e2 00ba
+    * After switching every two byte pairs because of endianness we get:
+    *   "\xe2\x98\xba\x00"
+    */
+   texts.plot_text_utf8_blend( font_path.c_str(), 16, 200, 200, 10.0, ":):)|\xc9\xb8|\xe2\x98\xba\x00|", 0.5, 0.8, 0.0, 0.0 );
+
+   std::cout << "Writing to disk...";
+   texts.close();
+   std::cout << " done." << std::endl;
+   /////////////////////////////////////////////////////////////////
+#endif
+
+   std::cout << "\npngtest has finished. Take a look at the PNG images that have been created!\n";
    return 0;
 }
