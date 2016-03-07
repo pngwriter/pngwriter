@@ -87,6 +87,11 @@ FOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
     TARGET_LINK_LIBRARIES(${examplename} ${EXAMPLES_LIBS})
 ENDFOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
 
+# Copy example files to "build" dir for easy testing ##########################
+#
+file(GLOB REFERENCE_PNGS "pngs/*.png")
+FILE(COPY ${REFERENCE_PNGS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 # Installation ################################################################
 #
 INSTALL(TARGETS pngwriter LIBRARY DESTINATION lib)

@@ -1,4 +1,4 @@
-/** Copyright 2014 Felix Schmitt, Axel Huebl
+/** Copyright 2014-2016 Felix Schmitt, Axel Huebl
   *
   * Example and bug report from Felix Schmitt
   *
@@ -60,10 +60,16 @@ int main(int argc, char **argv)
     image.close();
 
     if (!(black && white))
+    {
         std::cout << "failed double" << std::endl;
+        return 1;
+    }
 
     if (!(black_int && white_int))
+    {
         std::cout << "failed int" << std::endl;
+        return 1;
+    }
 
     return 0;
 }
