@@ -115,6 +115,7 @@ class pngwriter
 
 #ifndef NO_FREETYPE
    void static convertToUcs4( const char * const text, FT_ULong ** converted, int * r_num_chars );
+   void renderFTULongSequence(const char * face_path, int fontsize, int x_start, int y_start, double angle, const FT_ULong * text, int num_chars, double opacity, double red, double green, double blue);
    void my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, double green, double blue);
    void my_draw_bitmap_blend( FT_Bitmap * bitmap, int x, int y,double opacity,  double red, double green, double blue);
 #endif
