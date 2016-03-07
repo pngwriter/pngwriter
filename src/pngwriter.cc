@@ -795,7 +795,7 @@ int pngwriter::read(int x, int y, int colour) const
 
 	if(bit_depth_ == 8)
 	  {
-	     int const scale8To16Bit = 257;   // x/255*65535 = x*257
+	     int const scale8To16Bit = 257;   // (x/255.0)*65535.0 -> x*257
 	     temp2=3*(x-1);
 	     if(colour == 1)
 	       {
