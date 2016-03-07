@@ -2794,50 +2794,7 @@ double pngwriter::dreadCMYK(int x, int y, int colour) const
 
 int pngwriter::readCMYK(int x, int y, int colour) const
 {
-/*
- * Black   = minimum(1-Red,1-Green,1-Blue)
- *     Cyan    = (1-Red-Black)/(1-Black)
- *     Magenta = (1-Green-Black)/(1-Black)
- *     Yellow  = (1-Blue-Black)/(1-Black)
- *
- * */
-   double black, red, green, blue, ired, igreen, iblue, iblack;
-   //add error detection here
-   // not much to detect, really
-   red = this->dread(x, y, 1);
-   green = this->dread(x, y, 2);
-   blue = this->dread(x, y, 3);
-
-   ired = 1.0 - red;
-   igreen = 1.0 - green;
-   iblue = 1.0 - blue;
-
-   black = ired;
-
-   //black is the mimimum of inverse RGB colours, and if they are all equal, it is the inverse of red.
-   if( (igreen<ired)&&(igreen<iblue) )
-     {
-	black = igreen;
-     }
-
-   if( (iblue<igreen)&&(iblue<ired) )
-     {
-	black = iblue;
-     }
-
-   iblack = 1.0 - black;
-
-   switch( colour )
-     {
-	case 1: return (int)( ((ired-black)/(iblack))*65535);
-	case 2: return (int)( ((igreen-black)/(iblack))*65535);
-	case 3: return (int)( ((iblue-black)/(iblack))*65535);
-	case 4: return (int)( (black)*65535);
-	default:
-		std::cerr << " PNGwriter::readCMYK - WARNING **: Invalid argument: should be 1, 2, 3 or 4, is "
-			<< colour << std::endl;
-		return 0;
-     }
+   return (int)( dreadCMYK( x, y, colour )*65535 );
 }
 
 void pngwriter::scale_k(double k)
