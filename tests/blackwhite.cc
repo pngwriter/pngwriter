@@ -51,9 +51,8 @@ int main(int argc, char **argv)
             if (col == 0)
                 black_int = true;
 
-            if (col == 65535 && bit_depth == 16)
-                white_int = true;
-            if (col == 255 && bit_depth == 8)
+            // bit_depth 8 and 16 get all read as 16bit
+            if (col == 65535)
                 white_int = true;
         }
 
