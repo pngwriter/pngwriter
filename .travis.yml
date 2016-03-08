@@ -15,11 +15,11 @@ env:
     - LIBPNG_VERSION=1.4.16 FREETYPE=ON
     - LIBPNG_VERSION=1.5.22 FREETYPE=ON
     - LIBPNG_VERSION=1.6.17 FREETYPE=ON
-    - LIBPNG_VERSION=1.7.0beta65
+    - LIBPNG_VERSION=1.7.0beta78
 
 matrix:
   allow_failures:
-    - env: LIBPNG_VERSION=1.7.0beta65
+    - env: LIBPNG_VERSION=1.7.0beta78
 
 script:
   - cd $BUILD
