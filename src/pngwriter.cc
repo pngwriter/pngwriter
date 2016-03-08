@@ -873,18 +873,14 @@ int pngwriter::read(int xxx, int yyy) const
 /////////////////////////////////////////////////////
 double  pngwriter::dread(int x, int y, int colour) const
 {
-   if(bit_depth_ == 8)
-     return double(this->read(x,y,colour))/255.0;
-   else
-     return double(this->read(x,y,colour))/65535.0;
+    // PNGwriter converts all read images to 16bit RGB
+    return double(this->read(x,y,colour))/65535.0;
 }
 
 double  pngwriter::dread(int x, int y) const
 {
-   if(bit_depth_ == 8)
-     return double(this->read(x,y))/255.0;
-   else
-     return double(this->read(x,y))/65535.0;
+    // PNGwriter converts all read images to 16bit RGB
+   return double(this->read(x,y))/65535.0;
 }
 
 ///////////////////////////////////////////////////////
