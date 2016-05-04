@@ -68,6 +68,7 @@
 #endif
 
 #include <iostream>
+#include <string>
 #include <ios>
 #include <cmath>
 #include <cwchar>
@@ -85,11 +86,11 @@ class pngwriter
 {
  private:
 
-   char * filename_;
-   char * textauthor_;
-   char * textdescription_;
-   char * texttitle_;
-   char * textsoftware_;
+   std::string filename_;
+   std::string textauthor_;
+   std::string textdescription_;
+   std::string texttitle_;
+   std::string textsoftware_;
 
 
 
