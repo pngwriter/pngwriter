@@ -7,6 +7,7 @@
 *
 *    Author:                    Paul Blackburn https://github.com/individual61
 *                               Axel Huebl https://github.com/ax3l
+*                               Rene Widera https://github.com/psychocoderHPC
 *
 *    Email:                     individual61@users.sourceforge.net
 *
@@ -19,6 +20,7 @@
 *    License:                   GNU General Public License
 *                               (C) 2002-2015 Paul Blackburn
 *                               (C) 2013-2015 Axel Huebl
+*                               (C) 2016      Rene Widera
 *
 ******************************************************************************/
 
@@ -92,9 +94,9 @@ pngwriter::pngwriter()
      }
 
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+      for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
 	     tempindex = 6*hhh;
@@ -157,9 +159,9 @@ pngwriter::pngwriter(const pngwriter &rhs)
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //   graph_[vhhh][6*hhh + i ] i=0 to 5
 	     tempindex=6*hhh;
@@ -250,9 +252,9 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] i = 0  to 5
 	     tempindex = 6*hhh;
@@ -343,9 +345,9 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     // graph_[vhhh][tempindex + i] where i = 0 to 5
 	     tempindex = 6*hhh;
@@ -483,9 +485,9 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] where i = 0 to 5
 	     tempindex=6*hhh;
@@ -576,9 +578,9 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //etc
 	     tempindex = 6*hhh;
@@ -649,9 +651,9 @@ pngwriter & pngwriter::operator = (const pngwriter & rhs)
      }
 
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = rhs.graph_[vhhh][tempindex];
@@ -892,9 +894,9 @@ void pngwriter::clear()
 
    if(bit_depth_==16)
      {
-	for(pen = 0; pen<width_;pen++)
+	for(pencil = 0; pencil<height_;pencil++)
 	  {
-	     for(pencil = 0; pencil<height_;pencil++)
+           for(pen = 0; pen<width_;pen++)
 	       {
 		  tempindex=6*pen;
 		  graph_[pencil][tempindex] = 0;
@@ -909,9 +911,9 @@ void pngwriter::clear()
 
    if(bit_depth_==8)
      {
-	for(pen = 0; pen<width_;pen++)
+	for(pencil = 0; pencil<height_;pencil++)
 	  {
-	     for(pencil = 0; pencil<height_;pencil++)
+           for(pen = 0; pen<width_;pen++)
 	       {
 		  tempindex=3*pen;
 		  graph_[pencil][tempindex] = 0;
@@ -2369,7 +2371,7 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
    double temp;
    for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
      {
-	for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
+       for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
 	  {
 	     temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
 
@@ -2904,7 +2906,7 @@ void pngwriter::invert(void)
 
    for(int jjj = 1; jjj <= (this->height_); jjj++)
      {
-	for(int iii = 1; iii <= (this->width_); iii++)
+       for(int iii = 1; iii <= (this->width_); iii++)
 	  {
 	     /*	     temp11 = (this->read(iii,jjj,1));
 	      temp22 = (this->read(iii,jjj,2));
@@ -2962,9 +2964,9 @@ void pngwriter::resize(int width, int height)
      }
 
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
 	     tempindex = 6*hhh;
@@ -3286,9 +3288,9 @@ void pngwriter::scale_k(double k)
 
    double readx, ready;
 
-   for(int x = 1; x<= scaledw; x++)
+   for(int y = 1; y <= scaledh; y++)
      {
-	for(int y = 1; y <= scaledh; y++)
+       for(int x = 1; x<= scaledw; x++)
 	  {
 	     readx = (2*x-1)*spacingx;
 	     ready = (2*y-1)*spacingy;
@@ -3340,9 +3342,9 @@ void pngwriter::scale_k(double k)
 
    //Copy the temp date into this's storage.
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
@@ -3378,9 +3380,9 @@ void pngwriter::scale_kxky(double kx, double ky)
 
    double readx, ready;
 
-   for(int x = 1; x<= scaledw; x++)
+   for(int y = 1; y <= scaledh; y++)
      {
-	for(int y = 1; y <= scaledh; y++)
+       for(int x = 1; x<= scaledw; x++)
 	  {
 	     readx = (2*x-1)*spacingx;
 	     ready = (2*y-1)*spacingy;
@@ -3431,9 +3433,9 @@ void pngwriter::scale_kxky(double kx, double ky)
 
    //Copy the temp date into this's storage.
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
@@ -3466,9 +3468,9 @@ void pngwriter::scale_wh(int finalwidth, int finalheight)
 
    double readx, ready;
 
-   for(int x = 1; x<= finalwidth; x++)
+   for(int y = 1; y <= finalheight; y++)
      {
-	for(int y = 1; y <= finalheight; y++)
+       for(int x = 1; x<= finalwidth; x++)
 	  {
 	     readx = (2*x-1)*spacingx;
 	     ready = (2*y-1)*spacingy;
@@ -3520,9 +3522,9 @@ void pngwriter::scale_wh(int finalwidth, int finalheight)
 
    //Copy the temp date into this's storage.
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
@@ -4391,9 +4393,9 @@ void pngwriter::laplacian(double k, double offset)
 
    double red, green, blue;
 
-   for(int x = 1; x <= width_; x++)
+   for(int y = 1; y <= height_; y++)
      {
-	for(int y = 1; y <= height_; y++)
+       for(int x = 1; x <= width_; x++)
 	  {
 	     red =
 	       8.0*this->dread(x,y,1) -
@@ -4433,9 +4435,9 @@ void pngwriter::laplacian(double k, double offset)
 	  }
      }
 
-   for(int xx = 1; xx <= width_; xx++)
+   for(int yy = 1; yy <= height_; yy++)
      {
-	for(int yy = 1; yy <= height_; yy++)
+       for(int xx = 1; xx <= width_; xx++)
 	  {
 	     this->plot(xx,yy,  temp.read(xx,yy,1), temp.read(xx,yy,2), temp.read(xx,yy,3));
 	  }
