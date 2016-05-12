@@ -47,67 +47,8 @@
 ////////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter()
 {
-
-   filename_ = new char[255];
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_  = new char[255];
-   textsoftware_ = new char[255];
-
-   strcpy(filename_, "out.png");
-   width_ = 250;
-   height_ = 250;
-   backgroundcolour_ = 65535;
-   compressionlevel_ = -2;
-   filegamma_ = 0.5;
-   transformation_ = 0;
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, "out.png");
-
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-      for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
+   std::string filename("out.png");
+   initMembers(250, 250, 65535, const_cast<char*>(filename.c_str()));
 };
 
 //Copy Constructor
@@ -120,6 +61,8 @@ pngwriter::pngwriter(const pngwriter &rhs)
    compressionlevel_ = rhs.compressionlevel_;
    filegamma_ = rhs.filegamma_;
    transformation_ = rhs.transformation_;;
+
+   numOmpThreads_ = rhs.numOmpThreads_;
 
    filename_ = new char[strlen(rhs.filename_)+1];
    textauthor_ = new char[strlen(rhs.textauthor_)+1];
@@ -158,28 +101,37 @@ pngwriter::pngwriter(const pngwriter &rhs)
      {
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     //   graph_[vhhh][6*hhh + i ] i=0 to 5
-	     tempindex=6*hhh;
-	     graph_[vhhh][tempindex] = rhs.graph_[vhhh][tempindex];
-	     graph_[vhhh][tempindex+1] = rhs.graph_[vhhh][tempindex+1];
-	     graph_[vhhh][tempindex+2] = rhs.graph_[vhhh][tempindex+2];
-	     graph_[vhhh][tempindex+3] = rhs.graph_[vhhh][tempindex+3];
-	     graph_[vhhh][tempindex+4] = rhs.graph_[vhhh][tempindex+4];
-	     graph_[vhhh][tempindex+5] = rhs.graph_[vhhh][tempindex+5];
-	  }
-     }
-
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 //   graph_[vhhh][6*hhh + i ] i=0 to 5
+		 tempindex=6*hhh;
+		 graph_[vhhh][tempindex] = rhs.graph_[vhhh][tempindex];
+		 graph_[vhhh][tempindex+1] = rhs.graph_[vhhh][tempindex+1];
+		 graph_[vhhh][tempindex+2] = rhs.graph_[vhhh][tempindex+2];
+		 graph_[vhhh][tempindex+3] = rhs.graph_[vhhh][tempindex+3];
+		 graph_[vhhh][tempindex+4] = rhs.graph_[vhhh][tempindex+4];
+		 graph_[vhhh][tempindex+5] = rhs.graph_[vhhh][tempindex+5];
+	     }
+	 }
+   } // pragma omp parallel
 };
 
 //Constructor for int colour levels, char * filename
 //////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
 {
+   initMembers(x, y, backgroundcolour, filename);
+}
+
+void pngwriter::initMembers(int x, int y, int backgroundcolour, char * filename)
+{
+  numOmpThreads_ = 1;
    width_ = x;
    height_ = y;
    backgroundcolour_ = backgroundcolour;
@@ -194,7 +146,7 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
    filename_ = new char[strlen(filename)+1];
 
    strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
+   strcpy(textdescription_, "https://github.com/pngwriter");
    strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
    strcpy(texttitle_, filename);
    strcpy(filename_, filename);
@@ -243,54 +195,41 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
      {
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
-
-   if(backgroundcolour_ == 0)
-     for(int vhhh = 0; vhhh<height_;vhhh++)
-       memset( graph_[vhhh],
-               (char) backgroundcolour_,
-               width_*6 );
-   else
+   #pragma omp parallel num_threads(this->numOmpThreads_)
    {
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     //graph_[vhhh][6*hhh + i] i = 0  to 5
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-   }
+      if(backgroundcolour_ == 0)
+	 #pragma omp for schedule(guided)
+	 for(int vhhh = 0; vhhh<height_;vhhh++)
+	   memset( graph_[vhhh],
+		    (char) backgroundcolour_,
+		    width_*6 );
+      else
+      {
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 //graph_[vhhh][6*hhh + i] i = 0  to 5
+		 tempindex = 6*hhh;
+		 graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
+	     }
+	 }
+      }
+   } // pragma omp parallel
 };
 
 //Constructor for double levels, char * filename
 /////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 {
-   width_ = x;
-   height_ = y;
-   compressionlevel_ = -2;
-   filegamma_ = 0.6;
-   transformation_ = 0;
-   backgroundcolour_ = int(backgroundcolour*65535);
-
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   int bgcolour = int(backgroundcolour*65535);
 
    if((width_<0)||(height_<0))
      {
@@ -299,67 +238,19 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 	height_ = 1;
      }
 
-   if(backgroundcolour_ >65535)
+   if(bgcolour >65535)
      {
 	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour greater than 1.0. Setting to 1.0."<<std::endl;
-	backgroundcolour_ = 65535;
+	bgcolour = 65535;
      }
 
-   if(backgroundcolour_ < 0)
+   if(bgcolour < 0)
      {
 	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour lower than 0.0. Setting to 0.0."<<std::endl;
-	backgroundcolour_ = 0;
+	bgcolour = 0;
      }
 
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   if(backgroundcolour_ == 0)
-     for(int vhhh = 0; vhhh<height_;vhhh++)
-       memset( graph_[vhhh],
-               (char) backgroundcolour_,
-               width_*6 );
-   else
-   {
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     // graph_[vhhh][tempindex + i] where i = 0 to 5
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-   }
+   initMembers(x, y, bgcolour, filename);
 };
 
 void pngwriter::deleteMembers()
@@ -411,7 +302,8 @@ pngwriter::~pngwriter()
 
 //Constructor for int levels, const char * filename
 //////////////////////////////////////////////////////////////
-pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
+pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename) :
+  numOmpThreads_( 1 )
 {
    width_ = x;
    height_ = y;
@@ -477,34 +369,40 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
 
-   if(backgroundcolour_ == 0)
-     for(int vhhh = 0; vhhh<height_;vhhh++)
-       memset( graph_[vhhh],
-               (char) backgroundcolour_,
-               width_*6 );
-   else
+   #pragma omp parallel num_threads(this->numOmpThreads_)
    {
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     //graph_[vhhh][6*hhh + i] where i = 0 to 5
-	     tempindex=6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-   }
+      if(backgroundcolour_ == 0)
+	 #pragma omp for schedule(guided)
+	 for(int vhhh = 0; vhhh<height_;vhhh++)
+	   memset( graph_[vhhh],
+		    (char) backgroundcolour_,
+		    width_*6 );
+      else
+      {
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 //graph_[vhhh][6*hhh + i] where i = 0 to 5
+		 tempindex=6*hhh;
+		 graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
+	     }
+	 }
+      }
+   } // pragma omp parallel
 };
 
 //Constructor for double levels, const char * filename
 /////////////////////////////////////////////////////////////////////////
-pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filename)
+pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filename) :
+  numOmpThreads_( 1 )
 {
    width_ = x;
    height_ = y;
@@ -570,29 +468,34 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
 
-   if(backgroundcolour_ == 0)
-     for(int vhhh = 0; vhhh<height_;vhhh++)
-       memset( graph_[vhhh],
-               (char) backgroundcolour_,
-               width_*6 );
-   else
+   #pragma omp parallel num_threads(this->numOmpThreads_)
    {
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     //etc
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
-   }
+      if(backgroundcolour_ == 0)
+	 #pragma omp for schedule(guided)
+	 for(int vhhh = 0; vhhh<height_;vhhh++)
+	   memset( graph_[vhhh],
+		    (char) backgroundcolour_,
+		    width_*6 );
+      else
+      {
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 //etc
+		 tempindex = 6*hhh;
+		 graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
+	     }
+	 }
+      }
+   } // pragma omp parallel
 };
 
 // Overloading operator =
@@ -611,6 +514,8 @@ pngwriter & pngwriter::operator = (const pngwriter & rhs)
    compressionlevel_ = rhs.compressionlevel_;
    filegamma_ = rhs.filegamma_;
    transformation_ = rhs.transformation_;
+
+   numOmpThreads_ = rhs.numOmpThreads_;
 
    filename_ = new char[strlen(rhs.filename_)+1];
    textauthor_ = new char[strlen(rhs.textauthor_)+1];
@@ -636,6 +541,7 @@ pngwriter & pngwriter::operator = (const pngwriter & rhs)
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
 
+   #pragma omp parallel for num_threads(this->numOmpThreads_)
    for (kkkk = 0; kkkk < height_; kkkk++)
      {
         graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
@@ -650,21 +556,24 @@ pngwriter & pngwriter::operator = (const pngwriter & rhs)
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
 
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     tempindex=6*hhh;
-	     graph_[vhhh][tempindex] = rhs.graph_[vhhh][tempindex];
-	     graph_[vhhh][tempindex+1] = rhs.graph_[vhhh][tempindex+1];
-	     graph_[vhhh][tempindex+2] = rhs.graph_[vhhh][tempindex+2];
-	     graph_[vhhh][tempindex+3] = rhs.graph_[vhhh][tempindex+3];
-	     graph_[vhhh][tempindex+4] = rhs.graph_[vhhh][tempindex+4];
-	     graph_[vhhh][tempindex+5] = rhs.graph_[vhhh][tempindex+5];
-	  }
-     }
-
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 tempindex=6*hhh;
+		 graph_[vhhh][tempindex] = rhs.graph_[vhhh][tempindex];
+		 graph_[vhhh][tempindex+1] = rhs.graph_[vhhh][tempindex+1];
+		 graph_[vhhh][tempindex+2] = rhs.graph_[vhhh][tempindex+2];
+		 graph_[vhhh][tempindex+3] = rhs.graph_[vhhh][tempindex+3];
+		 graph_[vhhh][tempindex+4] = rhs.graph_[vhhh][tempindex+4];
+		 graph_[vhhh][tempindex+5] = rhs.graph_[vhhh][tempindex+5];
+	     }
+	 }
+   } // pragma omp parallel
    return *this;
 }
 
@@ -892,37 +801,42 @@ void pngwriter::clear()
    int pencil = 0;
    int tempindex;
 
-   if(bit_depth_==16)
-     {
-	for(pencil = 0; pencil<height_;pencil++)
-	  {
-           for(pen = 0; pen<width_;pen++)
-	       {
-		  tempindex=6*pen;
-		  graph_[pencil][tempindex] = 0;
-		  graph_[pencil][tempindex+1] = 0;
-		  graph_[pencil][tempindex+2] = 0;
-		  graph_[pencil][tempindex+3] = 0;
-		  graph_[pencil][tempindex+4] = 0;
-		  graph_[pencil][tempindex+5] = 0;
-	       }
-	  }
-     }
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
 
-   if(bit_depth_==8)
-     {
-	for(pencil = 0; pencil<height_;pencil++)
-	  {
-           for(pen = 0; pen<width_;pen++)
-	       {
-		  tempindex=3*pen;
-		  graph_[pencil][tempindex] = 0;
-		  graph_[pencil][tempindex+1] = 0;
-		  graph_[pencil][tempindex+2] = 0;
-	       }
-	  }
-     }
+      if(bit_depth_==16)
+	 {
+	   #pragma omp for schedule(guided)
+	   for(pencil = 0; pencil<height_;pencil++)
+	     {
+		for(pen = 0; pen<width_;pen++)
+		   {
+		     tempindex=6*pen;
+		     graph_[pencil][tempindex] = 0;
+		     graph_[pencil][tempindex+1] = 0;
+		     graph_[pencil][tempindex+2] = 0;
+		     graph_[pencil][tempindex+3] = 0;
+		     graph_[pencil][tempindex+4] = 0;
+		     graph_[pencil][tempindex+5] = 0;
+		   }
+	     }
+	 }
 
+      if(bit_depth_==8)
+	 {
+	   #pragma omp for schedule(guided)
+	   for(pencil = 0; pencil<height_;pencil++)
+	     {
+		for(pen = 0; pen<width_;pen++)
+		   {
+		     tempindex=3*pen;
+		     graph_[pencil][tempindex] = 0;
+		     graph_[pencil][tempindex+1] = 0;
+		     graph_[pencil][tempindex+2] = 0;
+		   }
+	     }
+	 }
+   } // pragma omp parallel
 };
 
 /////////////////////////////////////////////////////
@@ -2368,24 +2282,28 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
 
 void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, double green, double blue)
 {
-   double temp;
-   for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
-     {
-       for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
-	  {
-	     temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      double temp;
+      #pragma omp for schedule(guided)
+      for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
+	 {
+	   for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
+	     {
+		 temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
 
-	     if(temp)
-	       {
-		  this->plot(x + i,
-			     y  - j,
-			     temp*red + (1-temp)*(this->dread(x+i,y-j,1)),
-			     temp*green + (1-temp)*(this->dread(x+i,y-j,2)),
-			     temp*blue + (1-temp)*(this->dread(x+i,y-j,3))
-			     );
-	       }
-	  }
-     }
+		 if(temp)
+		   {
+		     this->plot(x + i,
+				 y  - j,
+				 temp*red + (1-temp)*(this->dread(x+i,y-j,1)),
+				 temp*green + (1-temp)*(this->dread(x+i,y-j,2)),
+				 temp*blue + (1-temp)*(this->dread(x+i,y-j,3))
+				 );
+		   }
+	     }
+	 }
+   } // pragma omp parallel
 }
 
 
@@ -2901,36 +2819,39 @@ void pngwriter::plot_blend(int x, int y, double opacity, double red, double gree
 
 void pngwriter::invert(void)
 {
-   //   int temp1, temp2, temp3;
-   double temp11, temp22, temp33;
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      //   int temp1, temp2, temp3;
+      double temp11, temp22, temp33;
+      #pragma omp for schedule(guided)
+      for(int jjj = 1; jjj <= (this->height_); jjj++)
+	 {
+	   for(int iii = 1; iii <= (this->width_); iii++)
+	     {
+		 /*	     temp11 = (this->read(iii,jjj,1));
+		  temp22 = (this->read(iii,jjj,2));
+		  temp33 = (this->read(iii,jjj,3));
+		  *
+		  this->plot(iii,jjj,
+		  ((double)(65535 - temp11))/65535.0,
+		  ((double)(65535 - temp22))/65535.0,
+		  ((double)(65535 - temp33))/65535.0
+		  );
+		  *
+		  */
+		 temp11 = (this->read(iii,jjj,1));
+		 temp22 = (this->read(iii,jjj,2));
+		 temp33 = (this->read(iii,jjj,3));
 
-   for(int jjj = 1; jjj <= (this->height_); jjj++)
-     {
-       for(int iii = 1; iii <= (this->width_); iii++)
-	  {
-	     /*	     temp11 = (this->read(iii,jjj,1));
-	      temp22 = (this->read(iii,jjj,2));
-	      temp33 = (this->read(iii,jjj,3));
-	      *
-	      this->plot(iii,jjj,
-	      ((double)(65535 - temp11))/65535.0,
-	      ((double)(65535 - temp22))/65535.0,
-	      ((double)(65535 - temp33))/65535.0
-	      );
-	      *
-	      */
-	     temp11 = (this->read(iii,jjj,1));
-	     temp22 = (this->read(iii,jjj,2));
-	     temp33 = (this->read(iii,jjj,3));
+		 this->plot(iii,jjj,
+			   (int)(65535 - temp11),
+			   (int)(65535 - temp22),
+			   (int)(65535 - temp33)
+			   );
 
-	     this->plot(iii,jjj,
-			(int)(65535 - temp11),
-			(int)(65535 - temp22),
-			(int)(65535 - temp33)
-			);
-
-	  }
-     }
+	     }
+	 }
+   } // pragma omp parallel
 }
 
 void pngwriter::resize(int width, int height)
@@ -2962,22 +2883,26 @@ void pngwriter::resize(int width, int height)
      {
 	std::cerr << " PNGwriter::resize - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
 
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
-	     tempindex = 6*hhh;
-	     graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-	     graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	  }
-     }
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
+		 tempindex = 6*hhh;
+		 graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
+		 graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
+		 graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
+	     }
+	 }
+   } // pragma omp parallel
 }
 
 void pngwriter::boundary_fill(int xstart, int ystart, double boundary_red,double boundary_green,double boundary_blue,double fill_red, double fill_green, double fill_blue)
@@ -3281,26 +3206,29 @@ void pngwriter::scale_k(double k)
    // Create image storage.
    pngwriter temp(scaledw,scaledh,0,"temp");
 
-   int red, green, blue;
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      int red, green, blue;
 
-   double spacingx = ((double)width_)/(2*scaledw);
-   double spacingy = ((double)height_)/(2*scaledh);
+      double spacingx = ((double)width_)/(2*scaledw);
+      double spacingy = ((double)height_)/(2*scaledh);
 
-   double readx, ready;
+      double readx, ready;
+      #pragma omp for schedule(guided)
+      for(int y = 1; y <= scaledh; y++)
+	 {
+	   for(int x = 1; x<= scaledw; x++)
+	     {
+		 readx = (2*x-1)*spacingx;
+		 ready = (2*y-1)*spacingy;
+		 red = this->bilinear_interpolation_read(readx, ready, 1);
+		 green = this->bilinear_interpolation_read(readx, ready, 2);
+		 blue = this->bilinear_interpolation_read(readx, ready, 3);
+		 temp.plot(x, y, red, green, blue);
 
-   for(int y = 1; y <= scaledh; y++)
-     {
-       for(int x = 1; x<= scaledw; x++)
-	  {
-	     readx = (2*x-1)*spacingx;
-	     ready = (2*y-1)*spacingy;
-	     red = this->bilinear_interpolation_read(readx, ready, 1);
-	     green = this->bilinear_interpolation_read(readx, ready, 2);
-	     blue = this->bilinear_interpolation_read(readx, ready, 3);
-	     temp.plot(x, y, red, green, blue);
-
-	  }
-     }
+	     }
+	 }
+   } // pragma omp parallel
 
    // From here on, the process is the same for all scale functions.
    //Get data out of temp and into this's storage.
@@ -3340,21 +3268,25 @@ void pngwriter::scale_k(double k)
 
    //This instance now has a new, resized storage space.
 
-   //Copy the temp date into this's storage.
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     tempindex=6*hhh;
-	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
-	     graph_[vhhh][tempindex+1] = temp.graph_[vhhh][tempindex+1];
-	     graph_[vhhh][tempindex+2] = temp.graph_[vhhh][tempindex+2];
-	     graph_[vhhh][tempindex+3] = temp.graph_[vhhh][tempindex+3];
-	     graph_[vhhh][tempindex+4] = temp.graph_[vhhh][tempindex+4];
-	     graph_[vhhh][tempindex+5] = temp.graph_[vhhh][tempindex+5];
-	  }
-     }
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      //Copy the temp date into this's storage.
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 tempindex=6*hhh;
+		 graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
+		 graph_[vhhh][tempindex+1] = temp.graph_[vhhh][tempindex+1];
+		 graph_[vhhh][tempindex+2] = temp.graph_[vhhh][tempindex+2];
+		 graph_[vhhh][tempindex+3] = temp.graph_[vhhh][tempindex+3];
+		 graph_[vhhh][tempindex+4] = temp.graph_[vhhh][tempindex+4];
+		 graph_[vhhh][tempindex+5] = temp.graph_[vhhh][tempindex+5];
+	     }
+	 }
+   } // pragma omp parallel
 
    // this should now contain the new, scaled image data.
    //
@@ -3373,26 +3305,31 @@ void pngwriter::scale_kxky(double kx, double ky)
 
    pngwriter temp(scaledw, scaledh, 0, "temp");
 
-   int red, green, blue;
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      int red, green, blue;
 
-   double spacingx = ((double)width_)/(2*scaledw);
-   double spacingy = ((double)height_)/(2*scaledh);
+      double spacingx = ((double)width_)/(2*scaledw);
+      double spacingy = ((double)height_)/(2*scaledh);
 
-   double readx, ready;
+      double readx, ready;
 
-   for(int y = 1; y <= scaledh; y++)
-     {
-       for(int x = 1; x<= scaledw; x++)
-	  {
-	     readx = (2*x-1)*spacingx;
-	     ready = (2*y-1)*spacingy;
-	     red = this->bilinear_interpolation_read(readx, ready, 1);
-	     green = this->bilinear_interpolation_read(readx, ready, 2);
-	     blue = this->bilinear_interpolation_read(readx, ready, 3);
-	     temp.plot(x, y, red, green, blue);
+      #pragma omp for schedule(guided)
+      for(int y = 1; y <= scaledh; y++)
+	 {
+	   for(int x = 1; x<= scaledw; x++)
+	     {
+		 readx = (2*x-1)*spacingx;
+		 ready = (2*y-1)*spacingy;
+		 red = this->bilinear_interpolation_read(readx, ready, 1);
+		 green = this->bilinear_interpolation_read(readx, ready, 2);
+		 blue = this->bilinear_interpolation_read(readx, ready, 3);
+		 temp.plot(x, y, red, green, blue);
 
-	  }
-     }
+	     }
+	 }
+   } // pragma omp parallel
+
    // From here on, the process is the same for all scale functions.
    //Get data out of temp and into this's storage.
 
@@ -3431,22 +3368,25 @@ void pngwriter::scale_kxky(double kx, double ky)
 
    //This instance now has a new, resized storage space.
 
-   //Copy the temp date into this's storage.
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     tempindex=6*hhh;
-	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
-	     graph_[vhhh][tempindex+1] = temp.graph_[vhhh][tempindex+1];
-	     graph_[vhhh][tempindex+2] = temp.graph_[vhhh][tempindex+2];
-	     graph_[vhhh][tempindex+3] = temp.graph_[vhhh][tempindex+3];
-	     graph_[vhhh][tempindex+4] = temp.graph_[vhhh][tempindex+4];
-	     graph_[vhhh][tempindex+5] = temp.graph_[vhhh][tempindex+5];
-	  }
-     }
-
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      //Copy the temp date into this's storage.
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 tempindex=6*hhh;
+		 graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
+		 graph_[vhhh][tempindex+1] = temp.graph_[vhhh][tempindex+1];
+		 graph_[vhhh][tempindex+2] = temp.graph_[vhhh][tempindex+2];
+		 graph_[vhhh][tempindex+3] = temp.graph_[vhhh][tempindex+3];
+		 graph_[vhhh][tempindex+4] = temp.graph_[vhhh][tempindex+4];
+		 graph_[vhhh][tempindex+5] = temp.graph_[vhhh][tempindex+5];
+	     }
+	 }
+   } // pragma omp parallel
    // this should now contain the new, scaled image data.
    //
    //
@@ -3461,27 +3401,29 @@ void pngwriter::scale_wh(int finalwidth, int finalheight)
 
    pngwriter temp(finalwidth, finalheight, 0, "temp");
 
-   int red, green, blue;
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      int red, green, blue;
 
-   double spacingx = ((double)width_)/(2*finalwidth);
-   double spacingy = ((double)height_)/(2*finalheight);
+      double spacingx = ((double)width_)/(2*finalwidth);
+      double spacingy = ((double)height_)/(2*finalheight);
 
-   double readx, ready;
+      double readx, ready;
+      #pragma omp for schedule(guided)
+      for(int y = 1; y <= finalheight; y++)
+	 {
+	   for(int x = 1; x<= finalwidth; x++)
+	     {
+		 readx = (2*x-1)*spacingx;
+		 ready = (2*y-1)*spacingy;
+		 red = this->bilinear_interpolation_read(readx, ready, 1);
+		 green = this->bilinear_interpolation_read(readx, ready, 2);
+		 blue = this->bilinear_interpolation_read(readx, ready, 3);
+		 temp.plot(x, y, red, green, blue);
 
-   for(int y = 1; y <= finalheight; y++)
-     {
-       for(int x = 1; x<= finalwidth; x++)
-	  {
-	     readx = (2*x-1)*spacingx;
-	     ready = (2*y-1)*spacingy;
-	     red = this->bilinear_interpolation_read(readx, ready, 1);
-	     green = this->bilinear_interpolation_read(readx, ready, 2);
-	     blue = this->bilinear_interpolation_read(readx, ready, 3);
-	     temp.plot(x, y, red, green, blue);
-
-	  }
-     }
-
+	     }
+	 }
+   } // pragma omp parallel
    // From here on, the process is the same for all scale functions.
    //Get data out of temp and into this's storage.
 
@@ -3520,22 +3462,26 @@ void pngwriter::scale_wh(int finalwidth, int finalheight)
 
    //This instance now has a new, resized storage space.
 
-   //Copy the temp date into this's storage.
-   int tempindex;
-   for(int vhhh = 0; vhhh<height_;vhhh++)
-     {
-       for(int hhh = 0; hhh<width_;hhh++)
-	  {
-	     tempindex=6*hhh;
-	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
-	     graph_[vhhh][tempindex+1] = temp.graph_[vhhh][tempindex+1];
-	     graph_[vhhh][tempindex+2] = temp.graph_[vhhh][tempindex+2];
-	     graph_[vhhh][tempindex+3] = temp.graph_[vhhh][tempindex+3];
-	     graph_[vhhh][tempindex+4] = temp.graph_[vhhh][tempindex+4];
-	     graph_[vhhh][tempindex+5] = temp.graph_[vhhh][tempindex+5];
-	  }
-     }
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
 
+      //Copy the temp date into this's storage.
+      int tempindex;
+      #pragma omp for schedule(guided)
+      for(int vhhh = 0; vhhh<height_;vhhh++)
+	 {
+	   for(int hhh = 0; hhh<width_;hhh++)
+	     {
+		 tempindex=6*hhh;
+		 graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
+		 graph_[vhhh][tempindex+1] = temp.graph_[vhhh][tempindex+1];
+		 graph_[vhhh][tempindex+2] = temp.graph_[vhhh][tempindex+2];
+		 graph_[vhhh][tempindex+3] = temp.graph_[vhhh][tempindex+3];
+		 graph_[vhhh][tempindex+4] = temp.graph_[vhhh][tempindex+4];
+		 graph_[vhhh][tempindex+5] = temp.graph_[vhhh][tempindex+5];
+	     }
+	 }
+   } // pragma omp parallel
    // this should now contain the new, scaled image data.
    //
    //
@@ -4138,25 +4084,29 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 
 void pngwriter::my_draw_bitmap_blend( FT_Bitmap * bitmap, int x, int y, double opacity, double red, double green, double blue)
 {
-   double temp;
-   for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
-     {
-	for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
-	  {
-	     temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      double temp;
+      #pragma omp for schedule(guided)
+      for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
+	 {
+	   for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
+	     {
+		 temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
 
-	     if(temp)
-	       {
-		  this->plot_blend(x + i,
-				   y  - j,
-				   opacity,
-				   temp*red + (1-temp)*(this->dread(x+i,y-j,1)),
-				   temp*green + (1-temp)*(this->dread(x+i,y-j,2)),
-				   temp*blue + (1-temp)*(this->dread(x+i,y-j,3))
-				   );
-	       }
-	  }
-     }
+		 if(temp)
+		   {
+		     this->plot_blend(x + i,
+				      y  - j,
+				      opacity,
+				      temp*red + (1-temp)*(this->dread(x+i,y-j,1)),
+				      temp*green + (1-temp)*(this->dread(x+i,y-j,2)),
+				      temp*blue + (1-temp)*(this->dread(x+i,y-j,3))
+				      );
+		   }
+	     }
+	 }
+   } // pragma omp parallel
 }
 
 #endif
@@ -4391,57 +4341,62 @@ void pngwriter::laplacian(double k, double offset)
    // Create image storage.
    pngwriter temp(width_,height_,0,"temp");
 
-   double red, green, blue;
+   #pragma omp parallel num_threads(this->numOmpThreads_)
+   {
+      double red, green, blue;
+      #pragma omp for schedule(guided)
+      for(int y = 1; y <= height_; y++)
+	 {
+	   for(int x = 1; x <= width_; x++)
+	     {
+		 red =
+		   8.0*this->dread(x,y,1) -
+		   ( this->dread(x+1, y-1, 1) +
+		    this->dread(x,   y-1, 1) +
+		    this->dread(x-1, y-1, 1) +
+		    this->dread(x-1, y,   1) +
+		    this->dread(x+1, y,   1) +
+		    this->dread(x+1, y+1, 1) +
+		    this->dread(x,   y+1, 1) +
+		    this->dread(x-1, y+1, 1) );
 
-   for(int y = 1; y <= height_; y++)
-     {
-       for(int x = 1; x <= width_; x++)
-	  {
-	     red =
-	       8.0*this->dread(x,y,1) -
-	       ( this->dread(x+1, y-1, 1) +
-		 this->dread(x,   y-1, 1) +
-		 this->dread(x-1, y-1, 1) +
-		 this->dread(x-1, y,   1) +
-		 this->dread(x+1, y,   1) +
-		 this->dread(x+1, y+1, 1) +
-		 this->dread(x,   y+1, 1) +
-		 this->dread(x-1, y+1, 1) );
+		 green =
+		   8.0*this->dread(x,y,2) -
+		   ( this->dread(x+1, y-1, 2) +
+		    this->dread(x,   y-1, 2) +
+		    this->dread(x-1, y-1, 2) +
+		    this->dread(x-1, y,   2) +
+		    this->dread(x+1, y,   2) +
+		    this->dread(x+1, y+1, 2) +
+		    this->dread(x,   y+1, 2) +
+		    this->dread(x-1, y+1, 2));
 
-	     green =
-	       8.0*this->dread(x,y,2) -
-	       ( this->dread(x+1, y-1, 2) +
-		 this->dread(x,   y-1, 2) +
-		 this->dread(x-1, y-1, 2) +
-		 this->dread(x-1, y,   2) +
-		 this->dread(x+1, y,   2) +
-		 this->dread(x+1, y+1, 2) +
-		 this->dread(x,   y+1, 2) +
-		 this->dread(x-1, y+1, 2));
+		 blue =
+		   8.0*this->dread(x,y,3) -
+		   ( this->dread(x+1, y-1, 3) +
+		    this->dread(x,   y-1, 3) +
+		    this->dread(x-1, y-1, 3) +
+		    this->dread(x-1, y,   3) +
+		    this->dread(x+1, y,   3) +
+		    this->dread(x+1, y+1, 3) +
+		    this->dread(x,   y+1, 3) +
+		    this->dread(x-1, y+1, 3));
 
-	     blue =
-	       8.0*this->dread(x,y,3) -
-	       ( this->dread(x+1, y-1, 3) +
-		 this->dread(x,   y-1, 3) +
-		 this->dread(x-1, y-1, 3) +
-		 this->dread(x-1, y,   3) +
-		 this->dread(x+1, y,   3) +
-		 this->dread(x+1, y+1, 3) +
-		 this->dread(x,   y+1, 3) +
-		 this->dread(x-1, y+1, 3));
+		 temp.plot(x,y,offset+k*red,offset+k*green,offset+k*blue);
 
-	     temp.plot(x,y,offset+k*red,offset+k*green,offset+k*blue);
+	     }
+	 }
+    } // pragma omp parallel
 
-	  }
-     }
+    #pragma omp parallel for num_threads(this->numOmpThreads_)
+    for(int yy = 1; yy <= height_; yy++)
+      {
+	 for(int xx = 1; xx <= width_; xx++)
+	   {
+	      this->plot(xx,yy,  temp.read(xx,yy,1), temp.read(xx,yy,2), temp.read(xx,yy,3));
+	   }
+      }
 
-   for(int yy = 1; yy <= height_; yy++)
-     {
-       for(int xx = 1; xx <= width_; xx++)
-	  {
-	     this->plot(xx,yy,  temp.read(xx,yy,1), temp.read(xx,yy,2), temp.read(xx,yy,3));
-	  }
-     }
 }
 
 
@@ -4854,4 +4809,9 @@ void pngwriter::filleddiamond( int x, int y, int width, int height, double red, 
 void pngwriter::diamond( int x, int y, int width, int height, double red, double green, double blue)
 {
    this->diamond(  x,  y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) );
+}
+
+void pngwriter::setNumOmpThreads( const int & n )
+{
+  this->numOmpThreads_ = n;
 }
