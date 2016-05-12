@@ -1,4 +1,4 @@
-/** Copyright 2015 Axel Huebl
+/** Copyright 2015-2016 Axel Huebl, Rene Widera
   *
   * License: GPLv2+
   *
@@ -49,7 +49,31 @@ int main( )
             << std::endl;
 
   t1 = high_resolution_clock::now();
-  //img.scale_k(0.1);
+  pngwriter imgCopy( img );
+  t2 = high_resolution_clock::now();
+
+  std::cout << "png copy (in RAM) time: "
+            << std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count()
+            << std::endl;
+
+  t1 = high_resolution_clock::now();
+  imgCopy.scale_k(0.5);
+  t2 = high_resolution_clock::now();
+
+  std::cout << "png scale_k(0.5) time: "
+            << std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count()
+            << std::endl;
+
+  imgCopy = img;
+  t1 = high_resolution_clock::now();
+  imgCopy.scale_k(2.);
+  t2 = high_resolution_clock::now();
+
+  std::cout << "png scale_k(2.0) time: "
+            << std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count()
+            << std::endl;
+
+  t1 = high_resolution_clock::now();
   img.write_png();
   t2 = high_resolution_clock::now();
 
