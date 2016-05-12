@@ -1812,47 +1812,7 @@ double pngwriter::dreadHSV(int x, int y, int colour) const
 //////////////////////////////////////////////////////////////////////////////////
 int pngwriter::readHSV(int x, int y, int colour) const
 {
-   if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
-     {
-
-	float * huep;
-	float * saturationp;
-	float * valuep;
-	float red,green,blue;
-	float hue, saturation, value;
-
-	red = float(dread(x,y,1));
-	green = float(dread(x,y,2));
-	blue = float(dread(x,y,3));
-
-	huep = &hue;
-	saturationp = &saturation;
-	valuep = &value;
-
-	RGBtoHSV( red,  green,  blue, huep,  saturationp, valuep );
-
-	if(colour == 1)
-	  {
-	     return int(65535*(double(hue)/360.0));
-	  }
-
-	else if(colour == 2)
-	  {
-	     return int(65535*saturation);
-	  }
-
-	else if(colour == 3)
-	  {
-	     return int(65535*value);
-	  }
-
-	std::cerr << " PNGwriter::readHSV - ERROR **: Called with wrong colour argument: should be 1, 2 or 3; was: " << colour << "." << std::endl;
-	return 0;
-     }
-   else
-     {
-	return 0;
-     }
+   return (int)( dreadHSV( x, y, colour )*65535 );
 }
 
 void pngwriter::setcompressionlevel(int level)
@@ -1927,343 +1887,54 @@ void pngwriter::write_png(void)
 }
 
 #ifndef NO_FREETYPE
-
 // Freetype-based text rendering functions.
 ///////////////////////////////////////////
+
 void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue)
 {
-   FT_Library  library;
-   FT_Face     face;
-   FT_Matrix   matrix;      // transformation matrix
-   FT_Vector   pen;
+    plot_text( (const char *) face_path, fontsize, x_start, y_start, angle, (const char *) text, red, green, blue );
+}
 
-   FT_UInt glyph_index;
-   FT_Error error;
-
-   FT_Bool use_kerning;
-   FT_UInt previous = 0;
-
-   /* Set up transformation Matrix */
-   matrix.xx = (FT_Fixed)( cos(angle)*0x10000);   /* It would make more sense to do this (below), but, bizzarely, */
-   matrix.xy = (FT_Fixed)(-sin(angle)*0x10000);   /* if one does, FT_Load_Glyph fails consistently.               */
-   matrix.yx = (FT_Fixed)( sin(angle)*0x10000);  //   matrix.yx = - matrix.xy;
-   matrix.yy = (FT_Fixed)( cos(angle)*0x10000);  //   matrix.yy = matrix.xx;
-
-   /* Place starting coordinates in adequate form. */
-   pen.x = x_start*64 ;
-   pen.y =   (int)(y_start/64.0);
-
-   /*Count the length of the string */
-   int num_chars = strlen(text);
-
-   /* Initialize FT Library object */
-   error = FT_Init_FreeType( &library );
-   if (error) { std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not init Library."<< std::endl; return;}
-
-   /* Initialize FT face object */
-   error = FT_New_Face( library,face_path,0,&face );
-   if ( error == FT_Err_Unknown_File_Format ) { std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Font was opened, but type not supported."<< std::endl; return; } else if (error){ std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file."<< std::endl; return; }
-
-   /* Set the Char size */
-   error = FT_Set_Char_Size( face,          /* handle to face object           */
-			     0,             /* char_width in 1/64th of points  */
-			     fontsize*64,   /* char_height in 1/64th of points */
-			     100,           /* horizontal device resolution    */
-			     100 );         /* vertical device resolution      */
-
-   /* A way of accesing the glyph directly */
-   FT_GlyphSlot  slot = face->glyph;  // a small shortcut
-
-   /* Does the font file support kerning? */
-   use_kerning = FT_HAS_KERNING( face );
-
-   int n;
-   for ( n = 0; n < num_chars; n++ )
-     {
-	/* Convert character code to glyph index */
-	glyph_index = FT_Get_Char_Index( face, text[n] );
-
-	/* Retrieve kerning distance and move pen position */
-	if ( use_kerning && previous&& glyph_index )
-	  {
-	     FT_Vector  delta;
-	     FT_Get_Kerning( face,
-			     previous,
-			     glyph_index,
-			     ft_kerning_default, //FT_KERNING_DEFAULT,
-			     &delta );
-
-	     /* Transform this kerning distance into rotated space */
-	     pen.x += (int) (((double) delta.x)*cos(angle));
-	     pen.y +=  (int) (((double) delta.x)*( sin(angle)));
-	  }
-
-	/* Set transform */
-	FT_Set_Transform( face, &matrix, &pen );
-
-/*set char size*/
-
-	if (error) { std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Set char size error." << std::endl; return;};
-
-	/* Retrieve glyph index from character code */
-	glyph_index = FT_Get_Char_Index( face, text[n] );
-
-	/* Load glyph image into the slot (erase previous one) */
-	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) {
-	  std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
-	  std::cerr.copyfmt(std::ios(NULL));
-	  return;
-	}
-
-	/* Convert to an anti-aliased bitmap */
-	//	error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-	error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
-	if (error) { std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Render glyph error." << std::endl; return;}
-
-	/* Now, draw to our target surface */
-	my_draw_bitmap( &slot->bitmap,
-			slot->bitmap_left,
-			y_start + slot->bitmap_top,
-			red,
-			green,
-			blue );
-
-	/* Advance to the next position */
-	pen.x += slot->advance.x;
-	pen.y += slot->advance.y;
-
-	/* record current glyph index */
-	previous = glyph_index;
-     }
-
-   /* Free the face and the library objects */
-   FT_Done_Face    ( face );
-   FT_Done_FreeType( library );
+void pngwriter::plot_text( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue)
+{
+   int num_chars = strlen( text );
+   FT_ULong * ucs4text = new FT_ULong[ num_chars ];
+   for ( int i = 0; i < num_chars; ++i )
+        ucs4text[i] = text[i];
+   renderFTULongSequence( face_path, fontsize, x_start, y_start, angle, ucs4text, num_chars, 1.0 /* full opacity */, red, green, blue );
+   delete[] ucs4text;
 }
 
 void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int y_start, double angle,  char * text, double red, double green, double blue)
 {
-   FT_Library  library;
-   FT_Face     face;
-   FT_Matrix   matrix;      // transformation matrix
-   FT_Vector   pen;
+    plot_text_utf8( (const char *) face_path, fontsize, x_start, y_start, angle,  (const char *) text, red, green, blue );
+}
 
-   FT_UInt glyph_index;
-   FT_Error error;
-
-   FT_Bool use_kerning;
-   FT_UInt previous = 0;
-
-   /* Set up transformation Matrix */
-   matrix.xx = (FT_Fixed)( cos(angle)*0x10000);   /* It would make more sense to do this (below), but, bizzarely, */
-   matrix.xy = (FT_Fixed)(-sin(angle)*0x10000);   /* if one does, FT_Load_Glyph fails consistently.               */
-   matrix.yx = (FT_Fixed)( sin(angle)*0x10000);  //   matrix.yx = - matrix.xy;
-   matrix.yy = (FT_Fixed)( cos(angle)*0x10000);  //   matrix.yy = matrix.xx;
-
-   /* Place starting coordinates in adequate form. */
-   pen.x = x_start*64 ;
-   pen.y = (int)(y_start/64.0);
-
-   /*Count the length of the string */
-   int num_bytes=0;
-   while(text[num_bytes]!=0)
-     {
-	num_bytes++;
-     }
-
-	 /*
-   std::cout << "Num bytes is: "<< num_bytes << std::endl;
-   */
-
-   //The array of ucs4 glyph indexes, which will by at most the number of bytes in the utf-8 file.
-   long * ucs4text;
-   ucs4text = new long[num_bytes+1];
-
-   unsigned char u,v,w,x,y;
-
-   int num_chars=0;
-
-   long iii=0;
-
-   while(iii<num_bytes)
-     {
-	unsigned char const z = text[iii];
-
-	if(z<=127)
-	  {
-	     ucs4text[num_chars] = z;
-	  }
-
-	if((192<=z)&&(z<=223))
-	  {
-	     iii++; y = text[iii];
-	     ucs4text[num_chars] = (z-192)*64 + (y -128);
-	  }
-
-	if((224<=z)&&(z<=239))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     ucs4text[num_chars] = (z-224)*4096 + (y -128)*64 + (x-128);
-	  }
-
-	if((240<=z)&&(z<=247))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     ucs4text[num_chars] = (z-240)*262144 + (y -128)*4096 + (x-128)*64 + (w-128);
-	  }
-
-	if((248<=z)&&(z<=251))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     iii++; v = text[iii];
-	     ucs4text[num_chars] = (z-248)*16777216 + (y -128)*262144 + (x-128)*4096 + (w-128)*64 +(v-128);
-	  }
-
-	if((252==z)||(z==253))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     iii++; v = text[iii];
-	     u = text[iii];
-	     ucs4text[num_chars] = (z-252)*1073741824 + (y -128)*16777216   + (x-128)*262144 + (w-128)*4096 +(v-128)*64 + (u-128);
-	  }
-
-	if((z==254)||(z==255))
-	  {
-	     std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: Problem with character: invalid UTF-8 data."<< std::endl;
-	  }
-	// std::cerr << "\nProblem at " << iii << ".\n";
-	//
-	iii++;
-	num_chars++;
-     }
-
-   // num_chars now contains the number of characters in the string.
-   /*
-   std::cout << "Num chars is: "<< num_chars << std::endl;
-   */
-
-   /* Initialize FT Library object */
-   error = FT_Init_FreeType( &library );
-   if (error) {
-     std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Could not init Library." << std::endl;
-     delete[] ucs4text;
-     return;
-   }
-
-   /* Initialize FT face object */
-   error = FT_New_Face( library,face_path,0,&face );
-   if ( error == FT_Err_Unknown_File_Format ) {
-     std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Font was opened, but type not supported." << std::endl;
-     delete[] ucs4text;
-     return;
-   } else if (error) {
-     std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file." << std::endl;
-     delete[] ucs4text;
-     return;
-   }
-
-   /* Set the Char size */
-   error = FT_Set_Char_Size( face,          /* handle to face object           */
-			     0,             /* char_width in 1/64th of points  */
-			     fontsize*64,   /* char_height in 1/64th of points */
-			     100,           /* horizontal device resolution    */
-			     100 );         /* vertical device resolution      */
-
-   /* A way of accesing the glyph directly */
-   FT_GlyphSlot  slot = face->glyph;  // a small shortcut
-
-   /* Does the font file support kerning? */
-   use_kerning = FT_HAS_KERNING( face );
-
-   int n;
-   for ( n = 0; n < num_chars; n++ )
-     {
-	/* Convert character code to glyph index */
-	glyph_index = FT_Get_Char_Index( face, ucs4text[n] );
-
-	/* Retrieve kerning distance and move pen position */
-	if ( use_kerning && previous&& glyph_index )
-	  {
-	     FT_Vector  delta;
-	     FT_Get_Kerning( face,
-			     previous,
-			     glyph_index,
-			     ft_kerning_default, //FT_KERNING_DEFAULT,
-			     &delta );
-
-	     /* Transform this kerning distance into rotated space */
-	     pen.x += (int) (((double) delta.x)*cos(angle));
-	     pen.y +=  (int) (((double) delta.x)*( sin(angle)));
-	  }
-
-	/* Set transform */
-	FT_Set_Transform( face, &matrix, &pen );
-
-/*set char size*/
-
-	if (error) {
-	  std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Set char size error." << std::endl;
-	  delete[] ucs4text;
-	  return;
-	}
-
-	/* Retrieve glyph index from character code */
-	glyph_index = FT_Get_Char_Index( face, ucs4text[n] );
-
-	/* Load glyph image into the slot (erase previous one) */
-	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) {
-	  std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
-	  std::cerr.copyfmt(std::ios(NULL));
-	  delete[] ucs4text;
-	  return;
-	}
-
-	/* Convert to an anti-aliased bitmap */
-	error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
-	if (error) {
-	  std::cerr << " PNGwriter::plot_text_utf8 - ERROR **: FreeType: Render glyph error." << std::endl;
-	  delete[] ucs4text;
-	  return;
-	}
-
-	/* Now, draw to our target surface */
-	my_draw_bitmap( &slot->bitmap,
-			slot->bitmap_left,
-			y_start + slot->bitmap_top,
-			red,
-			green,
-			blue );
-
-	/* Advance to the next position */
-	pen.x += slot->advance.x;
-	pen.y += slot->advance.y;
-
-	/* record current glyph index */
-	previous = glyph_index;
-     }
-
-   /* Free the face and the library objects */
-   FT_Done_Face    ( face );
-   FT_Done_FreeType( library );
-
+void pngwriter::plot_text_utf8( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue)
+{
+   int num_chars;
+   FT_ULong * ucs4text;
+   convertToUcs4( text, &ucs4text, &num_chars );
+   renderFTULongSequence( face_path, fontsize, x_start, y_start, angle, ucs4text, num_chars, 1.0 /* full opacity */, red, green, blue );
    delete[] ucs4text;
 }
 
 void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue)
 {
+    plot_text( (const char *) face_path, fontsize, x_start, y_start, angle, (const char *) text, red, green, blue );
+}
+
+void pngwriter::plot_text( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue)
+{
    plot_text( face_path, fontsize, x_start, y_start,  angle,  text,  ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
 
 void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue)
+{
+   plot_text_utf8( (const char *) face_path, fontsize, x_start, y_start, angle,  (const char *) text, red, green, blue );
+}
+
+void pngwriter::plot_text_utf8( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue)
 {
    plot_text_utf8( face_path, fontsize, x_start, y_start,  angle,  text,  ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
@@ -2297,6 +1968,11 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
 //put in freetype section
 
 int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
+{
+    return get_text_width( (const char *) face_path, fontsize, (const char *) text );
+}
+
+int pngwriter::get_text_width(const char * face_path, int fontsize, const char * text)
 {
 
    FT_Library  library;
@@ -2414,7 +2090,12 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 }
 
 
-int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
+int pngwriter::get_text_width_utf8(char * face_path, int fontsize, char * text)
+{
+    return get_text_width_utf8( (const char *) face_path, fontsize, (const char *) text );
+}
+
+int pngwriter::get_text_width_utf8(const char * face_path, int fontsize, const char * text)
 {
    FT_Library  library;
    FT_Face     face;
@@ -2437,90 +2118,9 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
    pen.x = 0 ;
    pen.y = 0;
 
-   /*Count the length of the string */
-   int num_bytes=0;
-   while(text[num_bytes]!=0)
-     {
-	num_bytes++;
-     }
-
-	 /*
-   std::cout << "Num bytes is: "<< num_bytes << std::endl;
-   */
-
-   //The array of ucs4 glyph indexes, which will by at most the number of bytes in the utf-8 file.
-   long * ucs4text;
-   ucs4text = new long[num_bytes+1];
-
-   unsigned char u,v,w,x,y;
-
-   int num_chars=0;
-
-   long iii=0;
-
-   while(iii<num_bytes)
-     {
-	unsigned char const z = text[iii];
-
-	if(z<=127)
-	  {
-	     ucs4text[num_chars] = z;
-	  }
-
-	if((192<=z)&&(z<=223))
-	  {
-	     iii++; y = text[iii];
-	     ucs4text[num_chars] = (z-192)*64 + (y -128);
-	  }
-
-	if((224<=z)&&(z<=239))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     ucs4text[num_chars] = (z-224)*4096 + (y -128)*64 + (x-128);
-	  }
-
-	if((240<=z)&&(z<=247))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     ucs4text[num_chars] = (z-240)*262144 + (y -128)*4096 + (x-128)*64 + (w-128);
-	  }
-
-	if((248<=z)&&(z<=251))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     iii++; v = text[iii];
-	     ucs4text[num_chars] = (z-248)*16777216 + (y -128)*262144 + (x-128)*4096 + (w-128)*64 +(v-128);
-	  }
-
-	if((252==z)||(z==253))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     iii++; v = text[iii];
-	     u = text[iii];
-	     ucs4text[num_chars] = (z-252)*1073741824 + (y -128)*16777216   + (x-128)*262144 + (w-128)*4096 +(v-128)*64 + (u-128);
-	  }
-
-	if((z==254)||(z==255))
-	  {
-	     std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **: Problem with character: invalid UTF-8 data."<< std::endl;
-	  }
-	// std::cerr << "\nProblem at " << iii << ".\n";
-	//
-	iii++;
-	num_chars++;
-     }
-
-   // num_chars now contains the number of characters in the string.
-   /*
-   std::cout << "Num chars is: "<< num_chars << std::endl;
-   */
+   FT_ULong * ucs4text;
+   int num_chars;
+   convertToUcs4( text, &ucs4text, &num_chars );
 
    /* Initialize FT Library object */
    error = FT_Init_FreeType( &library );
@@ -2642,11 +2242,22 @@ void pngwriter::plot_text( char *, int, int, int, double, char *, int, int, int 
    return;
 }
 
+void pngwriter::plot_text( const char *, int, int, int, double, const char *, int, int, int )
+{
+   std::cerr << " PNGwriter::plot_text - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
+   return;
+}
+
 void pngwriter::plot_text( char *, int, int, int, double, char *, double, double, double )
 {
    std::cerr << " PNGwriter::plot_text - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
+}
 
+void pngwriter::plot_text( const char *, int, int, int, double, const char *, double, double, double )
+{
+   std::cerr << " PNGwriter::plot_text - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
+   return;
 }
 
 void pngwriter::plot_text_utf8( char *, int, int, int, double, char *, int, int, int )
@@ -3122,50 +2733,7 @@ double pngwriter::dreadCMYK(int x, int y, int colour) const
 
 int pngwriter::readCMYK(int x, int y, int colour) const
 {
-/*
- * Black   = minimum(1-Red,1-Green,1-Blue)
- *     Cyan    = (1-Red-Black)/(1-Black)
- *     Magenta = (1-Green-Black)/(1-Black)
- *     Yellow  = (1-Blue-Black)/(1-Black)
- *
- * */
-   double black, red, green, blue, ired, igreen, iblue, iblack;
-   //add error detection here
-   // not much to detect, really
-   red = this->dread(x, y, 1);
-   green = this->dread(x, y, 2);
-   blue = this->dread(x, y, 3);
-
-   ired = 1.0 - red;
-   igreen = 1.0 - green;
-   iblue = 1.0 - blue;
-
-   black = ired;
-
-   //black is the mimimum of inverse RGB colours, and if they are all equal, it is the inverse of red.
-   if( (igreen<ired)&&(igreen<iblue) )
-     {
-	black = igreen;
-     }
-
-   if( (iblue<igreen)&&(iblue<ired) )
-     {
-	black = iblue;
-     }
-
-   iblack = 1.0 - black;
-
-   switch( colour )
-     {
-	case 1: return (int)( ((ired-black)/(iblack))*65535);
-	case 2: return (int)( ((igreen-black)/(iblack))*65535);
-	case 3: return (int)( ((iblue-black)/(iblack))*65535);
-	case 4: return (int)( (black)*65535);
-	default:
-		std::cerr << " PNGwriter::readCMYK - WARNING **: Invalid argument: should be 1, 2, 3 or 4, is "
-			<< colour << std::endl;
-		return 0;
-     }
+   return (int)( dreadCMYK( x, y, colour )*65535 );
 }
 
 void pngwriter::scale_k(double k)
@@ -3700,118 +3268,99 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
 ///////////////////////////////////////////
 void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue)
 {
-   FT_Library  library;
-   FT_Face     face;
-   FT_Matrix   matrix;      // transformation matrix
-   FT_Vector   pen;
-
-   FT_UInt glyph_index;
-   FT_Error error;
-
-   FT_Bool use_kerning;
-   FT_UInt previous = 0;
-
-   /* Set up transformation Matrix */
-   matrix.xx = (FT_Fixed)( cos(angle)*0x10000);   /* It would make more sense to do this (below), but, bizzarely, */
-   matrix.xy = (FT_Fixed)(-sin(angle)*0x10000);   /* if one does, FT_Load_Glyph fails consistently.               */
-   matrix.yx = (FT_Fixed)( sin(angle)*0x10000);  //   matrix.yx = - matrix.xy;
-   matrix.yy = (FT_Fixed)( cos(angle)*0x10000);  //   matrix.yy = matrix.xx;
-
-   /* Place starting coordinates in adequate form. */
-   pen.x = x_start*64 ;
-   pen.y =   (int)(y_start/64.0);
-
-   /*Count the length of the string */
-   int num_chars = strlen(text);
-
-   /* Initialize FT Library object */
-   error = FT_Init_FreeType( &library );
-   if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Could not init Library."<< std::endl; return;}
-
-   /* Initialize FT face object */
-   error = FT_New_Face( library,face_path,0,&face );
-   if ( error == FT_Err_Unknown_File_Format ) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Font was opened, but type not supported."<< std::endl; return; } else if (error){ std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file."<< std::endl; return; }
-
-   /* Set the Char size */
-   error = FT_Set_Char_Size( face,          /* handle to face object           */
-			     0,             /* char_width in 1/64th of points  */
-			     fontsize*64,   /* char_height in 1/64th of points */
-			     100,           /* horizontal device resolution    */
-			     100 );         /* vertical device resolution      */
-
-   /* A way of accesing the glyph directly */
-   FT_GlyphSlot  slot = face->glyph;  // a small shortcut
-
-   /* Does the font file support kerning? */
-   use_kerning = FT_HAS_KERNING( face );
-
-   int n;
-   for ( n = 0; n < num_chars; n++ )
-     {
-	/* Convert character code to glyph index */
-	glyph_index = FT_Get_Char_Index( face, text[n] );
-
-	/* Retrieve kerning distance and move pen position */
-	if ( use_kerning && previous&& glyph_index )
-	  {
-	     FT_Vector  delta;
-	     FT_Get_Kerning( face,
-			     previous,
-			     glyph_index,
-			     ft_kerning_default, //FT_KERNING_DEFAULT,
-			     &delta );
-
-	     /* Transform this kerning distance into rotated space */
-	     pen.x += (int) (((double) delta.x)*cos(angle));
-	     pen.y +=  (int) (((double) delta.x)*( sin(angle)));
-	  }
-
-	/* Set transform */
-	FT_Set_Transform( face, &matrix, &pen );
-
-/*set char size*/
-
-	if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Set char size error." << std::endl; return;};
-
-	/* Retrieve glyph index from character code */
-	glyph_index = FT_Get_Char_Index( face, text[n] );
-
-	/* Load glyph image into the slot (erase previous one) */
-	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
-	if (error) {
-	  std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
-	  std::cerr.copyfmt(std::ios(NULL));
-	  return;
-	}
-
-	/* Convert to an anti-aliased bitmap */
-	//	error = FT_Render_Glyph( face->glyph, FT_RENDER_MODE_NORMAL );
-	error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
-	if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Render glyph error." << std::endl; return;}
-
-	/* Now, draw to our target surface */
-	my_draw_bitmap_blend( &slot->bitmap,
-			      slot->bitmap_left,
-			      y_start + slot->bitmap_top,
-			      opacity,
-			      red,
-			      green,
-			      blue );
-
-	/* Advance to the next position */
-	pen.x += slot->advance.x;
-	pen.y += slot->advance.y;
-
-	/* record current glyph index */
-	previous = glyph_index;
-     }
-
-   /* Free the face and the library objects */
-   FT_Done_Face    ( face );
-   FT_Done_FreeType( library );
+    plot_text_blend( (const char *) face_path, fontsize, x_start, y_start, angle, (const char *) text, opacity, red, green,blue );
 }
 
-void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_start, int y_start, double angle,  char * text, double opacity, double red, double green, double blue)
+void pngwriter::plot_text_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue)
+{
+   int num_chars = strlen( text );
+   FT_ULong * ucs4text = new FT_ULong[ num_chars ];
+   for ( int i = 0; i < num_chars; ++i )
+        ucs4text[i] = text[i];
+   renderFTULongSequence( face_path, fontsize, x_start, y_start, angle, ucs4text, num_chars, opacity, red, green, blue );
+   delete[] ucs4text;
+}
+
+void pngwriter::convertToUcs4( const char * const text, FT_ULong ** converted, int * r_num_chars )
+{
+   int const num_bytes = strlen(text);
+
+   //The array of ucs4 glyph indexes, which will by at most the number of bytes in the utf-8 file.
+   FT_ULong * ucs4text = new FT_ULong[ num_bytes+1 ];
+
+   unsigned char u,v,w,x,y;
+
+   int num_chars=0;
+
+   long iii=0;
+
+   while(iii<num_bytes)
+   {
+      unsigned char const z = text[iii];
+
+      if(z<=127)
+      {
+         ucs4text[num_chars] = z;
+      }
+
+      if((192<=z)&&(z<=223))
+      {
+         iii++; y = text[iii];
+         ucs4text[num_chars] = (z-192)*64 + (y -128);
+      }
+
+      if((224<=z)&&(z<=239))
+      {
+         iii++; y = text[iii];
+         iii++; x = text[iii];
+         ucs4text[num_chars] = (z-224)*4096 + (y -128)*64 + (x-128);
+      }
+
+      if((240<=z)&&(z<=247))
+      {
+         iii++; y = text[iii];
+         iii++; x = text[iii];
+         iii++; w = text[iii];
+         ucs4text[num_chars] = (z-240)*262144 + (y -128)*4096 + (x-128)*64 + (w-128);
+      }
+
+      if((248<=z)&&(z<=251))
+      {
+         iii++; y = text[iii];
+         iii++; x = text[iii];
+         iii++; w = text[iii];
+         iii++; v = text[iii];
+         ucs4text[num_chars] = (z-248)*16777216 + (y -128)*262144 + (x-128)*4096 + (w-128)*64 +(v-128);
+      }
+
+      if((252==z)||(z==253))
+      {
+         iii++; y = text[iii];
+         iii++; x = text[iii];
+         iii++; w = text[iii];
+         iii++; v = text[iii];
+         u = text[iii];
+         ucs4text[num_chars] = (z-252)*1073741824 + (y -128)*16777216   + (x-128)*262144 + (w-128)*4096 +(v-128)*64 + (u-128);
+      }
+
+      if((z==254)||(z==255))
+      {
+         std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: Problem with character: invalid UTF-8 data."<< std::endl;
+      }
+      iii++;
+      num_chars++;
+   }
+
+   *r_num_chars = num_chars;
+   *converted = ucs4text;
+}
+
+void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue)
+{
+    plot_text_utf8_blend( (const char *) face_path, fontsize, x_start, y_start, angle, (const char *) text, opacity, red, green, blue );
+}
+
+void pngwriter::renderFTULongSequence(const char * face_path, int fontsize, int x_start, int y_start, double angle, const FT_ULong * text, int const num_chars, double opacity, double red, double green, double blue)
 {
    FT_Library  library;
    FT_Face     face;
@@ -3834,96 +3383,10 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    pen.x = x_start*64 ;
    pen.y = (int)(y_start/64.0);
 
-   /*Count the length of the string */
-   int num_bytes=0;
-   while(text[num_bytes]!=0)
-     {
-	num_bytes++;
-     }
-
-	 /*
-   std::cout << "Num bytes is: "<< num_bytes << std::endl;
-   */
-
-   //The array of ucs4 glyph indexes, which will by at most the number of bytes in the utf-8 file.
-   long * ucs4text;
-   ucs4text = new long[num_bytes+1];
-
-   unsigned char u,v,w,x,y;
-
-   int num_chars=0;
-
-   long iii=0;
-
-   while(iii<num_bytes)
-     {
-	unsigned char const z = text[iii];
-
-	if(z<=127)
-	  {
-	     ucs4text[num_chars] = z;
-	  }
-
-	if((192<=z)&&(z<=223))
-	  {
-	     iii++; y = text[iii];
-	     ucs4text[num_chars] = (z-192)*64 + (y -128);
-	  }
-
-	if((224<=z)&&(z<=239))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     ucs4text[num_chars] = (z-224)*4096 + (y -128)*64 + (x-128);
-	  }
-
-	if((240<=z)&&(z<=247))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     ucs4text[num_chars] = (z-240)*262144 + (y -128)*4096 + (x-128)*64 + (w-128);
-	  }
-
-	if((248<=z)&&(z<=251))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     iii++; v = text[iii];
-	     ucs4text[num_chars] = (z-248)*16777216 + (y -128)*262144 + (x-128)*4096 + (w-128)*64 +(v-128);
-	  }
-
-	if((252==z)||(z==253))
-	  {
-	     iii++; y = text[iii];
-	     iii++; x = text[iii];
-	     iii++; w = text[iii];
-	     iii++; v = text[iii];
-	     u = text[iii];
-	     ucs4text[num_chars] = (z-252)*1073741824 + (y -128)*16777216   + (x-128)*262144 + (w-128)*4096 +(v-128)*64 + (u-128);
-	  }
-
-	if((z==254)||(z==255))
-	  {
-	     std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: Problem with character: invalid UTF-8 data."<< std::endl;
-	  }
-	// std::cerr << "\nProblem at " << iii << ".\n";
-	//
-	iii++;
-	num_chars++;
-     }
-
-   // num_chars now contains the number of characters in the string.
-   /*
-   std::cout << "Num chars is: "<< num_chars << std::endl;
-   */
-
    /* Initialize FT Library object */
    error = FT_Init_FreeType( &library );
    if (error) {
      std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Could not init Library." << std::endl;
-     delete[] ucs4text;
      return;
    }
 
@@ -3931,11 +3394,9 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    error = FT_New_Face( library,face_path,0,&face );
    if ( error == FT_Err_Unknown_File_Format ) {
      std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Font was opened, but type not supported." << std::endl;
-     delete[] ucs4text;
      return;
    } else if (error) {
      std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Could not find or load font file." << std::endl;
-     delete[] ucs4text;
      return;
    }
 
@@ -3956,7 +3417,7 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    for ( n = 0; n < num_chars; n++ )
      {
 	/* Convert character code to glyph index */
-	glyph_index = FT_Get_Char_Index( face, ucs4text[n] );
+	glyph_index = FT_Get_Char_Index( face, text[n] );
 
 	/* Retrieve kerning distance and move pen position */
 	if ( use_kerning && previous&& glyph_index )
@@ -3980,19 +3441,17 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 
 	if (error) {
 	  std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Set char size error." << std::endl;
-	  delete[] ucs4text;
 	  return;
 	}
 
 	/* Retrieve glyph index from character code */
-	glyph_index = FT_Get_Char_Index( face, ucs4text[n] );
+	glyph_index = FT_Get_Char_Index( face, text[n] );
 
 	/* Load glyph image into the slot (erase previous one) */
 	error = FT_Load_Glyph( face, glyph_index, FT_LOAD_DEFAULT );
 	if (error) {
 	  std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Could not load glyph (in loop). (FreeType error " << std::hex << error <<")." << std::endl;
 	  std::cout.copyfmt(std::ios(NULL));
-	  delete[] ucs4text;
 	  return;
 	}
 
@@ -4000,18 +3459,29 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 	error = FT_Render_Glyph( face->glyph, ft_render_mode_normal );
 	if (error) {
 	  std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **: FreeType: Render glyph error." << std::endl;
-	  delete[] ucs4text;
 	  return;
 	}
 
 	/* Now, draw to our target surface */
-	my_draw_bitmap_blend( &slot->bitmap,
-			      slot->bitmap_left,
-			      y_start + slot->bitmap_top,
-			      opacity,
-			      red,
-			      green,
-			      blue );
+    if ( opacity == 1.0 )
+    {
+        my_draw_bitmap( &slot->bitmap,
+                        slot->bitmap_left,
+                        y_start + slot->bitmap_top,
+                        red,
+                        green,
+                        blue );
+    }
+    else
+    {
+        my_draw_bitmap_blend( &slot->bitmap,
+                              slot->bitmap_left,
+                              y_start + slot->bitmap_top,
+                              opacity,
+                              red,
+                              green,
+                              blue );
+    }
 
 	/* Advance to the next position */
 	pen.x += slot->advance.x;
@@ -4024,16 +3494,33 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    /* Free the face and the library objects */
    FT_Done_Face    ( face );
    FT_Done_FreeType( library );
+}
 
+void pngwriter::plot_text_utf8_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue)
+{
+   int num_chars;
+   FT_ULong * ucs4text;
+   convertToUcs4( text, &ucs4text, &num_chars );
+   renderFTULongSequence( face_path, fontsize, x_start, y_start, angle, ucs4text, num_chars, opacity, red, green, blue );
    delete[] ucs4text;
 }
 
 void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, int red, int green, int blue)
 {
+    plot_text_blend( (const char *) face_path, fontsize, x_start, y_start, angle, (const char *) text, opacity, red, green, blue);
+}
+
+void pngwriter::plot_text_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, int red, int green, int blue)
+{
    plot_text_blend( face_path, fontsize, x_start, y_start,  angle,  text, opacity,   ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
 
 void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity,  int red, int green, int blue)
+{
+   plot_text_utf8_blend( (const char *) face_path, fontsize, x_start, y_start, angle, (const char *) text, opacity, red, green, blue );
+}
+
+void pngwriter::plot_text_utf8_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity,  int red, int green, int blue)
 {
    plot_text_utf8_blend( face_path, fontsize, x_start, y_start,  angle,  text, opacity,  ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
@@ -4070,11 +3557,22 @@ void pngwriter::plot_text_blend( char *, int, int, int, double, char *, double, 
    return;
 }
 
+void pngwriter::plot_text_blend( const char *, int, int, int, double, const char *, double, int, int, int )
+{
+   std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
+   return;
+}
+
 void pngwriter::plot_text_blend( char *, int, int, int, double, char *, double,  double, double, double )
 {
    std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
+}
 
+void pngwriter::plot_text_blend( const char *, int, int, int, double, const char *, double,  double, double, double )
+{
+   std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
+   return;
 }
 
 void pngwriter::plot_text_utf8_blend( char *, int, int, int, double, char *, double,  int, int, int )
@@ -4084,6 +3582,18 @@ void pngwriter::plot_text_utf8_blend( char *, int, int, int, double, char *, dou
 }
 
 void pngwriter::plot_text_utf8_blend( char *, int, int, int, double, char *, double, double, double, double )
+{
+   std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
+   return;
+}
+
+void pngwriter::plot_text_utf8_blend( const char *, int, int, int, double, const char *, double,  int, int, int )
+{
+   std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
+   return;
+}
+
+void pngwriter::plot_text_utf8_blend( const char *, int, int, int, double, const char *, double, double, double, double )
 {
    std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
