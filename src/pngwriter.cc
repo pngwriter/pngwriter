@@ -45,75 +45,10 @@
 
 // Default Constructor
 ////////////////////////////////////////////////////////////////////////////
-pngwriter::pngwriter() :
-  numOmpThreads_( 1 )
+pngwriter::pngwriter()
 {
-
-   filename_ = new char[255];
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_  = new char[255];
-   textsoftware_ = new char[255];
-
-   strcpy(filename_, "out.png");
-   width_ = 250;
-   height_ = 250;
-   backgroundcolour_ = 65535;
-   compressionlevel_ = -2;
-   filegamma_ = 0.5;
-   transformation_ = 0;
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, "out.png");
-
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   #pragma omp parallel for schedule(guided) num_threads(this->numOmpThreads_)
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   #pragma omp parallel num_threads(this->numOmpThreads_)
-   {
-      int tempindex;
-      #pragma omp for schedule(guided)
-      for(int vhhh = 0; vhhh<height_;vhhh++)
-	 {
-	  for(int hhh = 0; hhh<width_;hhh++)
-	     {
-		 //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
-		 tempindex = 6*hhh;
-		 graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-		 graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-		 graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-		 graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-		 graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-		 graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	     }
-	 }
-   } // pragma omp parallel
+   std::string filename("out.png");
+   initMembers(250, 250, 65535, const_cast<char*>(filename.c_str()));
 };
 
 //Copy Constructor
@@ -189,9 +124,14 @@ pngwriter::pngwriter(const pngwriter &rhs)
 
 //Constructor for int colour levels, char * filename
 //////////////////////////////////////////////////////////////////////////
-pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename) :
-  numOmpThreads_( 1 )
+pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
 {
+   initMembers(x, y, backgroundcolour, filename);
+}
+
+void pngwriter::initMembers(int x, int y, int backgroundcolour, char * filename)
+{
+  numOmpThreads_ = 1;
    width_ = x;
    height_ = y;
    backgroundcolour_ = backgroundcolour;
@@ -206,7 +146,7 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename) :
    filename_ = new char[strlen(filename)+1];
 
    strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
+   strcpy(textdescription_, "https://github.com/pngwriter");
    strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
    strcpy(texttitle_, filename);
    strcpy(filename_, filename);
@@ -287,27 +227,9 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename) :
 
 //Constructor for double levels, char * filename
 /////////////////////////////////////////////////////////////////////////
-pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename) :
-  numOmpThreads_( 1 )
+pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 {
-   width_ = x;
-   height_ = y;
-   compressionlevel_ = -2;
-   filegamma_ = 0.6;
-   transformation_ = 0;
-   backgroundcolour_ = int(backgroundcolour*65535);
-
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   int bgcolour = int(backgroundcolour*65535);
 
    if((width_<0)||(height_<0))
      {
@@ -316,72 +238,19 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename) :
 	height_ = 1;
      }
 
-   if(backgroundcolour_ >65535)
+   if(bgcolour >65535)
      {
 	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour greater than 1.0. Setting to 1.0."<<std::endl;
-	backgroundcolour_ = 65535;
+	bgcolour = 65535;
      }
 
-   if(backgroundcolour_ < 0)
+   if(bgcolour < 0)
      {
 	std::cerr << " PNGwriter::pngwriter - WARNING **: Constructor called with background colour lower than 0.0. Setting to 0.0."<<std::endl;
-	backgroundcolour_ = 0;
+	bgcolour = 0;
      }
 
-   int kkkk;
-
-   bit_depth_ = 16; //Default bit depth for new images
-   colortype_=2;
-   screengamma_ = 2.2;
-
-   graph_ = (png_bytepp)malloc(height_ * sizeof(png_bytep));
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   for (kkkk = 0; kkkk < height_; kkkk++)
-     {
-        graph_[kkkk] = (png_bytep)malloc(6*width_ * sizeof(png_byte));
-	if(graph_[kkkk] == NULL)
-	  {
-	     std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-	  }
-     }
-
-   if(graph_ == NULL)
-     {
-	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
-     }
-
-   #pragma omp parallel num_threads(this->numOmpThreads_)
-   {
-      if(backgroundcolour_ == 0)
-	 #pragma omp for schedule(guided)
-	 for(int vhhh = 0; vhhh<height_;vhhh++)
-	   memset( graph_[vhhh],
-		    (char) backgroundcolour_,
-		    width_*6 );
-      else
-      {
-      int tempindex;
-      #pragma omp for schedule(guided)
-      for(int vhhh = 0; vhhh<height_;vhhh++)
-	 {
-	   for(int hhh = 0; hhh<width_;hhh++)
-	     {
-		 // graph_[vhhh][tempindex + i] where i = 0 to 5
-		 tempindex = 6*hhh;
-		 graph_[vhhh][tempindex] = (char) floor(((double)backgroundcolour_)/256);
-		 graph_[vhhh][tempindex+1] = (char)(backgroundcolour_%256);
-		 graph_[vhhh][tempindex+2] = (char) floor(((double)backgroundcolour_)/256);
-		 graph_[vhhh][tempindex+3] = (char)(backgroundcolour_%256);
-		 graph_[vhhh][tempindex+4] = (char) floor(((double)backgroundcolour_)/256);
-		 graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
-	     }
-	 }
-      }
-   } // pragma omp parallel
+   initMembers(x, y, bgcolour, filename);
 };
 
 void pngwriter::deleteMembers()
@@ -3460,7 +3329,7 @@ void pngwriter::scale_kxky(double kx, double ky)
 	     }
 	 }
    } // pragma omp parallel
-   
+
    // From here on, the process is the same for all scale functions.
    //Get data out of temp and into this's storage.
 

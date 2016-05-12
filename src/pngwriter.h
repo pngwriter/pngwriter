@@ -138,6 +138,8 @@ class pngwriter
 
    /* free up memory of member variables and reset internal pointers to NULL */
    void deleteMembers();
+   /* allocate memory and initialize */
+   void initMembers(int x, int y, int backgroundcolour, char * filename);
  public:
 
    /* General Notes
