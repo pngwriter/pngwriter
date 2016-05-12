@@ -43,18 +43,13 @@
 
 #include "pngwriter.h"
 
+
 // Default Constructor
 ////////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter()
 {
 
-   filename_ = new char[255];
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_  = new char[255];
-   textsoftware_ = new char[255];
-
-   strcpy(filename_, "out.png");
+   filename_ = std::string("out.png");
    width_ = 250;
    height_ = 250;
    backgroundcolour_ = 65535;
@@ -62,10 +57,10 @@ pngwriter::pngwriter()
    filegamma_ = 0.5;
    transformation_ = 0;
 
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, "out.png");
+   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
+   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
+   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
+   texttitle_ = std::string("out.png");
 
    int kkkk;
 
@@ -121,17 +116,12 @@ pngwriter::pngwriter(const pngwriter &rhs)
    filegamma_ = rhs.filegamma_;
    transformation_ = rhs.transformation_;;
 
-   filename_ = new char[strlen(rhs.filename_)+1];
-   textauthor_ = new char[strlen(rhs.textauthor_)+1];
-   textdescription_ = new char[strlen(rhs.textdescription_)+1];
-   textsoftware_ = new char[strlen(rhs.textsoftware_)+1];
-   texttitle_ = new char[strlen(rhs.texttitle_)+1];
+   filename_ = rhs.filename_;
+   textauthor_ = rhs.textauthor_;
+   textdescription_ = rhs.textdescription_;
+   textsoftware_ = rhs.textsoftware_;
+   texttitle_ = rhs.texttitle_;
 
-   strcpy(filename_, rhs.filename_);
-   strcpy(textauthor_, rhs.textauthor_);
-   strcpy(textdescription_, rhs.textdescription_);
-   strcpy(textsoftware_,rhs.textsoftware_);
-   strcpy(texttitle_, rhs.texttitle_);
 
    int kkkk;
 
@@ -187,17 +177,11 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
+   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
+   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
+   texttitle_ = std::string(filename);
+   filename_ = std::string(filename);
 
    if((width_<0)||(height_<0))
      {
@@ -280,17 +264,11 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
    transformation_ = 0;
    backgroundcolour_ = int(backgroundcolour*65535);
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
+   textdescription_= std::string("http://pngwriter.sourceforge.net/");
+   textsoftware_= std::string("PNGwriter: An easy to use graphics library.");
+   texttitle_= std::string(filename);
+   filename_= std::string(filename);
 
    if((width_<0)||(height_<0))
      {
@@ -364,31 +342,6 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 
 void pngwriter::deleteMembers()
 {
-   if( filename_ )
-   {
-     delete [] filename_;
-     filename_ = NULL;
-   }
-   if( textauthor_ )
-   {
-     delete [] textauthor_;
-     textauthor_ = NULL;
-   }
-   if( textdescription_ )
-   {
-      delete [] textdescription_;
-      textdescription_ = NULL;
-   }
-   if( texttitle_ )
-   {
-      delete [] texttitle_;
-      texttitle_ = NULL;
-   }
-   if( textsoftware_ )
-   {
-      delete [] textsoftware_;
-      textsoftware_ = NULL;
-   }
 
    for (int jjj = 0; jjj < height_; jjj++)
    {
@@ -420,17 +373,11 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
+   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
+   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
+   texttitle_ = std::string(filename);
+   filename_ = std::string(filename);
 
    if((width_<0)||(height_<0))
      {
@@ -513,17 +460,11 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
+   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
+   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
+   texttitle_ = std::string(filename);
+   filename_ = std::string(filename);
 
    if((width_<0)||(height_<0))
      {
@@ -612,17 +553,11 @@ pngwriter & pngwriter::operator = (const pngwriter & rhs)
    filegamma_ = rhs.filegamma_;
    transformation_ = rhs.transformation_;
 
-   filename_ = new char[strlen(rhs.filename_)+1];
-   textauthor_ = new char[strlen(rhs.textauthor_)+1];
-   textdescription_ = new char[strlen(rhs.textdescription_)+1];
-   textsoftware_ = new char[strlen(rhs.textsoftware_)+1];
-   texttitle_ = new char[strlen(rhs.texttitle_)+1];
-
-   strcpy(textauthor_, rhs.textauthor_);
-   strcpy(textdescription_, rhs.textdescription_);
-   strcpy(textsoftware_,rhs.textsoftware_);
-   strcpy(texttitle_, rhs.texttitle_);
-   strcpy(filename_, rhs.filename_);
+   textauthor_ = rhs.textauthor_;
+   textdescription_ = rhs.textdescription_;
+   textsoftware_ = rhs.textsoftware_;
+   texttitle_ = rhs.texttitle_;
+   filename_ = rhs.filename_;
 
    int kkkk;
 
@@ -928,27 +863,15 @@ void pngwriter::clear()
 /////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(char * newname)
 {
-   delete [] filename_;
-   delete [] texttitle_;
-
-   filename_ = new char[strlen(newname)+1];
-   texttitle_ = new char[strlen(newname)+1];
-
-   strcpy(filename_,newname);
-   strcpy(texttitle_,newname);
+   filename_ = std::string(newname);
+   texttitle_ = std::string(newname);
 };
 
 ///////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(const char * newname)
 {
-   delete [] filename_;
-   delete [] texttitle_;
-
-   filename_ = new char[strlen(newname)+1];
-   texttitle_ = new char[strlen(newname)+1];
-
-   strcpy(filename_,newname);
-   strcpy(texttitle_,newname);
+   filename_ = std::string(newname);
+   texttitle_ = std::string(newname);
 };
 
 ///////////////////////////////////////////////////////
@@ -970,53 +893,28 @@ void pngwriter::pngwriter_rename(long unsigned int index)
 	return;
      }
 
-   delete [] filename_;
-   delete [] texttitle_;
 
-   filename_ = new char[strlen(buffer)+1];
-   texttitle_ = new char[strlen(buffer)+1];
-
-   strcpy(filename_,buffer);
-   strcpy(texttitle_,buffer);
+   filename_ = std::string(buffer);
+   texttitle_ = std::string(buffer);
 
 };
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(char * title, char * author, char * description, char * software)
 {
-   delete [] textauthor_;
-   delete [] textdescription_;
-   delete [] texttitle_;
-   delete [] textsoftware_;
-
-   textauthor_ = new char[strlen(author)+1];
-   textdescription_ = new char[strlen(description)+1];
-   textsoftware_ = new char[strlen(software)+1];
-   texttitle_ = new char[strlen(title)+1];
-
-   strcpy(texttitle_, title);
-   strcpy(textauthor_, author);
-   strcpy(textdescription_, description);
-   strcpy(textsoftware_, software);
+   texttitle_ = std::string(title);
+   textauthor_ = std::string(author);
+   textdescription_ = std::string(description);
+   textsoftware_ = std::string(software);
 };
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(const char * title, const char * author, const char * description, const char * software)
 {
-   delete [] textauthor_;
-   delete [] textdescription_;
-   delete [] texttitle_;
-   delete [] textsoftware_;
-
-   textauthor_ = new char[strlen(author)+1];
-   textdescription_ = new char[strlen(description)+1];
-   textsoftware_ = new char[strlen(software)+1];
-   texttitle_ = new char[strlen(title)+1];
-
-   strcpy(texttitle_, title);
-   strcpy(textauthor_, author);
-   strcpy(textdescription_, description);
-   strcpy(textsoftware_, software);
+   texttitle_ = std::string(title);
+   textauthor_ = std::string(author);
+   textdescription_ = std::string(description);
+   textsoftware_ = std::string(software);
 };
 
 ///////////////////////////////////////////////////////
@@ -1026,7 +924,7 @@ void pngwriter::close()
    png_structp     png_ptr;
    png_infop       info_ptr;
 
-   fp = fopen(filename_, "wb");
+   fp = fopen(filename_.c_str(), "wb");
    if( fp == NULL)
      {
 	std::cerr << " PNGwriter::close - ERROR **: Error creating file (fopen() returned NULL pointer)." << std::endl;
@@ -1064,22 +962,26 @@ void pngwriter::close()
    time(&gmt);
    png_convert_from_time_t(&mod_time, gmt);
    png_set_tIME(png_ptr, info_ptr, &mod_time);
-   /* key is a 1-79 character description of type char* */
-   char key_title[] = "Title";
-   text_ptr[0].key = key_title;
-   text_ptr[0].text = texttitle_;
+   /* key is a 1-79 character description of type char*
+    *
+    * attention: the pointer of `c_str()` could be invalid if a non const
+    * operation to `key_title` is called
+    */
+   std::string key_title("Title");
+   text_ptr[0].key = const_cast<char*>(key_title.c_str());
+   text_ptr[0].text = const_cast<char*>(texttitle_.c_str());
    text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_author[] = "Author";
-   text_ptr[1].key = key_author;
-   text_ptr[1].text = textauthor_;
+   std::string key_author("Author");
+   text_ptr[1].key = const_cast<char*>(key_author.c_str());
+   text_ptr[1].text = const_cast<char*>(textauthor_.c_str());
    text_ptr[1].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_descr[] = "Description";
-   text_ptr[2].key = key_descr;
-   text_ptr[2].text = textdescription_;
+   std::string key_descr("Description");
+   text_ptr[2].key = const_cast<char*>(key_descr.c_str());
+   text_ptr[2].text = const_cast<char *>(textdescription_.c_str());
    text_ptr[2].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_software[] = "Software";
-   text_ptr[3].key = key_software;
-   text_ptr[3].text = textsoftware_;
+   std::string key_software("Software");
+   text_ptr[3].key = const_cast<char*>(key_software.c_str());
+   text_ptr[3].text = const_cast<char*>(textsoftware_.c_str());
    text_ptr[3].compression = PNG_TEXT_COMPRESSION_NONE;
 #if defined(PNG_TIME_RFC1123_SUPPORTED)
    char key_create[] = "Creation Time";
