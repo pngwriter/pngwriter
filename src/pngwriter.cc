@@ -43,7 +43,6 @@
 
 #include "pngwriter.h"
 
-#include <vector>
 
 // Default Constructor
 ////////////////////////////////////////////////////////////////////////////
@@ -963,26 +962,26 @@ void pngwriter::close()
    time(&gmt);
    png_convert_from_time_t(&mod_time, gmt);
    png_set_tIME(png_ptr, info_ptr, &mod_time);
-   /* key is a 1-79 character description of type char* */
-   char key_title[] = "Title";
-   text_ptr[0].key = key_title;
-   std::vector<char> texttitle(texttitle_.begin(), texttitle_.end());
-   text_ptr[0].text = &texttitle[0];
+   /* key is a 1-79 character description of type char*
+    *
+    * attention: the pointer of `c_str()` could be invalid if a non const
+    * operation to `key_title` is called
+    */
+   std::string key_title("Title");
+   text_ptr[0].key = const_cast<char*>(key_title.c_str());
+   text_ptr[0].text = const_cast<char*>(texttitle_.c_str());
    text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_author[] = "Author";
-   text_ptr[1].key = key_author;
-   std::vector<char> textauthor(textauthor_.begin(), textauthor_.end());
-   text_ptr[1].text = &textauthor[0];
+   std::string key_author("Author");
+   text_ptr[1].key = const_cast<char*>(key_author.c_str());
+   text_ptr[1].text = const_cast<char*>(textauthor_.c_str());
    text_ptr[1].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_descr[] = "Description";
-   text_ptr[2].key = key_descr;
-   std::vector<char> textdescription(textdescription_.begin(), textdescription_.end());
-   text_ptr[2].text = &textdescription[0];
+   std::string key_descr("Description");
+   text_ptr[2].key = const_cast<char*>(key_descr.c_str());
+   text_ptr[2].text = const_cast<char *>(textdescription_.c_str());
    text_ptr[2].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_software[] = "Software";
-   text_ptr[3].key = key_software;
-   std::vector<char> textsoftware(textsoftware_.begin(), textsoftware_.end());
-   text_ptr[3].text = &textsoftware[0];
+   std::string key_software("Software");
+   text_ptr[3].key = const_cast<char*>(key_software.c_str());
+   text_ptr[3].text = const_cast<char*>(textsoftware_.c_str());
    text_ptr[3].compression = PNG_TEXT_COMPRESSION_NONE;
 #if defined(PNG_TIME_RFC1123_SUPPORTED)
    char key_create[] = "Creation Time";
