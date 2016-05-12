@@ -1,2 +1,12 @@
 build/
 *~
+
+# netbeans project files
+/nbproject/
+
+# Code::Blocks project files
+/*.cbp
+/*.layout
+
+# original backup files
+*.orig
