@@ -180,8 +180,8 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
    textauthor_ = "PNGwriter Author: Paul Blackburn";
    textdescription_ = "https://github.com/pngwriter/pngwriter";
    textsoftware_ = "PNGwriter: An easy to use graphics library.";
-   texttitle_ = std::string(filename);
-   filename_ = std::string(filename);
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -267,8 +267,8 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
    textauthor_ = "PNGwriter Author: Paul Blackburn";
    textdescription_ = "https://github.com/pngwriter/pngwriter";
    textsoftware_ = "PNGwriter: An easy to use graphics library.";
-   texttitle_ = std::string(filename);
-   filename_ = std::string(filename);
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -376,8 +376,8 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
    textauthor_ = "PNGwriter Author: Paul Blackburn";
    textdescription_ = "https://github.com/pngwriter/pngwriter";
    textsoftware_ = "PNGwriter: An easy to use graphics library.";
-   texttitle_ = std::string(filename);
-   filename_ = std::string(filename);
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -463,8 +463,8 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
    textauthor_ = "PNGwriter Author: Paul Blackburn";
    textdescription_ = "https://github.com/pngwriter/pngwriter";
    textsoftware_ = "PNGwriter: An easy to use graphics library.";
-   texttitle_ = std::string(filename);
-   filename_ = std::string(filename);
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -863,15 +863,15 @@ void pngwriter::clear()
 /////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(char * newname)
 {
-   filename_ = std::string(newname);
-   texttitle_ = std::string(newname);
+   filename_ = newname;
+   texttitle_ = newname;
 }
 
 ///////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(const char * newname)
 {
-   filename_ = std::string(newname);
-   texttitle_ = std::string(newname);
+   filename_ = newname;
+   texttitle_ = newname;
 }
 
 ///////////////////////////////////////////////////////
@@ -894,27 +894,27 @@ void pngwriter::pngwriter_rename(long unsigned int index)
      }
 
 
-   filename_ = std::string(buffer);
-   texttitle_ = std::string(buffer);
+   filename_ = buffer;
+   texttitle_ = buffer;
 
 }
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(char * title, char * author, char * description, char * software)
 {
-   texttitle_ = std::string(title);
-   textauthor_ = std::string(author);
-   textdescription_ = std::string(description);
-   textsoftware_ = std::string(software);
+   texttitle_ = title;
+   textauthor_ = author;
+   textdescription_ = description;
+   textsoftware_ = software;
 }
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(const char * title, const char * author, const char * description, const char * software)
 {
-   texttitle_ = std::string(title);
-   textauthor_ = std::string(author);
-   textdescription_ = std::string(description);
-   textsoftware_ = std::string(software);
+   texttitle_ = title;
+   textauthor_ = author;
+   textdescription_ = description;
+   textsoftware_ = software;
 }
 
 ///////////////////////////////////////////////////////
