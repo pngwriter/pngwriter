@@ -2,6 +2,10 @@ PNGwriter
 =========
 PNGwriter is a C++ library for creating PNG images.
 
+[![Build Status master](https://img.shields.io/travis/pngwriter/pngwriter/master.svg?label=master)](https://travis-ci.org/pngwriter/pngwriter/branches)
+[![Build Status dev](https://img.shields.io/travis/pngwriter/pngwriter/dev.svg?label=dev)](https://travis-ci.org/pngwriter/pngwriter/branches)
+
+
 ### Summary
 
 PNGwriter is a very easy to use open source graphics library that uses PNG as
@@ -31,13 +35,6 @@ The PNGwriter project's online presence consists of:
 This project was migrated from the PNGwriter repository originally hosted on
 SourceForge (and no longer maintained). The last version released on
 SourceForge was 0.5.5.
-
-
-### Build Status
-
-| master branch | development branch |
-|:-------------:|:--------------------:|
-| [![Build Status Master](https://travis-ci.org/pngwriter/pngwriter.png?branch=master)](https://travis-ci.org/pngwriter/pngwriter "master") | [![Build Status Development Branch](https://travis-ci.org/pngwriter/pngwriter.png?branch=dev)](https://travis-ci.org/pngwriter/pngwriter "development branch") |
 
 
 ### Latest News
