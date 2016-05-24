@@ -462,7 +462,7 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
 
    textauthor_ = "PNGwriter Author: Paul Blackburn";
    textdescription_ = "https://github.com/pngwriter/pngwriter";
-   textsoftware_ = "PNGwriter: An easy to use graphics library.");
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
    texttitle_ = std::string(filename);
    filename_ = std::string(filename);
 
