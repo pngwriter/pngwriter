@@ -49,7 +49,7 @@
 pngwriter::pngwriter()
 {
 
-   filename_ = std::string("out.png");
+   filename_ = "out.png";
    width_ = 250;
    height_ = 250;
    backgroundcolour_ = 65535;
@@ -57,10 +57,10 @@ pngwriter::pngwriter()
    filegamma_ = 0.5;
    transformation_ = 0;
 
-   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
-   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
-   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
-   texttitle_ = std::string("out.png");
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "http://pngwriter.sourceforge.net/";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
+   texttitle_ = "out.png";
 
    int kkkk;
 
@@ -177,9 +177,9 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
-   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
-   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
    texttitle_ = std::string(filename);
    filename_ = std::string(filename);
 
@@ -264,11 +264,11 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
    transformation_ = 0;
    backgroundcolour_ = int(backgroundcolour*65535);
 
-   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
-   textdescription_= std::string("http://pngwriter.sourceforge.net/");
-   textsoftware_= std::string("PNGwriter: An easy to use graphics library.");
-   texttitle_= std::string(filename);
-   filename_= std::string(filename);
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
+   texttitle_ = std::string(filename);
+   filename_ = std::string(filename);
 
    if((width_<0)||(height_<0))
      {
@@ -373,9 +373,9 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
-   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
-   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
    texttitle_ = std::string(filename);
    filename_ = std::string(filename);
 
@@ -460,9 +460,9 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = std::string("PNGwriter Author: Paul Blackburn");
-   textdescription_ = std::string("http://pngwriter.sourceforge.net/");
-   textsoftware_ = std::string("PNGwriter: An easy to use graphics library.");
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.");
    texttitle_ = std::string(filename);
    filename_ = std::string(filename);
 
