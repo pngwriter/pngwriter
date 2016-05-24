@@ -103,7 +103,7 @@ pngwriter::pngwriter()
 	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
 	  }
      }
-};
+}
 
 //Copy Constructor
 //////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ pngwriter::pngwriter(const pngwriter &rhs)
    backgroundcolour_ = rhs.backgroundcolour_;
    compressionlevel_ = rhs.compressionlevel_;
    filegamma_ = rhs.filegamma_;
-   transformation_ = rhs.transformation_;;
+   transformation_ = rhs.transformation_;
 
    filename_ = rhs.filename_;
    textauthor_ = rhs.textauthor_;
@@ -164,7 +164,7 @@ pngwriter::pngwriter(const pngwriter &rhs)
 	  }
      }
 
-};
+}
 
 //Constructor for int colour levels, char * filename
 //////////////////////////////////////////////////////////////////////////
@@ -251,7 +251,7 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
 	  }
      }
    }
-};
+}
 
 //Constructor for double levels, char * filename
 /////////////////////////////////////////////////////////////////////////
@@ -338,7 +338,7 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 	  }
      }
    }
-};
+}
 
 void pngwriter::deleteMembers()
 {
@@ -360,7 +360,7 @@ void pngwriter::deleteMembers()
 pngwriter::~pngwriter()
 {
    deleteMembers();
-};
+}
 
 //Constructor for int levels, const char * filename
 //////////////////////////////////////////////////////////////
@@ -447,7 +447,7 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
 	  }
      }
    }
-};
+}
 
 //Constructor for double levels, const char * filename
 /////////////////////////////////////////////////////////////////////////
@@ -534,7 +534,7 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
 	  }
      }
    }
-};
+}
 
 // Overloading operator =
 /////////////////////////////////////////////////////////
@@ -647,7 +647,7 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 	     graph_[height_-y][tempindex+3] = (char)(green%256);
 	     graph_[height_-y][tempindex+4] = (char) floor(((double)blue)/256);
 	     graph_[height_-y][tempindex+5] = (char)(blue%256);
-	  };
+	  }
 
 	/*
 	 if(!( (height_-y >-1) && (height_-y <height_) && (6*(x-1) >-1) && (6*(x-1)+5<6*width_) ))
@@ -668,7 +668,7 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 	     graph_[height_-y][tempindex+1] = (char)(floor(((double)green)/256.0));
 	     graph_[height_-y][tempindex+2] = (char)(floor(((double)blue)/256.0));
 
-	  };
+	  }
 
 	/*
 	 if(!( (height_-y >-1) && (height_-y <height_) && (6*(x-1) >-1) && (6*(x-1)+5<6*width_) ))
@@ -677,14 +677,14 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 	 }
 	 */
      }
-};
+}
 
 void pngwriter::plot(int x, int y, double red, double green, double blue)
 {
     /* assuming values >= 0 adding +0.5 will round them to the nearest
      *      * integer when typecasting it */
     this->plot(x,y,int(red*65535+0.5),int(green*65535+0.5),int(blue*65535+0.5));
-};
+}
 
 ///////////////////////////////////////////////////////////////
 int pngwriter::read(int x, int y, int colour) const
@@ -858,21 +858,21 @@ void pngwriter::clear()
 	  }
      }
 
-};
+}
 
 /////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(char * newname)
 {
    filename_ = std::string(newname);
    texttitle_ = std::string(newname);
-};
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(const char * newname)
 {
    filename_ = std::string(newname);
    texttitle_ = std::string(newname);
-};
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(long unsigned int index)
@@ -897,7 +897,7 @@ void pngwriter::pngwriter_rename(long unsigned int index)
    filename_ = std::string(buffer);
    texttitle_ = std::string(buffer);
 
-};
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(char * title, char * author, char * description, char * software)
@@ -906,7 +906,7 @@ void pngwriter::settext(char * title, char * author, char * description, char * 
    textauthor_ = std::string(author);
    textdescription_ = std::string(description);
    textsoftware_ = std::string(software);
-};
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(const char * title, const char * author, const char * description, const char * software)
@@ -915,7 +915,7 @@ void pngwriter::settext(const char * title, const char * author, const char * de
    textauthor_ = std::string(author);
    textdescription_ = std::string(description);
    textsoftware_ = std::string(software);
-};
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::close()
@@ -2003,7 +2003,9 @@ void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_st
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Set char size error." << std::endl; return;};
+	if (error) {
+      std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Set char size error." << std::endl; return;
+    }
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, text[n] );
@@ -2370,7 +2372,7 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::get_text_width - ERROR **: FreeType: Set char size error." << std::endl; return 0;};
+	if (error) { std::cerr << " PNGwriter::get_text_width - ERROR **: FreeType: Set char size error." << std::endl; return 0; }
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, text[n] );
@@ -2780,12 +2782,12 @@ int pngwriter::bilinear_interpolation_read(double x, double y, int colour) const
     );
     * */
 
-};
+}
 
 double pngwriter::bilinear_interpolation_dread(double x, double y, int colour) const
 {
    return double(this->bilinear_interpolation_read(x,y,colour))/65535.0;
-};
+}
 
 void pngwriter::plot_blend(int x, int y, double opacity, int red, int green, int blue)
 {
@@ -2794,12 +2796,12 @@ void pngwriter::plot_blend(int x, int y, double opacity, int red, int green, int
 	      (int)( opacity*green +  this->read(x,y,2)*(1.0-opacity)),
 	      (int)( opacity*blue  +  this->read(x,y,3)*(1.0-opacity))
 	      );
-};
+}
 
 void pngwriter::plot_blend(int x, int y, double opacity, double red, double green, double blue)
 {
    this->plot_blend(x, y, opacity, (int)  (65535*red), (int)  (65535*green),  (int)  (65535*blue));
-};
+}
 
 void pngwriter::invert(void)
 {
@@ -3771,7 +3773,7 @@ void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, in
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Set char size error." << std::endl; return;};
+	if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Set char size error." << std::endl; return;}
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, text[n] );

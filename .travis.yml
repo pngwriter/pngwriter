@@ -6,7 +6,7 @@ compiler:
 
 env:
   global:
-    - CXXFLAGS="-Werror"
+    - CXXFLAGS="-Werror -Wextra -pedantic"
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
   matrix:
