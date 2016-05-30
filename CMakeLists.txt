@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
 
 # Projekt name ################################################################
 #
@@ -11,6 +11,11 @@ ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 
 # set helper pathes to find libraries and packages on some 64bit machines
 set(CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu/")
+
+# Compiler supports C++11?
+#
+# CMake 3.1.0+:
+# is `-std=c++11` in `${CMAKE_CXX_COMPILE_FEATURES}`
 
 # Warnings ####################################################################
 #
@@ -74,8 +79,11 @@ TARGET_LINK_LIBRARIES(pngwriter_static m ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FR
 # build examples and tests
 SET(EXAMPLES_LIBS pngwriter_static ${FREETYPE_LIBRARIES})
 FILE(GLOB EXAMPLES_SOURCES ${EXAMPLES_SOURCES}/*.cc ${TESTS_SOURCES}/*.cc)
-# needs CXXFLAGS="-std=c++11"
-LIST(REMOVE_ITEM EXAMPLES_SOURCES "${TESTS_SOURCES}/performance.cc")
+
+OPTION(BUILD_PERFORMANCE "Build the performance measurement test (needs C++11)" OFF)
+IF(NOT BUILD_PERFORMANCE)
+    LIST(REMOVE_ITEM EXAMPLES_SOURCES "${TESTS_SOURCES}/performance.cc")
+ENDIF()
 
 FOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
     GET_FILENAME_COMPONENT(examplename ${EXAMPLEFILE} NAME)
@@ -85,6 +93,12 @@ FOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
 
     ADD_EXECUTABLE(${examplename} ${EXAMPLEFILE})
     TARGET_LINK_LIBRARIES(${examplename} ${EXAMPLES_LIBS})
+
+    if("${examplename}" STREQUAL "performance")
+        TARGET_COMPILE_OPTIONS(performance PRIVATE -std=c++11)
+        # CMake 3.1.0+:
+        #SET_PROPERTY(TARGET performance PROPERTY CXX_STANDARD 11)
+    endif()
 ENDFOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
 
 # Copy example files to "build" dir for easy testing ##########################
