@@ -136,6 +136,47 @@ class pngwriter
 
    /* free up memory of member variables and reset internal pointers to NULL */
    void deleteMembers();
+
+   /* Fill 16 bit image background color using either RGB555 or RGB565 formatting
+    * Defaults to RGB565 formatting
+    *
+    *   http://stackoverflow.com/questions/13720937/c-defined-16bit-high-color
+    *   https://msdn.microsoft.com/en-us/library/windows/desktop/dd390989(v=vs.85).aspx
+    * */
+   void fillBackgroundColor_16(png_uint_16 color, bool bRGB565 = true);
+
+   /* Convert 16 bit RGB565 to 24 bit RGB888
+    * http://stackoverflow.com/questions/2442576/how-does-one-convert-16-bit-rgb565-to-24-bit-rgb888
+    * http://stackoverflow.com/questions/2442576/how-does-one-convert-16-bit-rgb565-to-24-bit-rgb888/9069480#9069480
+    * https://msdn.microsoft.com/en-us/library/windows/desktop/dd390989(v=vs.85).aspx
+    * Returns png_color_struct
+    *
+    * */
+   png_color_struct decode_16bit_rgb565_channels(png_uint_16 color);
+
+  /* Convert 16 bit RGB555 to 24 bit RGB888
+   * http://stackoverflow.com/questions/2442576/how-does-one-convert-16-bit-rgb565-to-24-bit-rgb888
+   * http://stackoverflow.com/questions/2442576/how-does-one-convert-16-bit-rgb565-to-24-bit-rgb888/9069480#9069480
+   * https://msdn.microsoft.com/en-us/library/windows/desktop/dd390989(v=vs.85).aspx
+   * Returns png_color_struct
+   *
+   * */
+   png_color_struct decode_16bit_rgb555_channels(png_uint_16 color);
+
+  /* Fills 16 bit image background with png_color_struct values.  Decoding of
+   * color space values should be done prior to calling this function.
+   *
+   * */
+   void fillBackgroundWithRGBColor(const png_color_struct rgb_color);
+
+   /* Copy source image data to destination image
+    * */
+   static void copyImageDataFrom(unsigned char ** const source_graph,
+                                 unsigned char ** dest_graph,
+                                 int height, int width);
+
+   friend void swap(pngwriter & lhs, pngwriter & rhs);
+
  public:
 
    /* General Notes
