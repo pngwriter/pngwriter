@@ -765,46 +765,11 @@ int pngwriter::read(int x, int y, int colour) const
 ///////////////////////////////////////////////////////////////
 int pngwriter::read(int xxx, int yyy) const
 {
-   int temp1,temp2,temp3,temp4,temp5;
+    int sumRGB = 0;
+    for( int colour = 1; colour <= 3; ++colour )
+        sumRGB += this->read(xxx, yyy, colour);
 
-   if(
-      ( xxx>0 ) &&
-      ( xxx <= (this->width_) ) &&
-      ( yyy>0 ) &&
-      ( yyy <= (this->height_) )
-      )
-     {
-	if(bit_depth_ == 16)
-	  {
-	     //	temp1 = (graph_[(height_-yyy)][6*(xxx-1)])*256 + graph_[height_-yyy][6*(xxx-1)+1];
-	     temp5=6*xxx;
-	     temp1 = (graph_[(height_-yyy)][temp5-6])*256 + graph_[height_-yyy][temp5-5];
-	     temp2 = (graph_[height_-yyy][temp5-4])*256 + graph_[height_-yyy][temp5-3];
-	     temp3 = (graph_[height_-yyy][temp5-2])*256 + graph_[height_-yyy][temp5-1];
-	     temp4 =  int((temp1+temp2+temp3)/3.0);
-	  }
-	else if(bit_depth_ == 8)
-	  {
-	     //	temp1 = graph_[height_-yyy][3*(xxx-1)];
-	     temp5 = 3*xxx;
-	     temp1 = graph_[height_-yyy][temp5-3];
-	     temp2 =  graph_[height_-yyy][temp5-2];
-	     temp3 =  graph_[height_-yyy][temp5-1];
-	     temp4 =  int((temp1+temp2+temp3)/3.0);
-	  }
-	else
-	  {
-	     std::cerr << " PNGwriter::read - WARNING **: Invalid bit depth! Returning 0 as average value." << std::endl;
-	     temp4 = 0;
-	  }
-
-	return temp4;
-
-     }
-   else
-     {
-	return 0;
-     }
+    return sumRGB / 3;
 }
 
 /////////////////////////////////////////////////////
