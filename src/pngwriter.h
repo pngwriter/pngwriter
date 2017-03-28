@@ -136,6 +136,10 @@ class pngwriter
 
    /* free up memory of member variables and reset internal pointers to NULL */
    void deleteMembers();
+
+   /* Fill image with background color */
+    int setBackgroundWithColor(int color);
+
  public:
 
    /* General Notes
@@ -195,6 +199,8 @@ class pngwriter
    /* Assignment Operator
     * */
    pngwriter & operator = (const pngwriter & rhs);
+
+   friend void swap(pngwriter & lhs, pngwriter & rhs);
 
    /*  Plot
     * With this function a pixel at coordinates (x, y) can be set to the desired colour.
@@ -732,6 +738,12 @@ class pngwriter
 
    int static get_text_width_utf8(char * face_path, int fontsize, char * text);
 
+   int fillBackgroundColor(void);
+   int fillBackgroundWithColor(int color);
+
+   static int copyImageDataFrom(unsigned char ** const source_graph,
+                                unsigned char ** dest_graph,
+                                int height, int width);
 
 };
 
