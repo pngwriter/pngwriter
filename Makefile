@@ -10,15 +10,15 @@
 #
 #    Email:                     individual61@users.sourceforge.net
 #
-#    Version:                   0.5.6 (December 2015)
+#    Version:                   0.6.0 (March 2017)
 #
 #    Description:               Library that allows plotting a 48 bit
 #                               PNG image pixel by pixel, which can
 #                               then be opened with a graphics program.
 #
 #    License:                   GNU General Public License
-#                               (C) 2002-2015 Paul Blackburn
-#                               (C) 2013-2015 Axel Huebl
+#                               (C) 2002-2017 Paul Blackburn
+#                               (C) 2013-2017 Axel Huebl
 #
 ##############################################################################
 
@@ -28,8 +28,8 @@
 #
 ##############################################################################
 
-# Default installation is for a Linux/UNIX type system. 
-# Makefile options for Mac OS X (with Fink-installed libpng) 
+# Default installation is for a Linux/UNIX type system.
+# Makefile options for Mac OS X (with Fink-installed libpng)
 # are also available. See the README.
 
 
@@ -39,7 +39,7 @@
 include make.include
 
 MAJVERSION=0
-MINVERSION=5.6
+MINVERSION=6.0
 VERSION=$(MAJVERSION).$(MINVERSION)
 
 
@@ -55,7 +55,7 @@ endif
 all	:    libpngwriter examples
 
 libpngwriter: intro
-	cd src;	make 
+	cd src;	make
 
 examples: libpngwriter
 	cd examples; make
@@ -64,7 +64,7 @@ intro	:
 	@ echo "#"
 	@ echo "#"
 	@ echo "#  PNGwriter $(VERSION)"
-	@ echo "#  Copyright 2002-2015 Paul Blackburn, 2013-2015 Axel Huebl"
+	@ echo "#  Copyright 2002-2017 Paul Blackburn, 2013-2017 Axel Huebl"
 	@ echo "#  http://pngwriter.sourceforge.net/"
 	@ echo "#  This library and its associated files are covered"
 	@ echo "#  by the GNU General Public License."
@@ -74,14 +74,14 @@ intro	:
 	@ echo "#  Important: If you do not have FreeType2 installed, "
 	@ echo "#  see the README for instructions on compiling PNGwriter"
 	@ echo "#  without FreeType2 support."
-	@ echo "#"	
+	@ echo "#"
 	@ echo "#  You have selected to compile PNGwriter $(FT_REPORT)"
 	@ echo "#  FreeType2 support."
 	@ echo "#"
 	@ echo "#"
 
 
-install:  docs 
+install:  docs
 	@ echo "#"
 	@ echo "#"
 	@ echo "#  PNGwriter $(VERSION)"
@@ -108,7 +108,7 @@ install:  docs
 	@ echo "#    doc/            in $(DESTDIR)$(PREFIX)/share/doc/pngwriter/"
 	@ echo "#    Fonts	     in $(DESTDIR)$(PREFIX)/share/pngwriter/fonts"
 	@ echo "#"
-	@ echo "#"	
+	@ echo "#"
 	$(INSTALL) -d -v $(DESTDIR)$(PREFIX)/include/ $(DESTDIR)$(PREFIX)/lib/
 	$(INSTALL) -d -v $(DESTDIR)$(PREFIX)/share/pngwriter/fonts/
 	$(INSTALL) -S -v -m644 src/pngwriter.h $(DESTDIR)$(PREFIX)/include/
@@ -126,7 +126,7 @@ docs	:
 	cp doc/README doc/README.bak
 	cat doc/README.bak | \
 	sed   's# -  libpngwriter.a:# -  libpngwriter.a: $(PREFIX)/lib/#g' > doc/README
-	
+
 	cp doc/README doc/README.bak
 	cat doc/README.bak | \
 	sed   's# -  pngwriter.h:# -  pngwriter.h: $(PREFIX)/include/#g' > doc/README
@@ -149,7 +149,7 @@ docs	:
 	rm -f READMEe doc/READMEe
 
 
-clean	:    
+clean	:
 	cd src; make clean
 	cd examples; make clean
 	cd doc/; rm -f CHANGES~ README~ LICENSE~ EXAMPLES~ .DS_Store
@@ -162,7 +162,7 @@ clean	:
 	cp README README.bak
 	cat README.bak | \
 	sed   's# -  libpngwriter.a: $(PREFIX)/lib/# -  libpngwriter.a:#g' > README
-	
+
 	cp README README.bak
 	cat README.bak | \
 	sed   's# -  pngwriter.h: $(PREFIX)/include/# -  pngwriter.h:#g' > README
@@ -187,7 +187,7 @@ clean	:
 	cp doc/README doc/README.bak
 	cat doc/README.bak | \
 	sed   's# -  libpngwriter.a: $(PREFIX)/lib/# -  libpngwriter.a:#g' > doc/README
-	
+
 	cp doc/README doc/README.bak
 	cat doc/README.bak | \
 	sed   's# -  pngwriter.h: $(PREFIX)/include/# -  pngwriter.h:#g' > doc/README

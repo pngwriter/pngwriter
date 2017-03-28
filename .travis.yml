@@ -1,30 +1,54 @@
 language: cpp
 
+sudo: required
+dist: trusty
+
 compiler:
   - gcc
   - clang
 
 env:
   global:
-    - CXXFLAGS="-Werror"
+    - CXXFLAGS="-Werror -Wextra -pedantic"
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
+    - LIBFREETYPE_DOWNLOAD=http://download.savannah.gnu.org/releases/freetype/freetype-
   matrix:
-    - LIBPNG_VERSION=1.2.53
-    - LIBPNG_VERSION=1.4.16
-    - LIBPNG_VERSION=1.5.22
-    - LIBPNG_VERSION=1.6.17
-    - LIBPNG_VERSION=1.7.0beta65
+    - LIBPNG_VERSION=1.2.56 FREETYPE=OFF PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.2.56 FREETYPE=2.4.12 PERFTEST=ON CPP11=OFF # risky due to stdlib 98/11 incomp.
+    - LIBPNG_VERSION=1.2.56 FREETYPE=2.4.12 PERFTEST=ON CPP11=ON
+    - LIBPNG_VERSION=1.4.19 FREETYPE=2.4.12 PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.5.26 FREETYPE=2.5.5 PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.6.21 FREETYPE=2.6.3 PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.7.0beta80 FREETYPE=2.6.3 PERFTEST=OFF CPP11=OFF
 
 matrix:
   allow_failures:
-    - env: LIBPNG_VERSION=1.7.0beta65
+    - env: LIBPNG_VERSION=1.7.0beta80 FREETYPE=2.6.3 PERFTEST=OFF CPP11=OFF
 
 script:
   - cd $BUILD
-  - cmake $TRAVIS_BUILD_DIR
+  - if [ "$CPP11" == "ON" ]; then
+      export CXXFLAGS="$CXXFLAGS -std=c++11";
+    fi
+  - cmake -DBUILD_PERFORMANCE=$PERFTEST $TRAVIS_BUILD_DIR
   - make
   - sudo make install
+# tests
+  - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
+  - ./pngtest
+  - ./readwrite
+  # read channel range test (black-white, RGB)
+  - ./blackwhite bw_16bit_rgb_20x20.png
+  - ./blackwhite bw_16bit_rgba_20x20.png
+  - ./blackwhite bw_8bit_rgba_20x20.png
+  - ./blackwhite bw_8bit_rgb_20x20.png
+  # read channel range test (black-white, grayscale)
+  # to do
+  # performance test
+  - if [ "$PERFTEST" == "ON" ]; then 
+      ./performance;
+    fi
 
 before_script:
   - uname -r
@@ -32,9 +56,13 @@ before_script:
 # kick without checking dependencies
   - sudo dpkg -r --force-depends libpng12-dev
   - sudo dpkg -r --force-depends libpng12-0
-  - sudo rm -rf /usr/include/libpng12 /urs/include/png*.h /usr/lib/x86_64-linux-gnu/libpng*
-#  - sudo apt-get remove -qq libpng12-0 libpng12-0:i386
+  - sudo dpkg -r --force-depends libfreetype6-dev
+  - sudo dpkg -r --force-depends libfreetype6
+  - sudo rm -rf /usr/include/freetype* /usr/lib/x86_64-linux-gnu/libfreetype*
+  - sudo rm -rf /usr/include/libpng12 /usr/include/png*.h /usr/lib/x86_64-linux-gnu/libpng*
+#  - sudo apt-get remove -qq libpng12-0 libpng14-0:i386
   - sudo dpkg --get-selections
+# BUILD libpng
   - wget "$LIBPNG_DOWNLOAD$LIBPNG_VERSION.tar.xz"
   - tar -xJf libpng-$LIBPNG_VERSION.tar.xz
   - cd libpng-$LIBPNG_VERSION
@@ -42,10 +70,17 @@ before_script:
   - ./configure --prefix=/usr
   - make
   - sudo make install
+  - cd ..
   - sudo find /usr/lib -name 'libpng*'
+# BUILD libfreetype (depends on libpng)
+  - if [ "$FREETYPE" != "OFF" ]; then
+      wget "$LIBFREETYPE_DOWNLOAD$FREETYPE.tar.gz";
+      tar -xzf freetype-$FREETYPE.tar.gz;
+      cd freetype-$FREETYPE;
+      ./configure --prefix=/usr;
+      make; sudo make install;
+      cd ..;
+    fi
+  - sudo find /usr/lib -name 'libfreetype*'
+# create build dir
   - mkdir -p $BUILD
-
-after_script:
-  - cp -R $TRAVIS_BUILD_DIR/examples/burro.png .
-  - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
-  - ./pngtest

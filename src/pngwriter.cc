@@ -7,18 +7,20 @@
 *
 *    Author:                    Paul Blackburn https://github.com/individual61
 *                               Axel Huebl https://github.com/ax3l
+*                               Rene Widera https://github.com/psychocoderHPC
 *
 *    Email:                     individual61@users.sourceforge.net
 *
-*    Version:                   0.5.6 (December 2015)
+*    Version:                   0.6.0 (March 2017)
 *
 *    Description:               Library that allows plotting a 48 bit
 *                               PNG image pixel by pixel, which can
 *                               then be opened with a graphics program.
 *
 *    License:                   GNU General Public License
-*                               (C) 2002-2015 Paul Blackburn
-*                               (C) 2013-2015 Axel Huebl
+*                               (C) 2002-2017 Paul Blackburn
+*                               (C) 2013-2017 Axel Huebl
+*                               (C) 2016-2017 Rene Widera
 *
 ******************************************************************************/
 
@@ -41,18 +43,13 @@
 
 #include "pngwriter.h"
 
+
 // Default Constructor
 ////////////////////////////////////////////////////////////////////////////
 pngwriter::pngwriter()
 {
 
-   filename_ = new char[255];
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_  = new char[255];
-   textsoftware_ = new char[255];
-
-   strcpy(filename_, "out.png");
+   filename_ = "out.png";
    width_ = 250;
    height_ = 250;
    backgroundcolour_ = 65535;
@@ -60,10 +57,10 @@ pngwriter::pngwriter()
    filegamma_ = 0.5;
    transformation_ = 0;
 
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, "out.png");
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "http://pngwriter.sourceforge.net/";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
+   texttitle_ = "out.png";
 
    int kkkk;
 
@@ -92,9 +89,9 @@ pngwriter::pngwriter()
      }
 
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+      for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
 	     tempindex = 6*hhh;
@@ -106,7 +103,7 @@ pngwriter::pngwriter()
 	     graph_[vhhh][tempindex+5] = (char)(backgroundcolour_%256);
 	  }
      }
-};
+}
 
 //Copy Constructor
 //////////////////////////////////////////////////////////////////////////
@@ -117,19 +114,14 @@ pngwriter::pngwriter(const pngwriter &rhs)
    backgroundcolour_ = rhs.backgroundcolour_;
    compressionlevel_ = rhs.compressionlevel_;
    filegamma_ = rhs.filegamma_;
-   transformation_ = rhs.transformation_;;
+   transformation_ = rhs.transformation_;
 
-   filename_ = new char[strlen(rhs.filename_)+1];
-   textauthor_ = new char[strlen(rhs.textauthor_)+1];
-   textdescription_ = new char[strlen(rhs.textdescription_)+1];
-   textsoftware_ = new char[strlen(rhs.textsoftware_)+1];
-   texttitle_ = new char[strlen(rhs.texttitle_)+1];
+   filename_ = rhs.filename_;
+   textauthor_ = rhs.textauthor_;
+   textdescription_ = rhs.textdescription_;
+   textsoftware_ = rhs.textsoftware_;
+   texttitle_ = rhs.texttitle_;
 
-   strcpy(filename_, rhs.filename_);
-   strcpy(textauthor_, rhs.textauthor_);
-   strcpy(textdescription_, rhs.textdescription_);
-   strcpy(textsoftware_,rhs.textsoftware_);
-   strcpy(texttitle_, rhs.texttitle_);
 
    int kkkk;
 
@@ -157,9 +149,9 @@ pngwriter::pngwriter(const pngwriter &rhs)
 	std::cerr << " PNGwriter::pngwriter - ERROR **:  Not able to allocate memory for image." << std::endl;
      }
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //   graph_[vhhh][6*hhh + i ] i=0 to 5
 	     tempindex=6*hhh;
@@ -172,7 +164,7 @@ pngwriter::pngwriter(const pngwriter &rhs)
 	  }
      }
 
-};
+}
 
 //Constructor for int colour levels, char * filename
 //////////////////////////////////////////////////////////////////////////
@@ -185,17 +177,11 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -250,9 +236,9 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] i = 0  to 5
 	     tempindex = 6*hhh;
@@ -265,7 +251,7 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, char * filename)
 	  }
      }
    }
-};
+}
 
 //Constructor for double levels, char * filename
 /////////////////////////////////////////////////////////////////////////
@@ -278,17 +264,11 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
    transformation_ = 0;
    backgroundcolour_ = int(backgroundcolour*65535);
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -343,9 +323,9 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     // graph_[vhhh][tempindex + i] where i = 0 to 5
 	     tempindex = 6*hhh;
@@ -358,35 +338,10 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, char * filename)
 	  }
      }
    }
-};
+}
 
 void pngwriter::deleteMembers()
 {
-   if( filename_ )
-   {
-     delete [] filename_;
-     filename_ = NULL;
-   }
-   if( textauthor_ )
-   {
-     delete [] textauthor_;
-     textauthor_ = NULL;
-   }
-   if( textdescription_ )
-   {
-      delete [] textdescription_;
-      textdescription_ = NULL;
-   }
-   if( texttitle_ )
-   {
-      delete [] texttitle_;
-      texttitle_ = NULL;
-   }
-   if( textsoftware_ )
-   {
-      delete [] textsoftware_;
-      textsoftware_ = NULL;
-   }
 
    for (int jjj = 0; jjj < height_; jjj++)
    {
@@ -405,7 +360,7 @@ void pngwriter::deleteMembers()
 pngwriter::~pngwriter()
 {
    deleteMembers();
-};
+}
 
 //Constructor for int levels, const char * filename
 //////////////////////////////////////////////////////////////
@@ -418,17 +373,11 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -483,9 +432,9 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] where i = 0 to 5
 	     tempindex=6*hhh;
@@ -498,7 +447,7 @@ pngwriter::pngwriter(int x, int y, int backgroundcolour, const char * filename)
 	  }
      }
    }
-};
+}
 
 //Constructor for double levels, const char * filename
 /////////////////////////////////////////////////////////////////////////
@@ -511,17 +460,11 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
    filegamma_ = 0.6;
    transformation_ = 0;
 
-   textauthor_ = new char[255];
-   textdescription_ = new char[255];
-   texttitle_ = new char[strlen(filename)+1];
-   textsoftware_ = new char[255];
-   filename_ = new char[strlen(filename)+1];
-
-   strcpy(textauthor_, "PNGwriter Author: Paul Blackburn");
-   strcpy(textdescription_, "http://pngwriter.sourceforge.net/");
-   strcpy(textsoftware_, "PNGwriter: An easy to use graphics library.");
-   strcpy(texttitle_, filename);
-   strcpy(filename_, filename);
+   textauthor_ = "PNGwriter Author: Paul Blackburn";
+   textdescription_ = "https://github.com/pngwriter/pngwriter";
+   textsoftware_ = "PNGwriter: An easy to use graphics library.";
+   texttitle_ = filename;
+   filename_ = filename;
 
    if((width_<0)||(height_<0))
      {
@@ -576,9 +519,9 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
    else
    {
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //etc
 	     tempindex = 6*hhh;
@@ -591,7 +534,7 @@ pngwriter::pngwriter(int x, int y, double backgroundcolour, const char * filenam
 	  }
      }
    }
-};
+}
 
 // Overloading operator =
 /////////////////////////////////////////////////////////
@@ -610,17 +553,11 @@ pngwriter & pngwriter::operator = (const pngwriter & rhs)
    filegamma_ = rhs.filegamma_;
    transformation_ = rhs.transformation_;
 
-   filename_ = new char[strlen(rhs.filename_)+1];
-   textauthor_ = new char[strlen(rhs.textauthor_)+1];
-   textdescription_ = new char[strlen(rhs.textdescription_)+1];
-   textsoftware_ = new char[strlen(rhs.textsoftware_)+1];
-   texttitle_ = new char[strlen(rhs.texttitle_)+1];
-
-   strcpy(textauthor_, rhs.textauthor_);
-   strcpy(textdescription_, rhs.textdescription_);
-   strcpy(textsoftware_,rhs.textsoftware_);
-   strcpy(texttitle_, rhs.texttitle_);
-   strcpy(filename_, rhs.filename_);
+   textauthor_ = rhs.textauthor_;
+   textdescription_ = rhs.textdescription_;
+   textsoftware_ = rhs.textsoftware_;
+   texttitle_ = rhs.texttitle_;
+   filename_ = rhs.filename_;
 
    int kkkk;
 
@@ -649,9 +586,9 @@ pngwriter & pngwriter::operator = (const pngwriter & rhs)
      }
 
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = rhs.graph_[vhhh][tempindex];
@@ -710,7 +647,7 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 	     graph_[height_-y][tempindex+3] = (char)(green%256);
 	     graph_[height_-y][tempindex+4] = (char) floor(((double)blue)/256);
 	     graph_[height_-y][tempindex+5] = (char)(blue%256);
-	  };
+	  }
 
 	/*
 	 if(!( (height_-y >-1) && (height_-y <height_) && (6*(x-1) >-1) && (6*(x-1)+5<6*width_) ))
@@ -731,7 +668,7 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 	     graph_[height_-y][tempindex+1] = (char)(floor(((double)green)/256.0));
 	     graph_[height_-y][tempindex+2] = (char)(floor(((double)blue)/256.0));
 
-	  };
+	  }
 
 	/*
 	 if(!( (height_-y >-1) && (height_-y <height_) && (6*(x-1) >-1) && (6*(x-1)+5<6*width_) ))
@@ -740,15 +677,17 @@ void pngwriter::plot(int x, int y, int red, int green, int blue)
 	 }
 	 */
      }
-};
+}
 
 void pngwriter::plot(int x, int y, double red, double green, double blue)
 {
-   this->plot(x,y,int(red*65535),int(green*65535),int(blue*65535));
-};
+    /* assuming values >= 0 adding +0.5 will round them to the nearest
+     *      * integer when typecasting it */
+    this->plot(x,y,int(red*65535+0.5),int(green*65535+0.5),int(blue*65535+0.5));
+}
 
 ///////////////////////////////////////////////////////////////
-int pngwriter::read(int x, int y, int colour)
+int pngwriter::read(int x, int y, int colour) const
 {
    int temp1,temp2;
 
@@ -763,6 +702,14 @@ int pngwriter::read(int x, int y, int colour)
 
 	if(bit_depth_ == 16)
 	  {
+	     /* In these cases *256 is correct, because what we actually are
+	      * doing is bitshifting by 8 bit and then appending the next lower
+	      * 8 bit.
+	      * These lines are inefficient. Bitshifting and bitwise anding may
+	      * have better performance than multiplication and addition.
+	      * We could also just convert (unsigned char*) to (uint16_t*).
+	      * If the open file function does it in the same way, then this
+	      * method makes no assumptions about platform endianness */
 	     temp2=6*(x-1);
 	     if(colour == 1)
 	       {
@@ -785,23 +732,24 @@ int pngwriter::read(int x, int y, int colour)
 
 	if(bit_depth_ == 8)
 	  {
+	     int const scale8To16Bit = 257;   // (x/255.0)*65535.0 -> x*257
 	     temp2=3*(x-1);
 	     if(colour == 1)
 	       {
 		  temp1 = graph_[height_-y][temp2];
-		  return temp1*256;
+		  return temp1*scale8To16Bit;
 	       }
 
 	     if(colour == 2)
 	       {
 		  temp1 =  graph_[height_-y][temp2+1];
-		  return temp1*256;
+		  return temp1*scale8To16Bit;
 	       }
 
 	     if(colour == 3)
 	       {
 		  temp1 =  graph_[height_-y][temp2+2];
-		  return temp1*256;
+		  return temp1*scale8To16Bit;
 	       }
 	  }
      }
@@ -815,65 +763,26 @@ int pngwriter::read(int x, int y, int colour)
 }
 
 ///////////////////////////////////////////////////////////////
-int pngwriter::read(int xxx, int yyy)
+int pngwriter::read(int xxx, int yyy) const
 {
-   int temp1,temp2,temp3,temp4,temp5;
+    int sumRGB = 0;
+    for( int colour = 1; colour <= 3; ++colour )
+        sumRGB += this->read(xxx, yyy, colour);
 
-   if(
-      ( xxx>0 ) &&
-      ( xxx <= (this->width_) ) &&
-      ( yyy>0 ) &&
-      ( yyy <= (this->height_) )
-      )
-     {
-	if(bit_depth_ == 16)
-	  {
-	     //	temp1 = (graph_[(height_-yyy)][6*(xxx-1)])*256 + graph_[height_-yyy][6*(xxx-1)+1];
-	     temp5=6*xxx;
-	     temp1 = (graph_[(height_-yyy)][temp5-6])*256 + graph_[height_-yyy][temp5-5];
-	     temp2 = (graph_[height_-yyy][temp5-4])*256 + graph_[height_-yyy][temp5-3];
-	     temp3 = (graph_[height_-yyy][temp5-2])*256 + graph_[height_-yyy][temp5-1];
-	     temp4 =  int((temp1+temp2+temp3)/3.0);
-	  }
-	else if(bit_depth_ == 8)
-	  {
-	     //	temp1 = graph_[height_-yyy][3*(xxx-1)];
-	     temp5 = 3*xxx;
-	     temp1 = graph_[height_-yyy][temp5-3];
-	     temp2 =  graph_[height_-yyy][temp5-2];
-	     temp3 =  graph_[height_-yyy][temp5-1];
-	     temp4 =  int((temp1+temp2+temp3)/3.0);
-	  }
-	else
-	  {
-	     std::cerr << " PNGwriter::read - WARNING **: Invalid bit depth! Returning 0 as average value." << std::endl;
-	     temp4 = 0;
-	  }
-
-	return temp4;
-
-     }
-   else
-     {
-	return 0;
-     }
+    return sumRGB / 3;
 }
 
 /////////////////////////////////////////////////////
-double  pngwriter::dread(int x, int y, int colour)
+double  pngwriter::dread(int x, int y, int colour) const
 {
-   if(bit_depth_ == 8)
-     return double(this->read(x,y,colour))/255.0;
-   else
-     return double(this->read(x,y,colour))/65535.0;
+    // PNGwriter converts all read images to 16bit RGB
+    return double(this->read(x,y,colour))/65535.0;
 }
 
-double  pngwriter::dread(int x, int y)
+double  pngwriter::dread(int x, int y) const
 {
-   if(bit_depth_ == 8)
-     return double(this->read(x,y))/255.0;
-   else
-     return double(this->read(x,y))/65535.0;
+    // PNGwriter converts all read images to 16bit RGB
+   return double(this->read(x,y))/65535.0;
 }
 
 ///////////////////////////////////////////////////////
@@ -885,9 +794,9 @@ void pngwriter::clear()
 
    if(bit_depth_==16)
      {
-	for(pen = 0; pen<width_;pen++)
+	for(pencil = 0; pencil<height_;pencil++)
 	  {
-	     for(pencil = 0; pencil<height_;pencil++)
+           for(pen = 0; pen<width_;pen++)
 	       {
 		  tempindex=6*pen;
 		  graph_[pencil][tempindex] = 0;
@@ -902,9 +811,9 @@ void pngwriter::clear()
 
    if(bit_depth_==8)
      {
-	for(pen = 0; pen<width_;pen++)
+	for(pencil = 0; pencil<height_;pencil++)
 	  {
-	     for(pencil = 0; pencil<height_;pencil++)
+           for(pen = 0; pen<width_;pen++)
 	       {
 		  tempindex=3*pen;
 		  graph_[pencil][tempindex] = 0;
@@ -914,33 +823,21 @@ void pngwriter::clear()
 	  }
      }
 
-};
+}
 
 /////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(char * newname)
 {
-   delete [] filename_;
-   delete [] texttitle_;
-
-   filename_ = new char[strlen(newname)+1];
-   texttitle_ = new char[strlen(newname)+1];
-
-   strcpy(filename_,newname);
-   strcpy(texttitle_,newname);
-};
+   filename_ = newname;
+   texttitle_ = newname;
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(const char * newname)
 {
-   delete [] filename_;
-   delete [] texttitle_;
-
-   filename_ = new char[strlen(newname)+1];
-   texttitle_ = new char[strlen(newname)+1];
-
-   strcpy(filename_,newname);
-   strcpy(texttitle_,newname);
-};
+   filename_ = newname;
+   texttitle_ = newname;
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::pngwriter_rename(long unsigned int index)
@@ -961,54 +858,29 @@ void pngwriter::pngwriter_rename(long unsigned int index)
 	return;
      }
 
-   delete [] filename_;
-   delete [] texttitle_;
 
-   filename_ = new char[strlen(buffer)+1];
-   texttitle_ = new char[strlen(buffer)+1];
+   filename_ = buffer;
+   texttitle_ = buffer;
 
-   strcpy(filename_,buffer);
-   strcpy(texttitle_,buffer);
-
-};
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(char * title, char * author, char * description, char * software)
 {
-   delete [] textauthor_;
-   delete [] textdescription_;
-   delete [] texttitle_;
-   delete [] textsoftware_;
-
-   textauthor_ = new char[strlen(author)+1];
-   textdescription_ = new char[strlen(description)+1];
-   textsoftware_ = new char[strlen(software)+1];
-   texttitle_ = new char[strlen(title)+1];
-
-   strcpy(texttitle_, title);
-   strcpy(textauthor_, author);
-   strcpy(textdescription_, description);
-   strcpy(textsoftware_, software);
-};
+   texttitle_ = title;
+   textauthor_ = author;
+   textdescription_ = description;
+   textsoftware_ = software;
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::settext(const char * title, const char * author, const char * description, const char * software)
 {
-   delete [] textauthor_;
-   delete [] textdescription_;
-   delete [] texttitle_;
-   delete [] textsoftware_;
-
-   textauthor_ = new char[strlen(author)+1];
-   textdescription_ = new char[strlen(description)+1];
-   textsoftware_ = new char[strlen(software)+1];
-   texttitle_ = new char[strlen(title)+1];
-
-   strcpy(texttitle_, title);
-   strcpy(textauthor_, author);
-   strcpy(textdescription_, description);
-   strcpy(textsoftware_, software);
-};
+   texttitle_ = title;
+   textauthor_ = author;
+   textdescription_ = description;
+   textsoftware_ = software;
+}
 
 ///////////////////////////////////////////////////////
 void pngwriter::close()
@@ -1017,7 +889,7 @@ void pngwriter::close()
    png_structp     png_ptr;
    png_infop       info_ptr;
 
-   fp = fopen(filename_, "wb");
+   fp = fopen(filename_.c_str(), "wb");
    if( fp == NULL)
      {
 	std::cerr << " PNGwriter::close - ERROR **: Error creating file (fopen() returned NULL pointer)." << std::endl;
@@ -1055,22 +927,26 @@ void pngwriter::close()
    time(&gmt);
    png_convert_from_time_t(&mod_time, gmt);
    png_set_tIME(png_ptr, info_ptr, &mod_time);
-   /* key is a 1-79 character description of type char* */
-   char key_title[] = "Title";
-   text_ptr[0].key = key_title;
-   text_ptr[0].text = texttitle_;
+   /* key is a 1-79 character description of type char*
+    *
+    * attention: the pointer of `c_str()` could be invalid if a non const
+    * operation to `key_title` is called
+    */
+   std::string key_title("Title");
+   text_ptr[0].key = const_cast<char*>(key_title.c_str());
+   text_ptr[0].text = const_cast<char*>(texttitle_.c_str());
    text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_author[] = "Author";
-   text_ptr[1].key = key_author;
-   text_ptr[1].text = textauthor_;
+   std::string key_author("Author");
+   text_ptr[1].key = const_cast<char*>(key_author.c_str());
+   text_ptr[1].text = const_cast<char*>(textauthor_.c_str());
    text_ptr[1].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_descr[] = "Description";
-   text_ptr[2].key = key_descr;
-   text_ptr[2].text = textdescription_;
+   std::string key_descr("Description");
+   text_ptr[2].key = const_cast<char*>(key_descr.c_str());
+   text_ptr[2].text = const_cast<char *>(textdescription_.c_str());
    text_ptr[2].compression = PNG_TEXT_COMPRESSION_NONE;
-   char key_software[] = "Software";
-   text_ptr[3].key = key_software;
-   text_ptr[3].text = textsoftware_;
+   std::string key_software("Software");
+   text_ptr[3].key = const_cast<char*>(key_software.c_str());
+   text_ptr[3].text = const_cast<char*>(textsoftware_.c_str());
    text_ptr[3].compression = PNG_TEXT_COMPRESSION_NONE;
 #if defined(PNG_TIME_RFC1123_SUPPORTED)
    char key_create[] = "Creation Time";
@@ -1329,121 +1205,121 @@ void pngwriter::readfromfile(char * name)
    //stuff should now be in image[][].
 
  */ //End of code as it was before Sven's patch.
-   
+
    //Sven's patch starts here
    ////////////////////////////////////
- 
+
    /*
-     
-   if(!read_png_info(fp, &png_ptr, &info_ptr)) 
+
+   if(!read_png_info(fp, &png_ptr, &info_ptr))
      {
-	 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl; 
-	// fp has been closed already if read_png_info() fails. 
-	return; 
-     } 
-   
-   // UPDATE: Query info struct to get header info BEFORE reading the image  
-   
-   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL); 
-   bit_depth_ = bit_depth; 
-   colortype_ = color_type; 
-   
-   if(color_type == PNG_COLOR_TYPE_PALETTE) 
-     { 
-	png_set_expand(png_ptr); 
-	png_read_update_info(png_ptr, info_ptr); 
-     } 
-   
+
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl;
+	// fp has been closed already if read_png_info() fails.
+	return;
+     }
+
+   // UPDATE: Query info struct to get header info BEFORE reading the image
+
+   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+   bit_depth_ = bit_depth;
+   colortype_ = color_type;
+
+   if(color_type == PNG_COLOR_TYPE_PALETTE)
+     {
+	png_set_expand(png_ptr);
+	png_read_update_info(png_ptr, info_ptr);
+     }
+
    if(!read_png_image(fp, png_ptr, info_ptr, &image, width, height))
-     { 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl; 
-	// fp has been closed already if read_png_image() fails. 
-	return; 
-     } 
-   
-   //stuff should now be in image[][]. 
+     {
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl;
+	// fp has been closed already if read_png_image() fails.
+	return;
+     }
+
+   //stuff should now be in image[][].
    */
    //Sven's patch ends here.
    ////////////////////////////////
-   
+
    // Mikkel's patch starts here
    // ///////////////////////////////////
-   
-   if(!read_png_info(fp, &png_ptr, &info_ptr)) 
+
+   if(!read_png_info(fp, &png_ptr, &info_ptr))
      {
-	 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl; 
-	// fp has been closed already if read_png_info() fails. 
-	  return; 
-     } 
-   
-   //Input transformations  
-   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL); 
-   bit_depth_ = bit_depth; 
-   colortype_ = color_type; 
-   
-    
+
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_info() failed." << std::endl;
+	// fp has been closed already if read_png_info() fails.
+	  return;
+     }
+
+   //Input transformations
+   png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+   bit_depth_ = bit_depth;
+   colortype_ = color_type;
+
+
    // Changes palletted image to RGB
-   if(color_type == PNG_COLOR_TYPE_PALETTE /*&& bit_depth<8*/) 
-     { 
-	// png_set_expand(png_ptr);  
+   if(color_type == PNG_COLOR_TYPE_PALETTE /*&& bit_depth<8*/)
+     {
+	// png_set_expand(png_ptr);
 	png_set_palette_to_rgb(png_ptr);  // Just an alias of png_set_expand()
-	transformation_ = 1; 
-     } 
-   
+	transformation_ = 1;
+     }
+
    // Transforms grescale images of less than 8 bits to 8 bits.
-   if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth<8) 
-     { 
-	// png_set_expand(png_ptr); 
+   if(color_type == PNG_COLOR_TYPE_GRAY && bit_depth<8)
+     {
+	// png_set_expand(png_ptr);
 	png_set_expand_gray_1_2_4_to_8(png_ptr);  // Just an alias of the above.
-	transformation_ = 1; 
-     } 
-   
+	transformation_ = 1;
+     }
+
    // Completely strips the alpha channel.
-   if(color_type & PNG_COLOR_MASK_ALPHA) 
-     { 
-	png_set_strip_alpha(png_ptr); 
-	transformation_ = 1; 
-     } 
-   
+   if(color_type & PNG_COLOR_MASK_ALPHA)
+     {
+	png_set_strip_alpha(png_ptr);
+	transformation_ = 1;
+     }
+
    // Converts greyscale images to RGB.
-   if(color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) // Used to be RGB, fixed it. 
-     { 
-	png_set_gray_to_rgb(png_ptr); 
-	transformation_ = 1; 
-     } 
-	 
+   if(color_type == PNG_COLOR_TYPE_GRAY || color_type == PNG_COLOR_TYPE_GRAY_ALPHA) // Used to be RGB, fixed it.
+     {
+	png_set_gray_to_rgb(png_ptr);
+	transformation_ = 1;
+     }
+
 	 // If any of the above were applied,
-   if(transformation_) 
-     { 
+   if(transformation_)
+     {
 	 // png_set_gray_to_rgb(png_ptr);   //Is this really needed here?
-	 
-	 // After setting the transformations, libpng can update your png_info structure to reflect any transformations 
-	 // you've requested with this call. This is most useful to update the info structure's rowbytes field so you can 
-	 // use it to allocate your image memory. This function will also update your palette with the correct screen_gamma 
+
+	 // After setting the transformations, libpng can update your png_info structure to reflect any transformations
+	 // you've requested with this call. This is most useful to update the info structure's rowbytes field so you can
+	 // use it to allocate your image memory. This function will also update your palette with the correct screen_gamma
 	 // and background if these have been given with the calls above.
-	 
-	png_read_update_info(png_ptr, info_ptr); 
-	
+
+	png_read_update_info(png_ptr, info_ptr);
+
 	// Just in case any of these have changed?
-	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL); 
-	bit_depth_ = bit_depth; 
-	colortype_ = color_type; 
-     } 
-   
+	png_get_IHDR(png_ptr, info_ptr, &width, &height, &bit_depth, &color_type, &interlace_type, NULL, NULL);
+	bit_depth_ = bit_depth;
+	colortype_ = color_type;
+     }
+
    if(!read_png_image(fp, png_ptr, info_ptr, &image, width, height))
-     { 
-	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl; 
-	// fp has been closed already if read_png_image() fails. 
-	return; 
-     } 
-   
+     {
+	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". read_png_image() failed." << std::endl;
+	// fp has been closed already if read_png_image() fails.
+	return;
+     }
+
    //stuff should now be in image[][].
-   
+
    // Mikkel's patch ends here
    // //////////////////////////////
-   // 
+   //
    if( image == NULL)
      {
 	std::cerr << " PNGwriter::readfromfile - ERROR **: Error opening file " << name << ". Can't assign memory (after read_png_image(), image is NULL)." << std::endl;
@@ -1498,7 +1374,7 @@ void pngwriter::readfromfile(char * name)
 
 // Thanks to Mikkel's patch, PNGwriter should now be able to handle these color types:
 
-/* 
+/*
 color_type     - describes which color/alpha channels are present.
                      PNG_COLOR_TYPE_GRAY                        (bit depths 1, 2, 4, 8, 16)
                      PNG_COLOR_TYPE_GRAY_ALPHA                        (bit depths 8, 16)
@@ -1508,28 +1384,28 @@ color_type     - describes which color/alpha channels are present.
 
                      PNG_COLOR_MASK_PALETTE
                      PNG_COLOR_MASK_COLOR
-					 
-color types.  Note that not all combinations are legal 
+
+color types.  Note that not all combinations are legal
 #define PNG_COLOR_TYPE_GRAY 0
 #define PNG_COLOR_TYPE_PALETTE  (PNG_COLOR_MASK_COLOR (2) | PNG_COLOR_MASK_PALETTE (1) )
 #define PNG_COLOR_TYPE_RGB        (PNG_COLOR_MASK_COLOR (2) )
 #define PNG_COLOR_TYPE_RGB_ALPHA  (PNG_COLOR_MASK_COLOR (2) | PNG_COLOR_MASK_ALPHA (4) )
 #define PNG_COLOR_TYPE_GRAY_ALPHA (PNG_COLOR_MASK_ALPHA (4) )
 
-aliases 
+aliases
 #define PNG_COLOR_TYPE_RGBA  PNG_COLOR_TYPE_RGB_ALPHA
 #define PNG_COLOR_TYPE_GA  PNG_COLOR_TYPE_GRAY_ALPHA
 
- These describe the color_type field in png_info. 
- color type masks 
+ These describe the color_type field in png_info.
+ color type masks
 #define PNG_COLOR_MASK_PALETTE    1
 #define PNG_COLOR_MASK_COLOR      2
 #define PNG_COLOR_MASK_ALPHA      4
 
 
 					 */
-					 
-					 
+
+
    if(colortype_ !=2)
      {
 	std::cerr << " PNGwriter::readfromfile() - WARNING **: Input file is of unsupported type (bad color_type). Output will be unpredictable.\n";
@@ -1576,16 +1452,16 @@ int pngwriter::check_if_png(char *file_name, FILE **fp)
 	fclose(*fp);
 	return 0;
      }
-   
-   if (png_sig_cmp( (png_bytep) sig, (png_size_t)0, PNG_BYTES_TO_CHECK) /*png_check_sig((png_bytep) sig, PNG_BYTES_TO_CHECK)*/ ) 
+
+   if (png_sig_cmp( (png_bytep) sig, (png_size_t)0, PNG_BYTES_TO_CHECK) /*png_check_sig((png_bytep) sig, PNG_BYTES_TO_CHECK)*/ )
      {
 	std::cerr << " PNGwriter::check_if_png - ERROR **: File " << file_name << " does not appear to be a valid PNG file. png_check_sig() failed." << std::endl;
 	fclose(*fp);
 	return 0;
      }
-   
-   
-   
+
+
+
    return 1; //Success
 }
 
@@ -1677,28 +1553,28 @@ int pngwriter::read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
 }
 
 ///////////////////////////////////
-int pngwriter::getheight(void)
+int pngwriter::getheight(void) const
 {
    return height_;
 }
 
-int pngwriter::getwidth(void)
+int pngwriter::getwidth(void) const
 {
    return width_;
 }
 
 
-int pngwriter::getbitdepth(void)
+int pngwriter::getbitdepth(void) const
 {
    return bit_depth_;
 }
 
-int pngwriter::getcolortype(void)
+int pngwriter::getcolortype(void) const
 {
    return colortype_;
 }
 
-double pngwriter::getgamma(void)
+double pngwriter::getgamma(void) const
 {
    return filegamma_;
 }
@@ -1856,7 +1732,7 @@ void pngwriter::plotHSV(int x, int y, int hue, int saturation, int value)
 
 //
 //////////////////////////////////////////////////////////////////////////////////
-double pngwriter::dreadHSV(int x, int y, int colour)
+double pngwriter::dreadHSV(int x, int y, int colour) const
 {
    if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
      {
@@ -1899,7 +1775,7 @@ double pngwriter::dreadHSV(int x, int y, int colour)
 
 //
 //////////////////////////////////////////////////////////////////////////////////
-int pngwriter::readHSV(int x, int y, int colour)
+int pngwriter::readHSV(int x, int y, int colour) const
 {
    if( (x>0)&&(x<=width_)&&(y>0)&&(y<=height_) )
      {
@@ -1960,7 +1836,6 @@ void pngwriter::bezier(  int startPtX, int startPtY,
 			 int endControlX, int endControlY,
 			 double red, double green, double blue)
 {
-
    double cx = 3.0*(startControlX - startPtX);
    double bx = 3.0*(endControlX - startControlX) - cx;
    double ax = double(endPtX - startPtX - cx - bx);
@@ -1969,17 +1844,16 @@ void pngwriter::bezier(  int startPtX, int startPtY,
    double by = 3.0*(endControlY - startControlY) - cy;
    double ay = double(endPtY - startPtY - cy - by);
 
-   double x,y,newx,newy;
-   x = startPtX;
-   y = startPtY;
+   double x = startPtX;
+   double y = startPtY;
 
    for(double t = 0.0; t<=1.005; t += 0.005)
      {
-	newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-	newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-	this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
-	x = newx;
-	y = newy;
+       double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+       double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+       this->line(int(x),int(y),int(newx),int(newy),red,green,blue);
+       x = newx;
+       y = newy;
      }
 }
 
@@ -2094,7 +1968,9 @@ void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_st
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Set char size error." << std::endl; return;};
+	if (error) {
+      std::cerr << " PNGwriter::plot_text - ERROR **: FreeType: Set char size error." << std::endl; return;
+    }
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, text[n] );
@@ -2171,7 +2047,7 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -2179,7 +2055,7 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
@@ -2364,7 +2240,7 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
    double temp;
    for(unsigned int j = 1u; j < bitmap->rows + 1u; j++)
      {
-	for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
+       for(unsigned int i = 1u; i < bitmap->width + 1u; i++)
 	  {
 	     temp = (double)(bitmap->buffer[(j-1u)*bitmap->width + (i-1u)] )/255.0;
 
@@ -2389,7 +2265,7 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
 
 int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 {
-   
+
    FT_Library  library;
    FT_Face     face;
    FT_Matrix   matrix;      // transformation matrix
@@ -2461,7 +2337,7 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::get_text_width - ERROR **: FreeType: Set char size error." << std::endl; return 0;};
+	if (error) { std::cerr << " PNGwriter::get_text_width - ERROR **: FreeType: Set char size error." << std::endl; return 0; }
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, text[n] );
@@ -2496,11 +2372,11 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 	previous = glyph_index;
      }
 
-   
+
    /* Free the face and the library objects */
    FT_Done_Face    ( face );
    FT_Done_FreeType( library );
-   
+
    return (int)( ((double)pen.x)/64.0 );
 }
 
@@ -2543,7 +2419,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -2551,7 +2427,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
@@ -2719,7 +2595,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
    FT_Done_FreeType( library );
 
    delete[] ucs4text;
- 
+
    return (int) (((double) pen.x)/64.0);
 }
 
@@ -2727,40 +2603,40 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 #endif
 #ifdef NO_FREETYPE
 
-void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue)
+void pngwriter::plot_text( char *, int, int, int, double, char *, int, int, int )
 {
    std::cerr << " PNGwriter::plot_text - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue)
+void pngwriter::plot_text( char *, int, int, int, double, char *, double, double, double )
 {
    std::cerr << " PNGwriter::plot_text - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 
 }
 
-void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue)
+void pngwriter::plot_text_utf8( char *, int, int, int, double, char *, int, int, int )
 {
    std::cerr << " PNGwriter::plot_text_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue)
+void pngwriter::plot_text_utf8( char *, int, int, int, double, char *, double, double, double)
 {
    std::cerr << " PNGwriter::plot_text_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
 //////////// Get text width
-int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
+int pngwriter::get_text_width(char *, int, char *)
 {
    std::cerr << " PNGwriter::get_text_width - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
 }
 
 
-int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
+int pngwriter::get_text_width_utf8(char *, int,  char *)
 {
    std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
@@ -2770,7 +2646,7 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 #endif
 
 /////////////////////////////////////
-int pngwriter::bilinear_interpolation_read(double x, double y, int colour)
+int pngwriter::bilinear_interpolation_read(double x, double y, int colour) const
 {
 
    int inty, intx;
@@ -2871,12 +2747,12 @@ int pngwriter::bilinear_interpolation_read(double x, double y, int colour)
     );
     * */
 
-};
+}
 
-double pngwriter::bilinear_interpolation_dread(double x, double y, int colour)
+double pngwriter::bilinear_interpolation_dread(double x, double y, int colour) const
 {
    return double(this->bilinear_interpolation_read(x,y,colour))/65535.0;
-};
+}
 
 void pngwriter::plot_blend(int x, int y, double opacity, int red, int green, int blue)
 {
@@ -2885,12 +2761,12 @@ void pngwriter::plot_blend(int x, int y, double opacity, int red, int green, int
 	      (int)( opacity*green +  this->read(x,y,2)*(1.0-opacity)),
 	      (int)( opacity*blue  +  this->read(x,y,3)*(1.0-opacity))
 	      );
-};
+}
 
 void pngwriter::plot_blend(int x, int y, double opacity, double red, double green, double blue)
 {
    this->plot_blend(x, y, opacity, (int)  (65535*red), (int)  (65535*green),  (int)  (65535*blue));
-};
+}
 
 void pngwriter::invert(void)
 {
@@ -2899,7 +2775,7 @@ void pngwriter::invert(void)
 
    for(int jjj = 1; jjj <= (this->height_); jjj++)
      {
-	for(int iii = 1; iii <= (this->width_); iii++)
+       for(int iii = 1; iii <= (this->width_); iii++)
 	  {
 	     /*	     temp11 = (this->read(iii,jjj,1));
 	      temp22 = (this->read(iii,jjj,2));
@@ -2957,9 +2833,9 @@ void pngwriter::resize(int width, int height)
      }
 
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     //graph_[vhhh][6*hhh + i] where i goes from 0 to 5
 	     tempindex = 6*hhh;
@@ -3163,7 +3039,7 @@ void pngwriter::plotCMYK(int x, int y, int cyan, int magenta, int yellow, int bl
 		   );
 }
 
-double pngwriter::dreadCMYK(int x, int y, int colour)
+double pngwriter::dreadCMYK(int x, int y, int colour) const
 {
 /*
  * Black   = minimum(1-Red,1-Green,1-Blue)
@@ -3211,7 +3087,7 @@ double pngwriter::dreadCMYK(int x, int y, int colour)
      }
 }
 
-int pngwriter::readCMYK(int x, int y, int colour)
+int pngwriter::readCMYK(int x, int y, int colour) const
 {
 /*
  * Black   = minimum(1-Red,1-Green,1-Blue)
@@ -3281,9 +3157,9 @@ void pngwriter::scale_k(double k)
 
    double readx, ready;
 
-   for(int x = 1; x<= scaledw; x++)
+   for(int y = 1; y <= scaledh; y++)
      {
-	for(int y = 1; y <= scaledh; y++)
+       for(int x = 1; x<= scaledw; x++)
 	  {
 	     readx = (2*x-1)*spacingx;
 	     ready = (2*y-1)*spacingy;
@@ -3335,9 +3211,9 @@ void pngwriter::scale_k(double k)
 
    //Copy the temp date into this's storage.
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
@@ -3373,9 +3249,9 @@ void pngwriter::scale_kxky(double kx, double ky)
 
    double readx, ready;
 
-   for(int x = 1; x<= scaledw; x++)
+   for(int y = 1; y <= scaledh; y++)
      {
-	for(int y = 1; y <= scaledh; y++)
+       for(int x = 1; x<= scaledw; x++)
 	  {
 	     readx = (2*x-1)*spacingx;
 	     ready = (2*y-1)*spacingy;
@@ -3426,9 +3302,9 @@ void pngwriter::scale_kxky(double kx, double ky)
 
    //Copy the temp date into this's storage.
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
@@ -3461,9 +3337,9 @@ void pngwriter::scale_wh(int finalwidth, int finalheight)
 
    double readx, ready;
 
-   for(int x = 1; x<= finalwidth; x++)
+   for(int y = 1; y <= finalheight; y++)
      {
-	for(int y = 1; y <= finalheight; y++)
+       for(int x = 1; x<= finalwidth; x++)
 	  {
 	     readx = (2*x-1)*spacingx;
 	     ready = (2*y-1)*spacingy;
@@ -3515,9 +3391,9 @@ void pngwriter::scale_wh(int finalwidth, int finalheight)
 
    //Copy the temp date into this's storage.
    int tempindex;
-   for(int hhh = 0; hhh<width_;hhh++)
+   for(int vhhh = 0; vhhh<height_;vhhh++)
      {
-	for(int vhhh = 0; vhhh<height_;vhhh++)
+       for(int hhh = 0; hhh<width_;hhh++)
 	  {
 	     tempindex=6*hhh;
 	     graph_[vhhh][tempindex] = temp.graph_[vhhh][tempindex];
@@ -3746,7 +3622,6 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
 			       double opacity,
 			       double red, double green, double blue)
 {
-
    double cx = 3.0*(startControlX - startPtX);
    double bx = 3.0*(endControlX - startControlX) - cx;
    double ax = double(endPtX - startPtX - cx - bx);
@@ -3755,17 +3630,17 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
    double by = 3.0*(endControlY - startControlY) - cy;
    double ay = double(endPtY - startPtY - cy - by);
 
-   double x,y,newx,newy;
+   double x,y;
    x = startPtX;
    y = startPtY;
 
    for(double t = 0.0; t<=1.005; t += 0.005)
      {
-	newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
-	newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
-	this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
-	x = newx;
-	y = newy;
+       double const newx = startPtX + t*(double(cx) + t*(double(bx) + t*(double(ax))));
+       double const newy = startPtY + t*(double(cy) + t*(double(by) + t*(double(ay))));
+       this->line_blend(int(x),int(y),int(newx),int(newy),opacity, red,green,blue);
+       x = newx;
+       y = newy;
      }
 }
 
@@ -3863,7 +3738,7 @@ void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, in
 
 /*set char size*/
 
-	if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Set char size error." << std::endl; return;};
+	if (error) { std::cerr << " PNGwriter::plot_text_blend - ERROR **: FreeType: Set char size error." << std::endl; return;}
 
 	/* Retrieve glyph index from character code */
 	glyph_index = FT_Get_Char_Index( face, text[n] );
@@ -3941,7 +3816,7 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    long * ucs4text;
    ucs4text = new long[num_bytes+1];
 
-   unsigned char u,v,w,x,y,z;
+   unsigned char u,v,w,x,y;
 
    int num_chars=0;
 
@@ -3949,7 +3824,7 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
 
    while(iii<num_bytes)
      {
-	z = text[iii];
+	unsigned char const z = text[iii];
 
 	if(z<=127)
 	  {
@@ -4156,26 +4031,26 @@ void pngwriter::my_draw_bitmap_blend( FT_Bitmap * bitmap, int x, int y, double o
 #endif
 #ifdef NO_FREETYPE
 
-void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, int red, int green, int blue)
+void pngwriter::plot_text_blend( char *, int, int, int, double, char *, double, int, int, int )
 {
    std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity,  double red, double green, double blue)
+void pngwriter::plot_text_blend( char *, int, int, int, double, char *, double,  double, double, double )
 {
    std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 
 }
 
-void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity,  int red, int green, int blue)
+void pngwriter::plot_text_utf8_blend( char *, int, int, int, double, char *, double,  int, int, int )
 {
    std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue)
+void pngwriter::plot_text_utf8_blend( char *, int, int, int, double, char *, double, double, double, double )
 {
    std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
@@ -4387,9 +4262,9 @@ void pngwriter::laplacian(double k, double offset)
 
    double red, green, blue;
 
-   for(int x = 1; x <= width_; x++)
+   for(int y = 1; y <= height_; y++)
      {
-	for(int y = 1; y <= height_; y++)
+       for(int x = 1; x <= width_; x++)
 	  {
 	     red =
 	       8.0*this->dread(x,y,1) -
@@ -4429,9 +4304,9 @@ void pngwriter::laplacian(double k, double offset)
 	  }
      }
 
-   for(int xx = 1; xx <= width_; xx++)
+   for(int yy = 1; yy <= height_; yy++)
      {
-	for(int yy = 1; yy <= height_; yy++)
+       for(int xx = 1; xx <= width_; xx++)
 	  {
 	     this->plot(xx,yy,  temp.read(xx,yy,1), temp.read(xx,yy,2), temp.read(xx,yy,3));
 	  }
@@ -4565,13 +4440,13 @@ void pngwriter::filledtriangle(int x1,int y1,int x2,int y2,int x3,int y3, int re
 //Double (bug found by Dave Wilks. Was: (int) red*65535, should have been (int) (red*65535).
 void pngwriter::filledtriangle(int x1,int y1,int x2,int y2,int x3,int y3, double red, double green, double blue)
 {
-   this->filledtriangle(x1, y1, x2, y2, x3, y3, (int) (red*65535), (int) (green*65535),  (int) (blue*65535)); 
+   this->filledtriangle(x1, y1, x2, y2, x3, y3, (int) (red*65535), (int) (green*65535),  (int) (blue*65535));
 }
 
 //Blend, double. (bug found by Dave Wilks. Was: (int) red*65535, should have been (int) (red*65535).
 void pngwriter::filledtriangle_blend(int x1,int y1,int x2,int y2,int x3,int y3, double opacity, double red, double green, double blue)
 {
-   this->filledtriangle_blend( x1, y1, x2, y2, x3, y3,  opacity,  (int) (red*65535), (int) (green*65535),  (int) (blue*65535)); 
+   this->filledtriangle_blend( x1, y1, x2, y2, x3, y3,  opacity,  (int) (red*65535), (int) (green*65535),  (int) (blue*65535));
 }
 
 //Blend, int
@@ -4597,7 +4472,7 @@ void pngwriter::filledtriangle_blend(int x1,int y1,int x2,int y2,int x3,int y3, 
 	y2^=y3^=y2^=y3;
      }
 	 */
-	 
+
 	 if(y2<y1)
      {
 	// x2^=x1^=x2^=x1;
@@ -4731,7 +4606,7 @@ void pngwriter::arrow( int x1,int y1,int x2,int y2,int size, double head_angle, 
    double th = 3.141592653589793 + head_angle;
    double costh = cos(th);
    double sinth = sin(th);
-   double t1, t2, r;   
+   double t1, t2, r;
    t1 = ((x2-x1)*costh - (y2-y1)*sinth);
    t2 = ((x2-x1)*sinth + (y2-y1)*costh);
    r = sqrt(t1*t1 + t2*t2);
@@ -4741,16 +4616,16 @@ void pngwriter::arrow( int x1,int y1,int x2,int y2,int size, double head_angle, 
    this->line(x2, y2, int(x2 + advancex), int(y2 + advancey), red, green, blue);
    t1 = (x2-x1)*costh + (y2-y1)*sinth;
    t2 =   (y2-y1)*costh - (x2-x1)*sinth;
- 
+
    advancex  = size*t1/r;
    advancey  = size*t2/r;
    this->line(x2, y2, int(x2 + advancex), int(y2 + advancey), red, green, blue);
 }
-   
+
 void pngwriter::filledarrow( int x1,int y1,int x2,int y2,int size, double head_angle, double red, double green, double blue)
 {
    int p1x, p2x, p3x, p1y, p2y, p3y;
-   
+
    this->line(x1, y1, x2, y2, red, green, blue);
    double th = 3.141592653589793 + head_angle;
    double costh = cos(th);
@@ -4763,7 +4638,7 @@ void pngwriter::filledarrow( int x1,int y1,int x2,int y2,int size, double head_a
 
    r1 = sqrt(t11*t11 + t21*t21);
    r2 = sqrt(t12*t12 + t22*t22);
-   
+
    double advancex1  = size*t11/r1;
    double advancey1  = size*t21/r1;
    double advancex2  = size*t12/r2;
@@ -4771,16 +4646,16 @@ void pngwriter::filledarrow( int x1,int y1,int x2,int y2,int size, double head_a
 
    p1x = x2;
    p1y = y2;
-   
+
    p2x = int(x2 + advancex1);
    p2y = int(y2 + advancey1);
 
    p3x = int(x2 + advancex2);
    p3y = int(y2 + advancey2);
 
-   
+
    this->filledtriangle( p1x,  p1y,  p2x,  p2y,  p3x,  p3y, red, green,  blue);
-   
+
 }
 
 void pngwriter::arrow( int x1,int y1,int x2,int y2,int size, double head_angle, int red, int green, int blue)
@@ -4814,12 +4689,12 @@ void pngwriter::maltesecross( int x, int y, int xwidth, int yheight, int x_bar_h
 
 void pngwriter::cross( int x, int y, int xwidth, int yheight, double red, double green, double blue)
 {
-   this->cross( x, y, xwidth, yheight, int(65535*red), int(65535*green), int(65535*blue)); 
+   this->cross( x, y, xwidth, yheight, int(65535*red), int(65535*green), int(65535*blue));
 }
 
 void pngwriter::maltesecross( int x, int y, int xwidth, int yheight, int x_bar_height, int y_bar_width, double red, double green, double blue)
 {
-   this->maltesecross( x, y, xwidth, yheight, x_bar_height, y_bar_width, int(65535*red), int(65535*green), int(65535*blue)); 
+   this->maltesecross( x, y, xwidth, yheight, x_bar_height, y_bar_width, int(65535*red), int(65535*green), int(65535*blue));
 }
 
 
@@ -4842,10 +4717,10 @@ void pngwriter::diamond( int x, int y, int width, int height, int red, int green
 
 void pngwriter::filleddiamond( int x, int y, int width, int height, double red, double green, double blue)
 {
-   this->filleddiamond(  x, y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) ); 
+   this->filleddiamond(  x, y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) );
 }
 
 void pngwriter::diamond( int x, int y, int width, int height, double red, double green, double blue)
 {
-   this->diamond(  x,  y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) ); 
+   this->diamond(  x,  y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) );
 }
