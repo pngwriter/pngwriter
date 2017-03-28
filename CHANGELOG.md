@@ -1,6 +1,42 @@
 Change Log for PNGwriter
 ========================
 
+0.6.0
+-----
+**Date:** 2017-03-28
+
+This release fixes 8bit RBG reads, adds performance improvements on large
+images, removes warnings and cleans up larger sections of the code. Some
+interfaces changed parameter attributes to reflect constants and static calls.
+
+All closed issues can be found at
+  [Milestone 0.6.0](https://github.com/pngwriter/pngwriter/milestone/2?closed=1)
+
+### Changes to 0.5.6
+
+**Bug Fixes:**
+  - 8bit read: correct range #89 #90
+  - unused parameters (no-freetype) #80 #81
+
+**Misc:**
+  - API changes:
+    - added const and static where possible #86
+  - performance improved:
+    - CMake: add option to build performance test #109
+    - extent the performance test #102
+    - change nested loop order #98
+  - refactoring:
+    - remove unnecessary `std::string` casts from commit c1e1e7d #107
+    - remove internet C strings and copies #99
+    - EOL White Spaces in code base #88
+    - round to nearest integer on float input #84
+  - update `.gitignore` #101
+  - add reference PNGs #96
+
+Thanks to René (@psychocoderHPC), Paul (@pkohut), Maximilian (@mxmlnkn) and
+Axel (@ax3l) for contributions to this release!
+
+
 0.5.6
 -----
 **Date:** 2015-12-16
