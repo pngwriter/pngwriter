@@ -1,4 +1,4 @@
-/** Copyright 2014 Felix Schmitt, Axel Huebl
+/** Copyright 2014-2016 Felix Schmitt, Axel Huebl
   *
   * Example and bug report from Felix Schmitt
   *
@@ -39,31 +39,36 @@ int main(int argc, char **argv)
             int pos_y = height - y - 1;
 
             double color = image.dread(pos_x, pos_y,3);
-            //std::cout << "dread val = " << color << std::endl;
+            std::cout << "dread val = " << color << std::endl;
             if (color == 0.0)
                 black = true;
 
             if (color == 1.0)
                 white = true;
 
-            int col = image.read(pos_x, pos_y,3);
-            //std::cout << "read val = " << col << std::endl;
+            int col = image.read(pos_x, pos_y);//,3);
+            std::cout << "read val = " << col << std::endl;
             if (col == 0)
                 black_int = true;
 
-            if (col == 65535 && bit_depth == 16)
-                white_int = true;
-            if (col == 255 && bit_depth == 8)
+            // bit_depth 8 and 16 get all read as 16bit
+            if (col == 65535)
                 white_int = true;
         }
 
     image.close();
 
     if (!(black && white))
+    {
         std::cout << "failed double" << std::endl;
+        return 1;
+    }
 
     if (!(black_int && white_int))
+    {
         std::cout << "failed int" << std::endl;
+        return 1;
+    }
 
     return 0;
 }
