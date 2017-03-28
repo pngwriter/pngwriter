@@ -11,16 +11,16 @@
 *
 *    Email:                     individual61@users.sourceforge.net
 *
-*    Version:                   0.5.6 (December 2015)
+*    Version:                   0.6.0 (March 2017)
 *
 *    Description:               Library that allows plotting a 48 bit
 *                               PNG image pixel by pixel, which can
 *                               then be opened with a graphics program.
 *
 *    License:                   GNU General Public License
-*                               (C) 2002-2015 Paul Blackburn
-*                               (C) 2013-2015 Axel Huebl
-*                               (C) 2016      Rene Widera
+*                               (C) 2002-2017 Paul Blackburn
+*                               (C) 2013-2017 Axel Huebl
+*                               (C) 2016-2017 Rene Widera
 *
 ******************************************************************************/
 
