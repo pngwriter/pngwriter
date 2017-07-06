@@ -108,7 +108,7 @@ class pngwriter
    double screengamma_;
    void circle_aux(int xcentre, int ycentre, int x, int y, int red, int green, int blue);
    void circle_aux_blend(int xcentre, int ycentre, int x, int y, double opacity, int red, int green, int blue);
-   int static check_if_png(char *file_name, FILE **fp);
+   int static check_if_png(const char *file_name, FILE **fp);
    int static read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr);
    int static read_png_image(FILE *fp, png_structp png_ptr, png_infop info_ptr,
  		       png_bytepp *image, png_uint_32& width, png_uint_32& height);
@@ -454,8 +454,8 @@ class pngwriter
     * Tip: PNGwriter installs a few fonts in /usr/local/share/pngwriter/fonts to get you started.
     * Tip: Remember to add -DNO_FREETYPE to your compilation flags if PNGwriter was compiled without FreeType support.
     * */
-   void plot_text(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue);
-   void plot_text(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue);
+   void plot_text(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue);
+   void plot_text(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue);
 
 
    /* Plot UTF-8 Text
@@ -465,8 +465,8 @@ class pngwriter
     * Tip: The quickest way to get a string into UTF-8 is to write it in an adequate text editor, and save it as a file
     * in UTF-8 encoding, which can then be read in in binary mode.
     * */
-   void plot_text_utf8(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue);
-   void plot_text_utf8(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue);
+   void plot_text_utf8(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue);
+   void plot_text_utf8(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue);
 
 
    /* Bilinear Interpolation of Image
@@ -616,11 +616,11 @@ class pngwriter
 		       double opacity,
 		       int red, int green, int blue);
 
-   void plot_text_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue);
-   void plot_text_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, int red, int green, int blue);
+   void plot_text_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue);
+   void plot_text_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, int red, int green, int blue);
 
-   void plot_text_utf8_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue);
-   void plot_text_utf8_blend(char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, int red, int green, int blue);
+   void plot_text_utf8_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue);
+   void plot_text_utf8_blend(const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, int red, int green, int blue);
 
    void boundary_fill_blend(int xstart, int ystart, double opacity, double boundary_red,double boundary_green,double boundary_blue,double fill_red, double fill_green, double fill_blue) ;
    void boundary_fill_blend(int xstart, int ystart, double opacity, int boundary_red,int boundary_green,int boundary_blue,int fill_red, int fill_green, int fill_blue) ;
@@ -739,9 +739,9 @@ class pngwriter
     *     4  (x_start - size*sin(angle), y_start + size*cos(angle))
     * */
 
-   int static get_text_width(char * face_path, int fontsize,  char * text);
+   int static get_text_width(const char * face_path, int fontsize, const char * text);
 
-   int static get_text_width_utf8(char * face_path, int fontsize, char * text);
+   int static get_text_width_utf8(const char * face_path, int fontsize, const char * text);
 
 
 };
