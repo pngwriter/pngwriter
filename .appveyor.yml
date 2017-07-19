@@ -1,0 +1,86 @@
+version: "{build}"
+
+branches:
+  except:
+    - coverity_scan
+
+shallow_clone: true
+skip_tags: false
+
+platform:
+# - Win32
+  - x64
+
+build:
+  verbosity: detailed
+
+configuration:
+  - Release
+#  - Debug
+
+environment:
+  global:
+#    CXX_FLAGS: "/WX /EHsc"
+    CMAKE_PREFIX_PATH: "C:\\Sys"
+    CMAKE_LIBRARY_PATH: "C:\\Sys\\lib"
+    CMAKE_INCLUDE_PATH: "C:\\Sys\\include"
+    ZLIB_DOWNLOAD: "https://github.com/madler/zlib/archive/v"
+    LIBPNG_DOWNLOAD: "http://download.sourceforge.net/libpng/libpng-"
+    LIBFREETYPE_DOWNLOAD: "http://download.savannah.gnu.org/releases/freetype/freetype-"
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: "Visual Studio 15 2017 Win64"
+      ZLIB_VERSION: 1.2.8
+      LIBPNG_VERSION: 1.6.21
+      FREETYPE: OFF
+      PERFTEST: OFF
+
+init:
+  - cmake --version
+  - git --version
+  - msbuild /version
+  # line endings on Windows
+  - git config --global core.autocrlf true
+
+install:
+  # zlib
+  - appveyor DownloadFile https://github.com/madler/zlib/archive/v%ZLIB_VERSION%.tar.gz
+  - 7z x v%ZLIB_VERSION%.tar.gz -so | 7z x -si -ttar
+  - cd zlib-%ZLIB_VERSION%
+  - cmake -G"%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=C:\\Sys .
+  - cmake --build . --config %CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION% --target install
+  - cd ..
+  # libpng
+  - appveyor DownloadFile %LIBPNG_DOWNLOAD%%LIBPNG_VERSION%.tar.xz
+  - 7z x libpng-%LIBPNG_VERSION%.tar.xz -so | 7z x -si -ttar
+  - cd libpng-%LIBPNG_VERSION%
+  - cmake -G"%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=C:\\Sys .
+  - cmake --build . --config %CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION% --target install
+  # go back to actual project
+  - cd ..
+
+build_script:
+  - mkdir build
+  - cd build
+  - cmake -G"%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_PERFORMANCE=$PERFTEST -DCMAKE_INSTALL_PREFIX=C:\\pngwriter ..
+  - cmake --build . --config %CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION% --target install
+# tests
+  - tree C:\\projects\pngwriter\build
+  - cd %CONFIGURATION%
+  - dir /R
+  #- pngtest.exe
+  #- readwrite.exe
+  # read channel range test (black-white, RGB)
+  #- blackwhite.exe bw_16bit_rgb_20x20.png
+  #- blackwhite.exe bw_16bit_rgba_20x20.png
+  #- blackwhite.exe bw_8bit_rgba_20x20.png
+  #- blackwhite.exe bw_8bit_rgb_20x20.png
+  # read channel range test (black-white, grayscale)
+  # to do
+  # performance test
+  #- if [ "$PERFTEST" == "ON" ]; then 
+  #    performance.exe;
+  #  fi

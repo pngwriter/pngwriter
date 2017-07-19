@@ -47,6 +47,14 @@ INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIRS})
 FIND_PACKAGE(ZLIB REQUIRED)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIRS})
 
+# external library: math from stdlib (mandatory)
+if(WIN32)
+    # automatically added on windows
+    set(MATH_LIBRARIES)
+else()
+    set(MATH_LIBRARIES m)
+endif()
+
 # external library: FreeType (optional)
 INCLUDE(FindFreetype)
 IF(FREETYPE_FOUND)
@@ -69,12 +77,12 @@ INCLUDE_DIRECTORIES(${LIBRARY_INCLUDES})
 
 # build shared library
 ADD_LIBRARY(pngwriter SHARED ${LIBRARY_SOURCES})
-TARGET_LINK_LIBRARIES(pngwriter m ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
+TARGET_LINK_LIBRARIES(pngwriter ${MATH_LIBRARIES} ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
 
 # build static library
 ADD_LIBRARY(pngwriter_static STATIC ${LIBRARY_SOURCES})
 SET_TARGET_PROPERTIES(pngwriter_static PROPERTIES OUTPUT_NAME pngwriter)
-TARGET_LINK_LIBRARIES(pngwriter_static m ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
+TARGET_LINK_LIBRARIES(pngwriter_static ${MATH_LIBRARIES} ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
 
 # build examples and tests
 SET(EXAMPLES_LIBS pngwriter_static ${FREETYPE_LIBRARIES})
@@ -108,7 +116,11 @@ FILE(COPY ${REFERENCE_PNGS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 # Installation ################################################################
 #
-INSTALL(TARGETS pngwriter LIBRARY DESTINATION lib)
+if(WIN32)
+  INSTALL(TARGETS pngwriter RUNTIME DESTINATION lib)
+else()
+  INSTALL(TARGETS pngwriter LIBRARY DESTINATION lib)
+endif()
 INSTALL(TARGETS pngwriter_static ARCHIVE DESTINATION lib)
 
 # they are test binaries and should not be installed, but tested
