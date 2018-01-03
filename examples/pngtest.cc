@@ -17,8 +17,8 @@
 *                               then be opened with a graphics program.
 *
 *    License:                   GNU General Public License
-*                               (C) 2002-2017 Paul Blackburn
-*                               (C) 2013-2017 Axel Huebl
+*                               (C) 2002-2018 Paul Blackburn
+*                               (C) 2013-2018 Axel Huebl
 *
 ******************************************************************************/
 
