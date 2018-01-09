@@ -9,7 +9,7 @@ compiler:
 
 env:
   global:
-    - CXXFLAGS="-Werror -Wextra -pedantic"
+    - CXXFLAGS="-Werror -Wall -Wshadow -Wextra -pedantic"
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
     - LIBFREETYPE_DOWNLOAD=http://download.savannah.gnu.org/releases/freetype/freetype-
@@ -33,22 +33,10 @@ script:
     fi
   - cmake -DBUILD_PERFORMANCE=$PERFTEST $TRAVIS_BUILD_DIR
   - make
-  - sudo make install
 # tests
-  - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
-  - ./pngtest
-  - ./readwrite
-  # read channel range test (black-white, RGB)
-  - ./blackwhite bw_16bit_rgb_20x20.png
-  - ./blackwhite bw_16bit_rgba_20x20.png
-  - ./blackwhite bw_8bit_rgba_20x20.png
-  - ./blackwhite bw_8bit_rgb_20x20.png
-  # read channel range test (black-white, grayscale)
-  # to do
-  # performance test
-  - if [ "$PERFTEST" == "ON" ]; then 
-      ./performance;
-    fi
+  - make test
+# install
+  - sudo make install
 
 before_script:
   - uname -r
