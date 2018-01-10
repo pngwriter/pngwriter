@@ -56,14 +56,6 @@ find_package(PNG 1.2.9 REQUIRED)
 # external library: zlib (mandatory)
 find_package(ZLIB REQUIRED)
 
-# external library: math from stdlib (mandatory)
-if(WIN32)
-    # automatically added on windows
-    set(MATH_LIBRARIES)
-else()
-    set(MATH_LIBRARIES m)
-endif()
-
 # external library: FreeType (optional)
 if(PNGwriter_USE_FREETYPE STREQUAL AUTO)
     find_package(Freetype)
@@ -86,6 +78,7 @@ add_library(PNGwriter
 target_link_libraries(PNGwriter PUBLIC PNG::PNG)
 target_link_libraries(PNGwriter PUBLIC ZLIB::ZLIB)
 if(NOT WIN32)
+    # automatically added on windows
     target_link_libraries(PNGwriter PRIVATE m)
 endif()
 
