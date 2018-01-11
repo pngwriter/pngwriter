@@ -5,7 +5,6 @@ PNGwriter is a C++ library for creating PNG images.
 [![Build Status master](https://img.shields.io/travis/pngwriter/pngwriter/master.svg?label=master)](https://travis-ci.org/pngwriter/pngwriter/branches)
 [![Build Status dev](https://img.shields.io/travis/pngwriter/pngwriter/dev.svg?label=dev)](https://travis-ci.org/pngwriter/pngwriter/branches)
 [![AppVeyor Build status dev](https://ci.appveyor.com/api/projects/status/d408e2j24ha2dopq/branch/dev?svg=true)](https://ci.appveyor.com/project/ax3l/pngwriter-2al7e/branch/dev)
-[![Spack Package](https://img.shields.io/badge/spack.io-pngwriter-brightgreen.svg)](https://spack.io)
 [![Language](https://img.shields.io/badge/language-C%2B%2B98-orange.svg)](https://isocpp.org)
 [![License](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
@@ -21,6 +20,9 @@ full TrueType antialiased and rotated text support, bezier curves, opening
 existing PNG images and more. Documentation in English (and Spanish up to
 v0.5.4). Runs under Linux, Unix, Mac OS X and Windows. Requires libpng and
 optionally FreeType2 for the text support.
+
+**Warning:** PNGwriter was never designed for reading untrusted files with it.
+Do NOT use this in sensitive environments, especially DO NOT read PNGs from unknown sources with it!
 
 
 ### Where to find information about PNGwriter
@@ -56,62 +58,55 @@ and let us know. Don't forget to include the following information:
 
 ### Installation
 
-The preferred way to install PNGwriter is using `CMake`:
+[![Spack Package](https://img.shields.io/badge/spack.io-pngwriter-brightgreen.svg)](https://spack.io)
 
-- `git clone https://github.com/pngwriter/pngwriter.git`
-- `mkdir -p build && cd build`
-- `cmake ../pngwriter`
-- `make install` (creates the libs in `lib/` and a `pngwriter.h` in `include/`)
+**Spack:**
 
-*Optional*, set a path where to install the libraries to:
-- `cmake -DCMAKE_INSTALL_PREFIX=~/myPath/`
-- `make install`
-  (installs `libpngwriter.a` and `libpngwriter.so` to `~/myPath/lib/`)
+```bash
+spack install pngwriter
+spack load pngwriter
+```
 
-(There is also a pre-created `Makefile` shipped with the source files, but
-since it is not directly portable we deprecated that install method and
-will not support it any longer.)
+**From Source:**
+
+First install the dependencies [zlib](https://github.com/madler/zlib/), [libpng](http://download.sourceforge.net/libpng) and (optional for text support) [freetype](http://download.savannah.gnu.org/releases/freetype).
+PNGwriter can then be installed using [CMake](http://cmake.org/):
+
+```bash
+git clone https://github.com/pngwriter/pngwriter.git
+
+mkdir -p pngwriter-build
+cd pngwriter-build
+
+# for own install prefix append: -DCMAKE_INSTALL_PREFIX=$HOME/somepath
+cmake ../pngwriter
+
+make -j
+
+# optional
+make test
+
+# sudo is only required for system paths
+sudo make install
+```
+
 
 ### Linking to your project
 
-You can either link manually to the `libpngwriter.a`/`libpngwriter.so` (which
-can have dependencies to `libpng`, `libz`, `libm`, `libc` and `libfreetype`) or
-use our CMake module:
+First set the following environment hint if PNGwriter was *not* installed in a system path:
 
 ```bash
-wget https://raw.githubusercontent.com/ComputationalRadiationPhysics/cmake-modules/dev/FindPNGwriter.cmake
-# read its documentation
-cmake -DCMAKE_MODULE_PATH=. --help-module FindPNGwriter | less
+# optional: only needed if installed outside of system paths
+export CMAKE_PREFIX_PATH=$HOME/somepath:$CMAKE_PREFIX_PATH
 ```
 
 Use the following lines in your projects `CMakeLists.txt`:
 ```cmake
-# this example requires at least CMake 2.8.5
-cmake_minimum_required(VERSION 2.8.5)
-
-# add path to FindPNGwriter.cmake, e.g. in the directory in cmake/
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/)
-
-# find PNGwriter installation
-#   optional: prefer static libraries over shared ones (but do not force them)
-#set(PNGwriter_USE_STATIC_LIBS ON)
-
-#   optional: specifiy (minimal) version / require to find it
-#           (PNGwriter 0.6.0 REQUIRED)
-find_package(PNGwriter)
+find_package(PNGwriter 0.6.1)
 
 if(PNGwriter_FOUND)
-  # where to find the pngwriter.h header file (-I include for your compiler)
-  include_directories(SYSTEM ${PNGwriter_INCLUDE_DIRS})
-  # additional compiler flags (e.g. -DNO_FREETYPE)
-  add_definitions(${PNGwriter_DEFINITIONS})
-  # libraries to link against (including dependencies)
-  set(LIBS ${LIBS} ${PNGwriter_LIBRARIES})
+  target_link_libraries(YourTarget PRIVATE PNGwriter::PNGwriter)
 endif(PNGwriter_FOUND)
-
-# add_executable(yourBinary ${SOURCES})
-# ...
-# target_link_libraries(yourBinary ${LIBS})
 ```
 
 ### License
