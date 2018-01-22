@@ -20,7 +20,7 @@
 #
 cmake_minimum_required(VERSION 3.0.1)
 
-project(PNGwriter VERSION 0.6.0 LANGUAGES CXX)
+project(PNGwriter VERSION 0.7.0 LANGUAGES CXX)
 
 
 # Options and Variants ########################################################
