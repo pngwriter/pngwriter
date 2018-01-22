@@ -19,6 +19,5 @@ int main( )
   img.filleddiamond( 30,6, 8,8,  1.0,1.0,1.0 );
   img.write_png();
 
-  system( "convert /tmp/foo.png /tmp/foo.xpm; cat /tmp/foo.xpm" );
-  return 0;
+  return system( "convert /tmp/foo.png /tmp/foo.xpm; cat /tmp/foo.xpm" );
 }

@@ -7,9 +7,11 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>      // srand, rand RAND_MAX
+#undef NDEBUG           // do not undefine asserts in Release builds
 #include <cassert>
 #include <cstring>      // memcpy
 #include <pngwriter.h>
+
 
 unsigned int const nMaxPixelsPerDimension = 2048;
 unsigned int const nImageDimsToTest = 20;
@@ -53,7 +55,7 @@ void readArray
         double r = png.dread( 1+ix,1+iy, 1 );
         double g = png.dread( 1+ix,1+iy, 1 );
         double b = png.dread( 1+ix,1+iy, 1 );
-        assert( r == g and g == b );
+        assert( r == g && g == b );
 
         rData[ iy*rWidth + ix ] = r;
     }

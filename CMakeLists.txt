@@ -1,124 +1,227 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
-
-# Projekt name ################################################################
+# Copyright 2013-2018 Axel Huebl
 #
-PROJECT(pngwriter)
-
-IF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}" CACHE PATH
-        "install prefix" FORCE)
-ENDIF(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-
-# set helper pathes to find libraries and packages on some 64bit machines
-set(CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu/")
-
-# Compiler supports C++11?
+# This file is part of PNGwriter.
 #
-# CMake 3.1.0+:
-# is `-std=c++11` in `${CMAKE_CXX_COMPILE_FEATURES}`
-
-# Warnings ####################################################################
+# PNGwriter is free software: you can edistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
 #
-# GNU
-IF(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
-# Clang
-ELSEIF(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
-# ICC
-ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow")
-# PGI
-ELSEIF(CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Minform=inform")
-ENDIF()
+# PNGwriter is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PNGwriter.
+# If not, see <http://www.gnu.org/licenses/>.
+
+# Preamble ####################################################################
+#
+cmake_minimum_required(VERSION 3.0.1)
+
+project(PNGwriter VERSION 0.7.0 LANGUAGES CXX)
+
+
+# Options and Variants ########################################################
+#
+function(pngwriter_option name description default)
+    set(PNGwriter_USE_${name} ${default} CACHE STRING "${description}")
+    set_property(CACHE PNGwriter_USE_${name} PROPERTY
+        STRINGS "ON;TRUE;AUTO;OFF;FALSE"
+    )
+    if(PNGwriter_HAVE_${name})
+        set(PNGwriter_HAVE_${name} TRUE)
+    else()
+        set(PNGwriter_HAVE_${name})
+    endif()
+    set(PNGwriter_CONFIG_OPTIONS ${PNGwriter_CONFIG_OPTIONS} ${name} PARENT_SCOPE)
+endfunction()
+
+pngwriter_option(FREETYPE "Enable support for text via Freetype" AUTO)
+
+set(BUILD_PERFORMANCE OFF CACHE STRING "Build Performance test (requires C++11)")
+
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+        "Choose the build type, e.g. Debug." FORCE)
+endif()
+
 
 # Dependencies ################################################################
 #
 # external library: libPNG (mandatory)
-FIND_PACKAGE(PNG 1.2.9 REQUIRED)
-INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIRS})
+find_package(PNG 1.2.9 REQUIRED)
 
 # external library: zlib (mandatory)
-FIND_PACKAGE(ZLIB REQUIRED)
-INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIRS})
+find_package(ZLIB REQUIRED)
 
 # external library: FreeType (optional)
-INCLUDE(FindFreetype)
-IF(FREETYPE_FOUND)
-    INCLUDE_DIRECTORIES(${FREETYPE_INCLUDE_DIRS})
-    SET(FREETYPE_FLAGS "-DUSE_FREETYPE")
-ELSE(FREETYPE_FOUND)
-    SET(FREETYPE_FLAGS "-DNO_FREETYPE")
-    SET(FREETYPE_LIBRARIES "")
-ENDIF(FREETYPE_FOUND)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FREETYPE_FLAGS}")
+if(PNGwriter_USE_FREETYPE STREQUAL AUTO)
+    find_package(Freetype)
+elseif(PNGwriter_USE_FREETYPE)
+    find_package(Freetype REQUIRED)
+endif()
 
-# Sources and targets #########################################################
+if(FREETYPE_FOUND)
+    set(PNGwriter_HAVE_FREETYPE TRUE)
+endif()
+
+
+# Targets #####################################################################
 #
-# add includes and sources
-AUX_SOURCE_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/src" LIBRARY_SOURCES)
-GET_FILENAME_COMPONENT(LIBRARY_INCLUDES ${LIBRARY_SOURCES} PATH)
-SET(EXAMPLES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/examples")
-SET(TESTS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/tests")
-INCLUDE_DIRECTORIES(${LIBRARY_INCLUDES})
+add_library(PNGwriter
+    src/pngwriter.cc
+    src/pngwriter.h
+)
 
-# build shared library
-ADD_LIBRARY(pngwriter SHARED ${LIBRARY_SOURCES})
-TARGET_LINK_LIBRARIES(pngwriter m ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
+target_link_libraries(PNGwriter PUBLIC PNG::PNG)
+target_link_libraries(PNGwriter PUBLIC ZLIB::ZLIB)
+if(NOT WIN32)
+    # automatically added on windows
+    target_link_libraries(PNGwriter PRIVATE m)
+endif()
 
-# build static library
-ADD_LIBRARY(pngwriter_static STATIC ${LIBRARY_SOURCES})
-SET_TARGET_PROPERTIES(pngwriter_static PROPERTIES OUTPUT_NAME pngwriter)
-TARGET_LINK_LIBRARIES(pngwriter_static m ${ZLIB_LIBRARIES} ${PNG_LIBRARIES} ${FREETYPE_LIBRARIES})
+if(PNGwriter_HAVE_FREETYPE)
+    target_include_directories(PNGwriter SYSTEM PUBLIC ${FREETYPE_INCLUDE_DIRS})
+    target_link_libraries(PNGwriter PUBLIC ${FREETYPE_LIBRARIES})
+    target_compile_definitions(PNGwriter PUBLIC "-DUSE_FREETYPE")
+    target_compile_definitions(PNGwriter PUBLIC ${FREETYPE_FLAGS})
+else()
+    target_compile_definitions(PNGwriter PUBLIC "-DNO_FREETYPE")
+endif()
 
-# build examples and tests
-SET(EXAMPLES_LIBS pngwriter_static ${FREETYPE_LIBRARIES})
-FILE(GLOB EXAMPLES_SOURCES ${EXAMPLES_SOURCES}/*.cc ${TESTS_SOURCES}/*.cc)
+set_target_properties(PNGwriter PROPERTIES PUBLIC_HEADER "src/pngwriter.h")
+target_include_directories(PNGwriter PUBLIC
+    $<BUILD_INTERFACE:${PNGwriter_BINARY_DIR}/src>
+    $<BUILD_INTERFACE:${PNGwriter_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:include>
+)
 
-OPTION(BUILD_PERFORMANCE "Build the performance measurement test (needs C++11)" OFF)
-IF(NOT BUILD_PERFORMANCE)
-    LIST(REMOVE_ITEM EXAMPLES_SOURCES "${TESTS_SOURCES}/performance.cc")
-ENDIF()
+# examples & tests
+set(PNGwriter_examples lyapunov pngtest)
+set(PNGwriter_tests blackwhite diamond readwrite)
+if(BUILD_PERFORMANCE)
+    list(APPEND PNGwriter_tests performance)
+endif()
 
-FOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
-    GET_FILENAME_COMPONENT(examplename ${EXAMPLEFILE} NAME)
-    STRING(REPLACE ".cc" "" examplename ${examplename})
-    SET(EXAMPLES_NAMES ${EXAMPLES_NAMES} ${examplename})
-    #MESSAGE("Found example: " ${examplename} " (" ${EXAMPLEFILE} ")")
+foreach(examplename IN LISTS PNGwriter_examples)
+    add_executable(${examplename} examples/${examplename}.cc)
+    target_link_libraries(${examplename} PRIVATE PNGwriter)
+endforeach()
+foreach(testname IN LISTS PNGwriter_tests)
+    add_executable(${testname} tests/${testname}.cc)
+    target_link_libraries(${testname} PRIVATE PNGwriter)
+endforeach()
 
-    ADD_EXECUTABLE(${examplename} ${EXAMPLEFILE})
-    TARGET_LINK_LIBRARIES(${examplename} ${EXAMPLES_LIBS})
+if(BUILD_PERFORMANCE)
+    set_target_properties(performance PROPERTIES
+        CXX_STANDARD 11
+        CXX_STANDARD_REQUIRED ON
+    )
+endif()
 
-    if("${examplename}" STREQUAL "performance")
-        TARGET_COMPILE_OPTIONS(performance PRIVATE -std=c++11)
-        # CMake 3.1.0+:
-        #SET_PROPERTY(TARGET performance PROPERTY CXX_STANDARD 11)
+
+# Generate Files with Configuration Options ###################################
+#
+configure_file(
+    ${PNGwriter_SOURCE_DIR}/PNGwriterConfig.cmake.in
+    ${PNGwriter_BINARY_DIR}/PNGwriterConfig.cmake
+    @ONLY
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file("PNGwriterConfigVersion.cmake"
+    VERSION ${PNGwriter_VERSION}
+    COMPATIBILITY SameMajorVersion # actually: SameMinorVersion
+)
+
+
+# Installs ####################################################################
+#
+# headers, libraries and exectuables
+install(TARGETS PNGwriter EXPORT PNGwriterTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    PUBLIC_HEADER DESTINATION include
+    INCLUDES DESTINATION include
+)
+
+# CMake package file for find_package(PNGwriter::PNGwriter) in depending projects
+install(EXPORT PNGwriterTargets
+    FILE PNGwriterTargets.cmake
+    NAMESPACE PNGwriter::
+    DESTINATION lib/cmake/PNGwriter
+)
+install(
+    FILES
+        ${PNGwriter_BINARY_DIR}/PNGwriterConfig.cmake
+        ${PNGwriter_BINARY_DIR}/PNGwriterConfigVersion.cmake
+    DESTINATION lib/cmake/PNGwriter
+)
+
+
+# Tests #######################################################################
+#
+enable_testing()
+
+set(REFERENCE_PNGS
+    pngs/burro.png
+    pngs/bw_16bit_rgba_20x20.png
+    pngs/bw_8bit_rgba_20x20.png
+    pngs/bw_16bit_rgb_20x20.png
+    pngs/bw_8bit_rgb_20x20.png
+)
+file(COPY ${REFERENCE_PNGS} DESTINATION ${PNGwriter_BINARY_DIR})
+
+foreach(examplename IN LISTS PNGwriter_examples)
+    add_test(NAME example.${examplename}
+        COMMAND ${examplename}
+    )
+endforeach()
+foreach(testname IN LISTS PNGwriter_tests)
+    if(testname STREQUAL blackwhite)
+        add_test(NAME test.${testname}.16bit.rgb
+            COMMAND ${testname} bw_16bit_rgb_20x20.png
+        )
+        add_test(NAME test.${testname}.16bit.rgba
+            COMMAND ${testname} bw_16bit_rgba_20x20.png
+        )
+        add_test(NAME test.${testname}.8bit.rgba
+            COMMAND ${testname} bw_8bit_rgba_20x20.png
+        )
+        add_test(NAME test.${testname}.8bit.rgb
+            COMMAND ${testname} bw_8bit_rgb_20x20.png
+        )
+    else()
+        add_test(NAME test.${testname}
+            COMMAND ${testname}
+        )
     endif()
-ENDFOREACH(EXAMPLEFILE ${EXAMPLES_SOURCES})
+endforeach()
 
-# Copy example files to "build" dir for easy testing ##########################
+
+# Status Message for Build Options ############################################
 #
-file(GLOB REFERENCE_PNGS "pngs/*.png")
-FILE(COPY ${REFERENCE_PNGS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+message("")
+message("PNGwriter build configuration:")
+message("  PNGwriter Version: ${PNGwriter_VERSION}")
+message("  C++ Compiler : ${CMAKE_CXX_COMPILER_ID} "
+                         "${CMAKE_CXX_COMPILER_VERSION} "
+                         "${CMAKE_CXX_COMPILER_WRAPPER}")
+message("    ${CMAKE_CXX_COMPILER}")
+message("")
+message("  Installation prefix: ${CMAKE_INSTALL_PREFIX}")
+message("")
+message("  Build Type: ${CMAKE_BUILD_TYPE}")
+message("  Build Options:")
 
-# Installation ################################################################
-#
-INSTALL(TARGETS pngwriter LIBRARY DESTINATION lib)
-INSTALL(TARGETS pngwriter_static ARCHIVE DESTINATION lib)
-
-# they are test binaries and should not be installed, but tested
-#foreach(EXAMPLENAME ${EXAMPLES_NAMES})
-#    INSTALL(TARGETS ${EXAMPLENAME} RUNTIME DESTINATION bin)
-#endforeach(EXAMPLENAME ${EXAMPLES_NAMES})
-
-# add pngwriter.h in include/
-#
-INSTALL(FILES ${LIBRARY_INCLUDES}/pngwriter.h DESTINATION include)
-
-# to do: install fonts, to shared/... too?
-#
+foreach(opt IN LISTS PNGwriter_CONFIG_OPTIONS)
+  if(${PNGwriter_HAVE_${opt}})
+    message("    ${opt}: ON")
+  else()
+    message("    ${opt}: OFF")
+  endif()
+endforeach()
+message("")

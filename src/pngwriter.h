@@ -10,15 +10,15 @@
 *
 *    Email:                     individual61@users.sourceforge.net
 *
-*    Version:                   0.6.0 (March 2017)
+*    Version:                   0.7.0 (January 2018)
 *
 *    Description:               Library that allows plotting a 48 bit
 *                               PNG image pixel by pixel, which can
 *                               then be opened with a graphics program.
 *
 *    License:                   GNU General Public License
-*                               (C) 2002-2017 Paul Blackburn
-*                               (C) 2013-2017 Axel Huebl
+*                               (C) 2002-2018 Paul Blackburn
+*                               (C) 2013-2018 Axel Huebl
 *
 ******************************************************************************/
 
@@ -44,7 +44,7 @@
 #define PNGWRITER_H 1
 
 #define PNGWRITER_VERSION_MAJOR 0
-#define PNGWRITER_VERSION_MINOR 6
+#define PNGWRITER_VERSION_MINOR 7
 #define PNGWRITER_VERSION_PATCH 0
 
 /* deprecated old define in style MAJOR.MINORREVISION, e.g., 0.56 for 0.5.6 */
