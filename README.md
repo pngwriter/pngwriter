@@ -102,7 +102,7 @@ export CMAKE_PREFIX_PATH=$HOME/somepath:$CMAKE_PREFIX_PATH
 
 Use the following lines in your projects `CMakeLists.txt`:
 ```cmake
-find_package(PNGwriter 0.7.0)
+find_package(PNGwriter 0.7.0 CONFIG)
 
 if(PNGwriter_FOUND)
   target_link_libraries(YourTarget PRIVATE PNGwriter::PNGwriter)
