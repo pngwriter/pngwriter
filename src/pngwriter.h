@@ -70,7 +70,6 @@
 #include <iostream>
 #include <string>
 #include <ios>
-#include <cmath>
 #include <cwchar>
 #include <cstring>
 
