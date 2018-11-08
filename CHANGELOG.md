@@ -1,6 +1,28 @@
 Change Log for PNGwriter
 ========================
 
+0.7.0
+-----
+**Date:** 2018-01-22
+
+Modernized CMake3 scripts, CMake package and Windows support.
+All closed issues can be found at
+  [Milestone 0.7.0](https://github.com/pngwriter/pngwriter/milestone/5?closed=1)
+
+### Changes to 0.6.0
+
+**New Features:**
+  - CMake modernized: #122
+    - use and create targets
+    - `PNGwriterConfig.cmake` package
+    - `make test` supported
+    - removed legacy "Makefile"s
+  - Windows build support #116
+
+**Misc:**
+  - removed warnings in tests #122
+
+
 0.6.0
 -----
 **Date:** 2017-03-28

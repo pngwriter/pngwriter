@@ -9,46 +9,34 @@ compiler:
 
 env:
   global:
-    - CXXFLAGS="-Werror -Wextra -pedantic"
+    - CXXFLAGS="-Werror -Wall -Wshadow -Wextra -pedantic"
     - BUILD=~/buildTmp
     - LIBPNG_DOWNLOAD=http://download.sourceforge.net/libpng/libpng-
     - LIBFREETYPE_DOWNLOAD=http://download.savannah.gnu.org/releases/freetype/freetype-
   matrix:
-    - LIBPNG_VERSION=1.2.56 FREETYPE=OFF PERFTEST=OFF CPP11=OFF
-    - LIBPNG_VERSION=1.2.56 FREETYPE=2.4.12 PERFTEST=ON CPP11=OFF # risky due to stdlib 98/11 incomp.
-    - LIBPNG_VERSION=1.2.56 FREETYPE=2.4.12 PERFTEST=ON CPP11=ON
-    - LIBPNG_VERSION=1.4.19 FREETYPE=2.4.12 PERFTEST=OFF CPP11=OFF
-    - LIBPNG_VERSION=1.5.26 FREETYPE=2.5.5 PERFTEST=OFF CPP11=OFF
-    - LIBPNG_VERSION=1.6.21 FREETYPE=2.6.3 PERFTEST=OFF CPP11=OFF
-    - LIBPNG_VERSION=1.7.0beta86 FREETYPE=2.7.1 PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.2.56 FREETYPE=OFF BUILD_TYPE=Release PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.2.56 FREETYPE=2.4.12 BUILD_TYPE=Release PERFTEST=ON CPP11=OFF # risky due to stdlib 98/11 incomp.
+    - LIBPNG_VERSION=1.2.56 FREETYPE=2.4.12 BUILD_TYPE=Debug PERFTEST=ON CPP11=ON
+    - LIBPNG_VERSION=1.4.19 FREETYPE=2.4.12 BUILD_TYPE=Debug PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.5.26 FREETYPE=2.5.5 BUILD_TYPE=Debug PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.6.21 FREETYPE=2.6.3 BUILD_TYPE=Release PERFTEST=OFF CPP11=OFF
+    - LIBPNG_VERSION=1.7.0beta89 FREETYPE=2.7.1 BUILD_TYPE=Debug PERFTEST=OFF CPP11=OFF
 
 matrix:
   allow_failures:
-    - env: LIBPNG_VERSION=1.7.0beta86 FREETYPE=2.7.1 PERFTEST=OFF CPP11=OFF
+    - env: LIBPNG_VERSION=1.7.0beta89 FREETYPE=2.7.1 BUILD_TYPE=Debug PERFTEST=OFF CPP11=OFF
 
 script:
   - cd $BUILD
   - if [ "$CPP11" == "ON" ]; then
       export CXXFLAGS="$CXXFLAGS -std=c++11";
     fi
-  - cmake -DBUILD_PERFORMANCE=$PERFTEST $TRAVIS_BUILD_DIR
+  - cmake -DBUILD_PERFORMANCE=$PERFTEST -DCMAKE_BUILD_TYPE=BUILD_TYPE $TRAVIS_BUILD_DIR
   - make
-  - sudo make install
 # tests
-  - export LD_LIBRARY_PATH=`pwd`:$LD_LIBRARY_PATH
-  - ./pngtest
-  - ./readwrite
-  # read channel range test (black-white, RGB)
-  - ./blackwhite bw_16bit_rgb_20x20.png
-  - ./blackwhite bw_16bit_rgba_20x20.png
-  - ./blackwhite bw_8bit_rgba_20x20.png
-  - ./blackwhite bw_8bit_rgb_20x20.png
-  # read channel range test (black-white, grayscale)
-  # to do
-  # performance test
-  - if [ "$PERFTEST" == "ON" ]; then 
-      ./performance;
-    fi
+  - make test
+# install
+  - sudo make install
 
 before_script:
   - uname -r
