@@ -885,7 +885,7 @@ void pngwriter::settext(const char * title, const char * author, const char * de
 }
 
 ///////////////////////////////////////////////////////
-void pngwriter::close()
+void pngwriter::close() const
 {
    FILE            *fp;
    png_structp     png_ptr;
@@ -914,11 +914,6 @@ void pngwriter::close()
    png_set_IHDR(png_ptr, info_ptr, width_, height_,
 		bit_depth_, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
 		PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-
-   if(filegamma_ < 1.0e-1)
-     {
-	filegamma_ = 0.5;  // Modified in 0.5.4 so as to be the same as the usual gamma.
-     }
 
    png_set_gAMA(png_ptr, info_ptr, filegamma_);
 
@@ -973,6 +968,88 @@ void pngwriter::close()
    png_write_end(png_ptr, info_ptr);
    png_destroy_write_struct(&png_ptr, &info_ptr);
    fclose(fp);
+}
+
+///////////////////////////////////////////////////////
+void pngwriter::PngWriteVectorCallback(png_structp  png_ptr, png_bytep data, png_size_t length) {
+   std::vector<unsigned char> *p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
+   p->insert(p->end(), data, data + length);
+}
+
+void pngwriter::write_to_buffer(std::vector<unsigned char> & buffer) const
+{
+   buffer.clear();
+   png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+   png_infop info_ptr = png_create_info_struct(png_ptr);
+
+   png_set_IHDR(png_ptr, info_ptr, width_, height_,
+    bit_depth_, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+    PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+
+   if(compressionlevel_ != -2)
+     {
+  png_set_compression_level(png_ptr, compressionlevel_);
+     }
+   else
+     {
+  png_set_compression_level(png_ptr, PNGWRITER_DEFAULT_COMPRESSION);
+     }
+
+   png_set_gAMA(png_ptr, info_ptr, filegamma_);
+
+   time_t          gmt;
+   png_time        mod_time;
+   png_text        text_ptr[5];
+   int             entries = 4;
+   time(&gmt);
+   png_convert_from_time_t(&mod_time, gmt);
+   png_set_tIME(png_ptr, info_ptr, &mod_time);
+   /* key is a 1-79 character description of type char*
+    *
+    * attention: the pointer of `c_str()` could be invalid if a non const
+    * operation to `key_title` is called
+    */
+   std::string key_title("Title");
+   text_ptr[0].key = const_cast<char*>(key_title.c_str());
+   text_ptr[0].text = const_cast<char*>(texttitle_.c_str());
+   text_ptr[0].compression = PNG_TEXT_COMPRESSION_NONE;
+   std::string key_author("Author");
+   text_ptr[1].key = const_cast<char*>(key_author.c_str());
+   text_ptr[1].text = const_cast<char*>(textauthor_.c_str());
+   text_ptr[1].compression = PNG_TEXT_COMPRESSION_NONE;
+   std::string key_descr("Description");
+   text_ptr[2].key = const_cast<char*>(key_descr.c_str());
+   text_ptr[2].text = const_cast<char *>(textdescription_.c_str());
+   text_ptr[2].compression = PNG_TEXT_COMPRESSION_NONE;
+   std::string key_software("Software");
+   text_ptr[3].key = const_cast<char*>(key_software.c_str());
+   text_ptr[3].text = const_cast<char*>(textsoftware_.c_str());
+   text_ptr[3].compression = PNG_TEXT_COMPRESSION_NONE;
+#if defined(PNG_TIME_RFC1123_SUPPORTED)
+   char key_create[] = "Creation Time";
+   text_ptr[4].key = key_create;
+   char textcrtime[29] = "tIME chunk is not present...";
+#if (PNG_LIBPNG_VER < 10600)
+   memcpy(textcrtime,
+          png_convert_to_rfc1123(png_ptr, &mod_time),
+          29);
+#else
+   png_convert_to_rfc1123_buffer(textcrtime, &mod_time);
+#endif
+   textcrtime[sizeof(textcrtime) - 1] = '\0';
+   text_ptr[4].text = textcrtime;
+   text_ptr[4].compression = PNG_TEXT_COMPRESSION_NONE;
+   entries++;
+#endif
+   png_set_write_fn(png_ptr, &buffer, PngWriteVectorCallback, NULL);
+
+   png_set_text(png_ptr, info_ptr, text_ptr, entries);
+
+   png_write_info(png_ptr, info_ptr);
+   png_write_image(png_ptr, graph_);
+   png_write_end(png_ptr, info_ptr);
+
+   png_destroy_write_struct(&png_ptr, &info_ptr);
 }
 
 //////////////////////////////////////////////////////
@@ -1583,7 +1660,11 @@ double pngwriter::getgamma(void) const
 
 void pngwriter::setgamma(double gamma)
 {
-   filegamma_ = gamma;
+  filegamma_ = gamma;
+  if(filegamma_ < 1.0e-1)
+     {
+  filegamma_ = 0.5;  // Modified in 0.5.4 so as to be the same as the usual gamma.
+     }
 }
 
 // The algorithms HSVtoRGB and RGBtoHSV were found at http://www.cs.rit.edu/~ncs/

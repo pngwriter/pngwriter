@@ -73,6 +73,7 @@
 #include <ios>
 #include <cwchar>
 #include <cstring>
+#include <vector>
 
 #include <cstdlib>
 #include <cstdio>
@@ -113,6 +114,10 @@ class pngwriter
  		       png_bytepp *image, png_uint_32& width, png_uint_32& height);
    void flood_fill_internal( int xstart, int ystart,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
    void flood_fill_internal_blend( int xstart, int ystart, double opacity,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
+
+   /* Callback function for png_set_write_fn()
+    */
+   void static PngWriteVectorCallback(png_structp  png_ptr, png_bytep data, png_size_t length);
 
 #ifndef NO_FREETYPE
    void my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, double green, double blue);
@@ -290,7 +295,7 @@ class pngwriter
     * Tip: If you do not call this function before your program ends, no image
     * will be written to disk.
     * */
-   void close(void);
+   void close(void) const;
 
    /* Rename
     * To rename the file once an instance of pngwriter has been created.
@@ -433,6 +438,12 @@ class pngwriter
     * write_png(), then alter the image, change its name, write_png(), etc.
     */
    void write_png(void);
+
+
+   /* Write PNG to a buffer
+    * Generate and write PNG to memory. The PNGwriter instance will not modified and can be used after this.
+    */
+   void write_to_buffer(std::vector<unsigned char> & buffer) const;
 
    /* Plot Text
     * Uses the Freetype2 library to set text in the image. face_path is the file path to a
