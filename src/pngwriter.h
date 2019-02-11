@@ -115,6 +115,11 @@ class pngwriter
    void flood_fill_internal( int xstart, int ystart,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
    void flood_fill_internal_blend( int xstart, int ystart, double opacity,  double start_red, double start_green, double start_blue, double fill_red, double fill_green, double fill_blue);
 
+
+   /* Writes the data to file or buffer.
+    */
+   void write_internal(std::vector<unsigned char> * buffer) const;
+
    /* Callback function for png_set_write_fn()
     */
    void static PngWriteVectorCallback(png_structp  png_ptr, png_bytep data, png_size_t length);
