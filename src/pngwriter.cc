@@ -885,7 +885,7 @@ void pngwriter::settext(const char * title, const char * author, const char * de
 }
 
 ///////////////////////////////////////////////////////
-void pngwriter::close()
+void pngwriter::close() const
 {
    FILE            *fp;
    png_structp     png_ptr;
@@ -914,11 +914,6 @@ void pngwriter::close()
    png_set_IHDR(png_ptr, info_ptr, width_, height_,
 		bit_depth_, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
 		PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-
-   if(filegamma_ < 1.0e-1)
-     {
-	filegamma_ = 0.5;  // Modified in 0.5.4 so as to be the same as the usual gamma.
-     }
 
    png_set_gAMA(png_ptr, info_ptr, filegamma_);
 
@@ -981,7 +976,8 @@ void pngwriter::PngWriteVectorCallback(png_structp  png_ptr, png_bytep data, png
    p->insert(p->end(), data, data + length);
 }
 
-void pngwriter::write_to_buffer(std::vector<unsigned char> & buffer){
+void pngwriter::write_to_buffer(std::vector<unsigned char> & buffer) const
+{
    buffer.clear();
    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    png_infop info_ptr = png_create_info_struct(png_ptr);
@@ -997,11 +993,6 @@ void pngwriter::write_to_buffer(std::vector<unsigned char> & buffer){
    else
      {
   png_set_compression_level(png_ptr, PNGWRITER_DEFAULT_COMPRESSION);
-     }
-
-   if(filegamma_ < 1.0e-1)
-     {
-  filegamma_ = 0.5;  // Modified in 0.5.4 so as to be the same as the usual gamma.
      }
 
    png_set_gAMA(png_ptr, info_ptr, filegamma_);
@@ -1669,7 +1660,11 @@ double pngwriter::getgamma(void) const
 
 void pngwriter::setgamma(double gamma)
 {
-   filegamma_ = gamma;
+  filegamma_ = gamma;
+  if(filegamma_ < 1.0e-1)
+     {
+  filegamma_ = 0.5;  // Modified in 0.5.4 so as to be the same as the usual gamma.
+     }
 }
 
 // The algorithms HSVtoRGB and RGBtoHSV were found at http://www.cs.rit.edu/~ncs/

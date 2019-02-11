@@ -295,7 +295,7 @@ class pngwriter
     * Tip: If you do not call this function before your program ends, no image
     * will be written to disk.
     * */
-   void close(void);
+   void close(void) const;
 
    /* Rename
     * To rename the file once an instance of pngwriter has been created.
@@ -443,7 +443,7 @@ class pngwriter
    /* Write PNG to a buffer
     * Generate and write PNG to memory. The PNGwriter instance will not modified and can be used after this.
     */
-   void write_to_buffer(std::vector<unsigned char> & buffer);
+   void write_to_buffer(std::vector<unsigned char> & buffer) const;
 
    /* Plot Text
     * Uses the Freetype2 library to set text in the image. face_path is the file path to a
