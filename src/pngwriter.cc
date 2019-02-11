@@ -4114,13 +4114,13 @@ void pngwriter::my_draw_bitmap_blend( FT_Bitmap * bitmap, int x, int y, double o
 #endif
 #ifdef NO_FREETYPE
 
-void pngwriter::plot_text_blend( const char *, int, int, int, double, char *, double, int, int, int )
+void pngwriter::plot_text_blend( const char *, int, int, int, double, const char *, double, int, int, int )
 {
    std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text_blend( const char *, int, int, int, double, char *, double,  double, double, double )
+void pngwriter::plot_text_blend( const char *, int, int, int, double, const char *, double,  double, double, double )
 {
    std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
