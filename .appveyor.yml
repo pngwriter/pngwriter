@@ -34,6 +34,15 @@ environment:
       LIBPNG_VERSION: 1.6.21
       FREETYPE: OFF
       PERFTEST: OFF
+      SHARED: OFF
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      CMAKE_GENERATOR: "Unix Makefiles"
+      ZLIB_VERSION: 1.2.8
+      LIBPNG_VERSION: 1.6.35
+      FREETYPE: OFF
+      PERFTEST: OFF
+      SHARED: ON
+      CYGWIN: ON
 
 init:
   - cmake --version
@@ -41,35 +50,52 @@ init:
   - msbuild /version
   # line endings on Windows
   - git config --global core.autocrlf true
+  - if [%CYGWIN%]==[ON] (
+        set "CC=gcc" &&
+        set "CXX=g++" &&
+        set "PATH=C:\\cygwin64\bin;C:\\cygwin64\usr\bin;%PATH%" &&
+        C:\\cygwin64\setup-x86_64.exe --quiet-mode --no-shortcuts --upgrade-also --packages cmake,cygwin-devel,gcc-core,gcc-g++,make,pkg-config,zlib-devel,libpng-devel &&
+        cygcheck -dc cygwin &&
+        set "VS_CONFIG="
+    ) else (
+        set "VS_CONFIG=--config %CONFIGURATION%"
+    )
+  - cmake --version
 
 install:
   # zlib
   - appveyor DownloadFile https://github.com/madler/zlib/archive/v%ZLIB_VERSION%.tar.gz
   - 7z x v%ZLIB_VERSION%.tar.gz -so | 7z x -si -ttar
   - cd zlib-%ZLIB_VERSION%
-  - cmake -G"%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=C:\\Sys .
-  - cmake --build . --config %CONFIGURATION%
-  - cmake --build . --config %CONFIGURATION% --target install
+  - if NOT [%CYGWIN%]==[ON] (
+        cmake -G"%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=C:\\Sys . &&
+        cmake --build . %VS_CONFIG% &&
+        cmake --build . %VS_CONFIG% --target install
+    )
   - cd ..
   # libpng
   - appveyor DownloadFile %LIBPNG_DOWNLOAD%%LIBPNG_VERSION%.tar.xz
   - 7z x libpng-%LIBPNG_VERSION%.tar.xz -so | 7z x -si -ttar
   - cd libpng-%LIBPNG_VERSION%
-  - cmake -G"%CMAKE_GENERATOR%" -DCMAKE_INSTALL_PREFIX=C:\\Sys .
-  - cmake --build . --config %CONFIGURATION%
-  - cmake --build . --config %CONFIGURATION% --target install
+  - if NOT [%CYGWIN%]==[ON] (
+        cmake -G"%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DCMAKE_INSTALL_PREFIX=C:\\Sys . &&
+        cmake --build . %VS_CONFIG% &&
+        cmake --build . %VS_CONFIG% --target install
+    )
   # go back to actual project
   - cd ..
 
 build_script:
   - mkdir build
   - cd build
-  - cmake -G"%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_PERFORMANCE=$PERFTEST -DCMAKE_INSTALL_PREFIX=C:\\pngwriter ..
-  - cmake --build . --config %CONFIGURATION%
-  - cmake --build . --config %CONFIGURATION% --target install
+  - cmake -G"%CMAKE_GENERATOR%" -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_PERFORMANCE=%PERFTEST% -DCMAKE_INSTALL_PREFIX=C:\\pngwriter -DBUILD_SHARED_LIBS=%SHARED% ..
+  - cmake --build . %VS_CONFIG%
+  - cmake --build . %VS_CONFIG% --target install
 # tests
   - tree C:\\projects\pngwriter\build
-  - cd %CONFIGURATION%
+  - if NOT [%CYGWIN%]==[ON] (
+        cd %CONFIGURATION%
+    )
   - dir /R
   #- pngtest.exe
   #- readwrite.exe
@@ -81,6 +107,6 @@ build_script:
   # read channel range test (black-white, grayscale)
   # to do
   # performance test
-  #- if [ "$PERFTEST" == "ON" ]; then 
+  #- if [ "%PERFTEST%" == "ON" ]; then 
   #    performance.exe;
   #  fi
