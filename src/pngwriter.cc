@@ -1517,7 +1517,8 @@ int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr
 	fclose(fp);
 	return 0;
      }
-#if (PNG_LIBPNG_VER < 10500)
+// introduced in libPNG 1.0.6, deprecated at least in 1.4.0+
+#if (PNG_LIBPNG_VER < 10400)
    if (setjmp((*png_ptr)->jmpbuf)) /*(setjmp(png_jmpbuf(*png_ptr)) )*//////////////////////////////////////
 #else
    if (setjmp(png_jmpbuf(*png_ptr)))
