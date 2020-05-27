@@ -171,7 +171,7 @@ class pngwriter
     * A typical compilation would look like this:
     *
     * g++ my_program.cc -o my_program freetype-config --cflags \
-    *          -I/usr/local/include  -L/usr/local/lib -lpng -lpngwriter -lz -lfreetype
+    *          -I/usr/local/include  -L/usr/local/lib -lpngwriter -lpng -lz -lfreetype
     *
     * If you did not compile PNGwriter with FreeType support, then remove the
     * FreeType-related flags and add -DNO_FREETYPE above.
