@@ -688,6 +688,53 @@ void pngwriter::plot(int x, int y, double red, double green, double blue)
     this->plot(x,y,int(red*65535+0.5),int(green*65535+0.5),int(blue*65535+0.5));
 }
 
+
+///////////////////////////////////////////////////////////////
+// Read RGB all at once
+int pngwriter::read(int x, int y, int& r, int& g, int& b) const
+{
+  int retErr = 0;
+
+  if ( ( x>0 ) && ( x <= (this->width_) ) && ( y>0 ) && ( y <= (this->height_) ) )
+  {
+    unsigned char* pLine = graph_[height_-y];
+
+    if (bit_depth_ == 16) {
+      /* In these cases *256 is correct, because what we actually are
+        * doing is bitshifting by 8 bit and then appending the next lower
+        * 8 bit.
+        * These lines are inefficient. Bitshifting and bitwise anding may
+        * have better performance than multiplication and addition.
+        * We could also just convert (unsigned char*) to (uint16_t*).
+        * If the open file function does it in the same way, then this
+        * method makes no assumptions about platform endianness */
+      int temp2 = 6*(x-1);
+
+      r = (pLine[temp2  ])*256 + pLine[temp2+1];
+      g = (pLine[temp2+2])*256 + pLine[temp2+3];
+      b = (pLine[temp2+4])*256 + pLine[temp2+5];
+
+      retErr = 0;
+    } else if (bit_depth_ == 8) {
+      int temp2 = 3*(x-1);
+      const int scale8To16Bit = 257;   // (x/255.0)*65535.0 -> x*257
+
+      r = pLine[temp2  ] * scale8To16Bit;
+      g = pLine[temp2+1] * scale8To16Bit;
+      b = pLine[temp2+2] * scale8To16Bit;
+
+      retErr = 0;
+    } else {  // bad bit_depth
+      retErr = 1;
+    }
+  } else {  // bad coords
+    retErr = 2;
+  }
+
+  return( retErr );
+}
+
+
 ///////////////////////////////////////////////////////////////
 int pngwriter::read(int x, int y, int colour) const
 {
@@ -4760,4 +4807,26 @@ void pngwriter::filleddiamond( int x, int y, int width, int height, double red, 
 void pngwriter::diamond( int x, int y, int width, int height, double red, double green, double blue)
 {
    this->diamond(  x,  y,  width,  height, int(red*65535), int(green*65535), int(blue*65535) );
+}
+
+
+///////////////////////////////////////////////////////////////
+// insert pixels from one pngwriter into another
+bool pngwriter::insert( int xDest, int yDest, pngwriter* pngWriterSrc, int xSrc, int ySrc, int width, int height )
+{
+  bool retError = 0;
+
+  for( int x=0; x<width; x++ ) {
+      for( int y=0; y<height; y++ ) {
+          int r, g, b;
+          int errRead = pngWriterSrc->read( xSrc+x, ySrc+y, r, g, b );
+          if ( !errRead ) {
+            plot( xDest+x, yDest+y, r, g, b );
+          } else {
+            retError = errRead;
+          }
+      }
+  }
+
+  return( retError );
 }

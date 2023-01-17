@@ -252,6 +252,10 @@ class pngwriter
     */
    int read(int x, int y) const;
 
+   /* Read R,G,B all at once
+    * */
+   int read(int x, int y, int& r, int& g, int& b) const;
+
   /* dRead
    * With this function we find out what colour the pixel (x, y) is. If "colour" is 1,
    * it will return the red coefficient, if it is set to 2, the green one, and if
@@ -748,6 +752,9 @@ class pngwriter
 
    int static get_text_width_utf8(const char * face_path, int fontsize, const char * text);
 
+   /* Insert image from another pngwriter into this one
+    * */
+   bool insert( int xDest, int yDest, pngwriter* pngWriterSrc, int xSrc, int ySrc, int width, int height );
 
 };
 
