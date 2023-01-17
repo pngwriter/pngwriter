@@ -43,6 +43,8 @@
 
 #include "pngwriter.h"
 
+#include <cmath>
+
 
 // Default Constructor
 ////////////////////////////////////////////////////////////////////////////
@@ -930,39 +932,44 @@ void pngwriter::settext(const char * title, const char * author, const char * de
 }
 
 ///////////////////////////////////////////////////////
-void pngwriter::close()
+
+void pngwriter::write_internal(std::vector<unsigned char> * buffer) const
 {
    FILE            *fp;
    png_structp     png_ptr;
    png_infop       info_ptr;
 
-   fp = fopen(filename_.c_str(), "wb");
-   if( fp == NULL)
-     {
-	std::cerr << " PNGwriter::close - ERROR **: Error creating file (fopen() returned NULL pointer)." << std::endl;
-	perror(" PNGwriter::close - ERROR **");
-	return;
-     }
-
    png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    info_ptr = png_create_info_struct(png_ptr);
-   png_init_io(png_ptr, fp);
-   if(compressionlevel_ != -2)
+
+   // create FILE or flush buffer
+   if(buffer == NULL)
      {
-	png_set_compression_level(png_ptr, compressionlevel_);
+       fp = fopen(filename_.c_str(), "wb");
+       if( fp == NULL)
+         {
+      std::cerr << " PNGwriter::close - ERROR **: Error creating file (fopen() returned NULL pointer)." << std::endl;
+      perror(" PNGwriter::close - ERROR **");
+      return;
+         }
+       png_init_io(png_ptr, fp);
      }
    else
      {
-	png_set_compression_level(png_ptr, PNGWRITER_DEFAULT_COMPRESSION);
+       buffer->clear();
      }
 
-   png_set_IHDR(png_ptr, info_ptr, width_, height_,
-		bit_depth_, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
-		PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+    png_set_IHDR(png_ptr, info_ptr, width_, height_,
+    bit_depth_, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+    PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
-   if(filegamma_ < 1.0e-1)
+   if(compressionlevel_ != -2)
      {
-	filegamma_ = 0.5;  // Modified in 0.5.4 so as to be the same as the usual gamma.
+  png_set_compression_level(png_ptr, compressionlevel_);
+     }
+   else
+     {
+  png_set_compression_level(png_ptr, PNGWRITER_DEFAULT_COMPRESSION);
      }
 
    png_set_gAMA(png_ptr, info_ptr, filegamma_);
@@ -1011,13 +1018,38 @@ void pngwriter::close()
    text_ptr[4].compression = PNG_TEXT_COMPRESSION_NONE;
    entries++;
 #endif
-   png_set_text(png_ptr, info_ptr, text_ptr, entries);
 
+   if(buffer != NULL)
+     {
+  png_set_write_fn(png_ptr, buffer, PngWriteVectorCallback, NULL);
+     }
+
+   png_set_text(png_ptr, info_ptr, text_ptr, entries);
    png_write_info(png_ptr, info_ptr);
    png_write_image(png_ptr, graph_);
    png_write_end(png_ptr, info_ptr);
    png_destroy_write_struct(&png_ptr, &info_ptr);
-   fclose(fp);
+
+   if(buffer == NULL)
+     {
+  fclose(fp);
+     }
+}
+
+void pngwriter::close() const
+{
+  write_internal(NULL);
+}
+
+///////////////////////////////////////////////////////
+void pngwriter::PngWriteVectorCallback(png_structp  png_ptr, png_bytep data, png_size_t length) {
+   std::vector<unsigned char> *p = (std::vector<unsigned char>*)png_get_io_ptr(png_ptr);
+   p->insert(p->end(), data, data + length);
+}
+
+void pngwriter::write_to_buffer(std::vector<unsigned char> & buffer) const
+{
+   write_internal(&buffer);
 }
 
 //////////////////////////////////////////////////////
@@ -1479,7 +1511,7 @@ void pngwriter::readfromfile(const char * name)
 }
 
 /////////////////////////////////////////////////////////
-int pngwriter::check_if_png(char *file_name, FILE **fp)
+int pngwriter::check_if_png(const char *file_name, FILE **fp)
 {
    char    sig[PNG_BYTES_TO_CHECK];
 
@@ -1532,7 +1564,8 @@ int pngwriter::read_png_info(FILE *fp, png_structp *png_ptr, png_infop *info_ptr
 	fclose(fp);
 	return 0;
      }
-#if (PNG_LIBPNG_VER < 10500)
+// introduced in libPNG 1.0.6, deprecated at least in 1.4.0+
+#if (PNG_LIBPNG_VER < 10400)
    if (setjmp((*png_ptr)->jmpbuf)) /*(setjmp(png_jmpbuf(*png_ptr)) )*//////////////////////////////////////
 #else
    if (setjmp(png_jmpbuf(*png_ptr)))
@@ -1628,7 +1661,11 @@ double pngwriter::getgamma(void) const
 
 void pngwriter::setgamma(double gamma)
 {
-   filegamma_ = gamma;
+  filegamma_ = gamma;
+  if(filegamma_ < 1.0e-1)
+     {
+  filegamma_ = 0.5;  // Modified in 0.5.4 so as to be the same as the usual gamma.
+     }
 }
 
 // The algorithms HSVtoRGB and RGBtoHSV were found at http://www.cs.rit.edu/~ncs/
@@ -1942,7 +1979,7 @@ void pngwriter::write_png(void)
 
 // Freetype-based text rendering functions.
 ///////////////////////////////////////////
-void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double red, double green, double blue)
+void pngwriter::plot_text( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue)
 {
    FT_Library  library;
    FT_Face     face;
@@ -2056,7 +2093,7 @@ void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_st
    FT_Done_FreeType( library );
 }
 
-void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int y_start, double angle,  char * text, double red, double green, double blue)
+void pngwriter::plot_text_utf8( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double red, double green, double blue)
 {
    FT_Library  library;
    FT_Face     face;
@@ -2272,12 +2309,12 @@ void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int
    delete[] ucs4text;
 }
 
-void pngwriter::plot_text( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue)
+void pngwriter::plot_text( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue)
 {
    plot_text( face_path, fontsize, x_start, y_start,  angle,  text,  ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
 
-void pngwriter::plot_text_utf8( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, int red, int green, int blue)
+void pngwriter::plot_text_utf8( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, int red, int green, int blue)
 {
    plot_text_utf8( face_path, fontsize, x_start, y_start,  angle,  text,  ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
@@ -2310,7 +2347,7 @@ void pngwriter::my_draw_bitmap( FT_Bitmap * bitmap, int x, int y, double red, do
 
 //put in freetype section
 
-int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
+int pngwriter::get_text_width(const char * face_path, int fontsize, const char * text)
 {
 
    FT_Library  library;
@@ -2428,7 +2465,7 @@ int pngwriter::get_text_width(char * face_path, int fontsize, char * text)
 }
 
 
-int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
+int pngwriter::get_text_width_utf8(const char * face_path, int fontsize, const char * text)
 {
    FT_Library  library;
    FT_Face     face;
@@ -2650,40 +2687,40 @@ int pngwriter::get_text_width_utf8(char * face_path, int fontsize,  char * text)
 #endif
 #ifdef NO_FREETYPE
 
-void pngwriter::plot_text( char *, int, int, int, double, char *, int, int, int )
+void pngwriter::plot_text( const char *, int, int, int, double, const char *, int, int, int )
 {
    std::cerr << " PNGwriter::plot_text - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text( char *, int, int, int, double, char *, double, double, double )
+void pngwriter::plot_text( const char *, int, int, int, double, const char *, double, double, double )
 {
    std::cerr << " PNGwriter::plot_text - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 
 }
 
-void pngwriter::plot_text_utf8( char *, int, int, int, double, char *, int, int, int )
+void pngwriter::plot_text_utf8( const char *, int, int, int, double, const char *, int, int, int )
 {
    std::cerr << " PNGwriter::plot_text_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text_utf8( char *, int, int, int, double, char *, double, double, double)
+void pngwriter::plot_text_utf8( const char *, int, int, int, double, const char *, double, double, double)
 {
    std::cerr << " PNGwriter::plot_text_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
 //////////// Get text width
-int pngwriter::get_text_width(char *, int, char *)
+int pngwriter::get_text_width(const char *, int, const char *)
 {
    std::cerr << " PNGwriter::get_text_width - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
 }
 
 
-int pngwriter::get_text_width_utf8(char *, int,  char *)
+int pngwriter::get_text_width_utf8(const char *, int, const char *)
 {
    std::cerr << " PNGwriter::get_text_width_utf8 - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return 0;
@@ -3712,7 +3749,7 @@ void pngwriter::bezier_blend(  int startPtX, int startPtY,
 
 // Freetype-based text rendering functions.
 ///////////////////////////////////////////
-void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, double red, double green, double blue)
+void pngwriter::plot_text_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue)
 {
    FT_Library  library;
    FT_Face     face;
@@ -3825,7 +3862,7 @@ void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, in
    FT_Done_FreeType( library );
 }
 
-void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_start, int y_start, double angle,  char * text, double opacity, double red, double green, double blue)
+void pngwriter::plot_text_utf8_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, double red, double green, double blue)
 {
    FT_Library  library;
    FT_Face     face;
@@ -4042,12 +4079,12 @@ void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_star
    delete[] ucs4text;
 }
 
-void pngwriter::plot_text_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity, int red, int green, int blue)
+void pngwriter::plot_text_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity, int red, int green, int blue)
 {
    plot_text_blend( face_path, fontsize, x_start, y_start,  angle,  text, opacity,   ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
 
-void pngwriter::plot_text_utf8_blend( char * face_path, int fontsize, int x_start, int y_start, double angle, char * text, double opacity,  int red, int green, int blue)
+void pngwriter::plot_text_utf8_blend( const char * face_path, int fontsize, int x_start, int y_start, double angle, const char * text, double opacity,  int red, int green, int blue)
 {
    plot_text_utf8_blend( face_path, fontsize, x_start, y_start,  angle,  text, opacity,  ((double) red)/65535.0,  ((double) green)/65535.0,  ((double) blue)/65535.0   );
 }
@@ -4078,26 +4115,26 @@ void pngwriter::my_draw_bitmap_blend( FT_Bitmap * bitmap, int x, int y, double o
 #endif
 #ifdef NO_FREETYPE
 
-void pngwriter::plot_text_blend( char *, int, int, int, double, char *, double, int, int, int )
+void pngwriter::plot_text_blend( const char *, int, int, int, double, const char *, double, int, int, int )
 {
    std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text_blend( char *, int, int, int, double, char *, double,  double, double, double )
+void pngwriter::plot_text_blend( const char *, int, int, int, double, const char *, double,  double, double, double )
 {
    std::cerr << " PNGwriter::plot_text_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 
 }
 
-void pngwriter::plot_text_utf8_blend( char *, int, int, int, double, char *, double,  int, int, int )
+void pngwriter::plot_text_utf8_blend( const char *, int, int, int, double, const char *, double,  int, int, int )
 {
    std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
 }
 
-void pngwriter::plot_text_utf8_blend( char *, int, int, int, double, char *, double, double, double, double )
+void pngwriter::plot_text_utf8_blend( const char *, int, int, int, double, const char *, double, double, double, double )
 {
    std::cerr << " PNGwriter::plot_text_utf8_blend - ERROR **:  PNGwriter was compiled without Freetype support! Recompile PNGwriter with Freetype support (once you have Freetype installed, that is. Websites: www.freetype.org and pngwriter.sourceforge.net)." << std::endl;
    return;
