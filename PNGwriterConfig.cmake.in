@@ -11,6 +11,11 @@ endif()
 find_dependency(PNG)
 find_dependency(ZLIB)
 
+set(PNGwriter_HAVE_OPENMP @PNGwriter_HAVE_OPENMP@)
+if(PNGwriter_HAVE_OPENMP)
+    find_dependency(OpenMP)
+endif()
+
 set(PNGwriter_HAVE_FREETYPE @PNGwriter_HAVE_FREETYPE@)
 if(PNGwriter_HAVE_FREETYPE)
     find_dependency(Freetype)

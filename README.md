@@ -94,6 +94,7 @@ The following options can be added to the `cmake` call to control PNGwriter feat
 |------------------------|------------------|-----------------------------------------|
 | BUILD_PERFORMANCE      | ON/**OFF**       | Build Performance test (requires C++11) |
 | PNGwriter_USE_FREETYPE | **AUTO**/ON/OFF  | Enable support for text via FreeType    |
+| PNGwriter_USE_OpenMP   | **AUTO**/ON/OFF  | Enable support for OpenMP acceleration  |
 
 By default, this will build PNGwriter as a static library (`libPNGwriter.a`) and installs also its headers.
 In order to build a static library, append `-DBUILD_SHARED_LIBS=ON` to the `cmake` command.

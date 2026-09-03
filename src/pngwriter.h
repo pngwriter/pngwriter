@@ -103,6 +103,9 @@ class pngwriter
    int compressionlevel_;
    bool transformation_; // Required by Mikkel's patch
 
+   /**! number of threads used to perform operations on the image */
+   int numOmpThreads_;
+
    unsigned char * * graph_;
    double filegamma_;
    double screengamma_;
@@ -748,6 +751,12 @@ class pngwriter
 
    int static get_text_width_utf8(const char * face_path, int fontsize, const char * text);
 
+   /**! set number of used OpenMP threads
+    *
+    * If OpenMP is enabled the given number of threads were used
+    * to speedup image operations on the image.
+    */
+   void set_num_omp_threads( const int & );
 
 };
 

@@ -42,6 +42,8 @@ pngwriter_option(FREETYPE "Enable support for text via Freetype" AUTO)
 
 set(BUILD_PERFORMANCE OFF CACHE STRING "Build Performance test (requires C++11)")
 
+pngwriter_option(OpenMP "Enable support for OpenMP acceleration" AUTO)
+
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
         "Choose the build type, e.g. Debug." FORCE)
@@ -67,6 +69,18 @@ if(FREETYPE_FOUND)
     set(PNGwriter_HAVE_FREETYPE TRUE)
 endif()
 
+# OpenMP ######################################################################
+#
+if(PNGwriter_USE_OpenMP STREQUAL AUTO)
+    find_package(OpenMP COMPONENTS CXX)
+elseif(PNGwriter_USE_OpenMP)
+    find_package(OpenMP REQUIRED COMPONENTS CXX)
+endif()
+
+if(OpenMP_CXX_FOUND)
+    message(STATUS "OpenMP found: ${OpenMP_CXX_VERSION}")
+    set(PNGwriter_HAVE_OpenMP TRUE)
+endif()
 
 # Targets #####################################################################
 #
@@ -77,6 +91,10 @@ add_library(PNGwriter
 
 target_link_libraries(PNGwriter PUBLIC PNG::PNG)
 target_link_libraries(PNGwriter PUBLIC ZLIB::ZLIB)
+if(PNGwriter_HAVE_OpenMP)
+    target_link_libraries(PNGwriter PRIVATE OpenMP::OpenMP_CXX)
+endif()
+
 if(NOT WIN32)
     # automatically added on windows
     target_link_libraries(PNGwriter PRIVATE m)
