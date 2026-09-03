@@ -18,13 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-latest
-            shell: bash
-          - os: macos-latest
-            shell: bash
-          - os: windows-latest
-            shell: msys2 {0}
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v6
@@ -57,18 +51,40 @@ jobs:
             ninja:p
 
       - name: Configure
-        shell: ${{ matrix.shell }}
+        if: runner.os != 'Windows'
+        run: >-
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DPNGwriter_USE_FREETYPE=ON
+
+      - name: Configure
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: >-
           cmake -S . -B build -G Ninja
           -DCMAKE_BUILD_TYPE=Release
           -DPNGwriter_USE_FREETYPE=ON
 
       - name: Build
-        shell: ${{ matrix.shell }}
+        if: runner.os != 'Windows'
+        run: cmake --build build --parallel
+
+      - name: Build
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: cmake --build build --parallel
 
       - name: Test
-        shell: ${{ matrix.shell }}
+        if: runner.os != 'Windows'
+        run: >-
+          ctest --test-dir build
+          --build-config Release
+          --output-on-failure
+          --no-tests=error
+
+      - name: Test
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
         run: >-
           ctest --test-dir build
           --build-config Release
