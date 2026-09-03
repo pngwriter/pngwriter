@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            shell: bash
+          - os: macos-latest
+            shell: bash
+          - os: windows-latest
+            shell: msys2 {0}
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends \
+            libfreetype-dev \
+            libpng-dev \
+            ninja-build
+
+      - name: Install dependencies
+        if: runner.os == 'macOS'
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+        run: brew install freetype libpng ninja
+
+      - name: Install dependencies
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          pacboy: >-
+            cmake:p
+            freetype:p
+            gcc:p
+            libpng:p
+            ninja:p
+
+      - name: Configure
+        shell: ${{ matrix.shell }}
+        run: >-
+          cmake -S . -B build -G Ninja
+          -DCMAKE_BUILD_TYPE=Release
+          -DPNGwriter_USE_FREETYPE=ON
+
+      - name: Build
+        shell: ${{ matrix.shell }}
+        run: cmake --build build --parallel
+
+      - name: Test
+        shell: ${{ matrix.shell }}
+        run: >-
+          ctest --test-dir build
+          --build-config Release
+          --output-on-failure
+          --no-tests=error
