@@ -9,15 +9,16 @@
   */
 
 #include <pngwriter.h>
-#include <cstdlib>
+#include <vector>
 
 int main( )
 {
-  pngwriter img( 40,11, 0, "/tmp/foo.png" );
+  pngwriter img( 40,11, 0, "diamond.png" );
 
   img.diamond      ( 10,6, 8,8,  1.0,1.0,1.0 );
   img.filleddiamond( 30,6, 8,8,  1.0,1.0,1.0 );
-  img.write_png();
+  std::vector<unsigned char> png;
+  img.write_to_buffer(png);
 
-  return system( "convert /tmp/foo.png /tmp/foo.xpm; cat /tmp/foo.xpm" );
+  return png.empty();
 }
