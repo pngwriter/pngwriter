@@ -18,7 +18,7 @@
 
 # Preamble ####################################################################
 #
-cmake_minimum_required(VERSION 3.5.2)
+cmake_minimum_required(VERSION 3.10...4.4)
 
 project(PNGwriter VERSION 0.7.0 LANGUAGES CXX)
 
